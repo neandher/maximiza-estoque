@@ -1,0 +1,26 @@
+{% block mt_checkbox_widget %}
+    <label class="rememberme check mt-checkbox mt-checkbox-outline">
+        <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+        {% if label is defined %}{{ label|trans }}{% endif %}
+        <span></span>
+    </label>
+{% endblock mt_checkbox_widget %}
+
+{% block switch_widget %}
+    <div class="form-group">
+        {{ block('form_label') }}
+        <div class="clearfix"></div>
+        <input type="checkbox"
+                {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+        {{ block('form_errors') }}
+    </div>
+{% endblock switch_widget %}
+
+{% block date_time_picker_widget %}
+    <div class="input-group date">
+        {{ block('datetime_widget') }}
+        <span class="input-group-addon">
+            <span class="fa fa-calendar" aria-hidden="true"></span>
+        </span>
+    </div>
+{% endblock %}

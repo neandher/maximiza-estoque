@@ -1,0 +1,209 @@
+<div class="page-sidebar-wrapper">
+    <!-- END SIDEBAR -->
+    <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
+    <!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
+    <div class="page-sidebar navbar-collapse collapse">
+        <!-- BEGIN SIDEBAR MENU -->
+        <!-- DOC: Apply "page-sidebar-menu-light" class right after "page-sidebar-menu" to enable light sidebar menu style(without borders) -->
+        <!-- DOC: Apply "page-sidebar-menu-hover-submenu" class right after "page-sidebar-menu" to enable hoverable(hover vs accordion) sub menu mode -->
+        <!-- DOC: Apply "page-sidebar-menu-closed" class right after "page-sidebar-menu" to collapse("page-sidebar-closed" class must be applied to the body element) the sidebar sub menu mode -->
+        <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
+        <!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
+        <!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
+        <ul class="page-sidebar-menu  page-header-fixed page-sidebar-menu-hover-submenu" data-keep-expanded="false"
+            data-auto-scroll="true" data-slide-speed="200">
+            <li class="nav-item start
+                {% if 'admin_index' in app.request.attributes.get('_route') %}active{% endif %}">
+                <a href="{{ path('admin_index') }}" class="nav-link">
+                    <i class="icon-home"></i>
+                    <span class="title">Dashboard</span>
+                    {% if 'admin_index' in app.request.attributes.get('_route') %}
+                        <span class="selected"></span>
+                    {% endif %}
+                    <span class="arrow
+                    {% if 'admin_index' in app.request.attributes.get('_route') %}open{% endif %}"></span>
+                </a>
+            </li>
+            <li class="nav-item
+                {% if 'admin_user' in app.request.attributes.get('_route') %}active{% endif %}">
+                <a href="{{ path('admin_user_index') }}" class="nav-link nav-toggle">
+                    <i class="icon-user"></i>
+                    <span class="title">Usuários</span>
+                    {% if 'admin_user' in app.request.attributes.get('_route') %}
+                        <span class="selected"></span>
+                    {% endif %}
+                    <span class="arrow
+                    {% if 'admin_user' in app.request.attributes.get('_route') %}open{% endif %}"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item
+                        {% if 'admin_user_new' in app.request.attributes.get('_route') %}active{% endif %}">
+                        <a href="{{ path('admin_user_new') }}" class="nav-link ">
+                            <i class="icon-user-follow"></i>
+                            <span class="title">Novo Usuário</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item
+                {% if 'admin_company' in app.request.attributes.get('_route') %}active{% endif %}">
+                <a href="{{ path('admin_company_index') }}" class="nav-link nav-toggle">
+                    <i class="icon-organization"></i>
+                    <span class="title">{{ 'admin.company.title'|trans }}</span>
+                    {% if 'admin_company' in app.request.attributes.get('_route') %}
+                        <span class="selected"></span>
+                    {% endif %}
+                    <span class="arrow
+                    {% if 'admin_company' in app.request.attributes.get('_route') %}open{% endif %}"></span>
+                </a>
+            </li>
+            <li class="nav-item
+            {% if 'admin_customer' in app.request.attributes.get('_route') %}active{% endif %}">
+                <a href="{{ path('admin_customer_index') }}" class="nav-link">
+                    <i class="icon-globe"></i>
+                    <span class="title">{{ 'admin.customers.title'|trans }}</span>
+                    {% if 'admin_customer' in app.request.attributes.get('_route') %}
+                        <span class="selected"></span>
+                    {% endif %}
+                    <span class="arrow
+                    {% if 'admin_customer' in app.request.attributes.get('_route') %}open{% endif %}"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item
+                        {% if 'admin_customer_new' in app.request.attributes.get('_route') %}active{% endif %}">
+                        <a href="{{ path('admin_customer_new') }}" class="nav-link ">
+                            <i class="icon-globe"></i>
+                            <span class="title">{{ 'admin.customers.new'|trans }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item
+            {% if 'admin_bill' in app.request.attributes.get('_route') and
+            app.request.attributes.get('_route') != 'admin_bill_remessa_index'%}active{% endif %}">
+                <a href="{{ path('admin_bill_index') }}" class="nav-link">
+                    <i class="icon-wallet"></i>
+                    <span class="title">{{ 'admin.bill.title'|trans }}</span>
+                    {% if 'admin_bill' in app.request.attributes.get('_route') %}
+                        <span class="selected"></span>
+                    {% endif %}
+                    <span class="arrow
+                    {% if 'admin_bill' in app.request.attributes.get('_route') %}open{% endif %}"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item">
+                        <a href="{{ path('admin_bill_new') }}" class="nav-link ">
+                            <i class="icon-wallet"></i>
+                            <span class="title">{{ 'admin.bill.new'|trans }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item
+            {% if 'admin_bill_remessa' in app.request.attributes.get('_route') %}active{% endif %}">
+                <a href="{{ path('admin_bill_remessa_index') }}" class="nav-link">
+                    <i class="icon-docs"></i>
+                    <span class="title">{{ 'admin.billRemessa.title'|trans }}</span>
+                    {% if 'admin_bill_remessa' in app.request.attributes.get('_route') %}
+                        <span class="selected"></span>
+                    {% endif %}
+                    <span class="arrow
+                    {% if 'admin_bill_remessa' in app.request.attributes.get('_route') %}open{% endif %}"></span>
+                </a>
+            </li>
+            <li class="nav-item
+            {% if 'admin_downloads' in app.request.attributes.get('_route') %}active{% endif %}">
+                <a href="{{ path('admin_downloads_index') }}" class="nav-link">
+                    <i class="icon-link"></i>
+                    <span class="title">{{ 'admin.downloads.title'|trans }}</span>
+                    {% if 'admin_downloads' in app.request.attributes.get('_route') %}
+                        <span class="selected"></span>
+                    {% endif %}
+                    <span class="arrow
+                    {% if 'admin_downloads' in app.request.attributes.get('_route') %}open{% endif %}"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item">
+                        <a href="{{ path('admin_downloads_new') }}" class="nav-link ">
+                            <i class="icon-link"></i>
+                            <span class="title">{{ 'admin.downloads.new'|trans }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item
+            {% if 'admin_video' in app.request.attributes.get('_route') %}active{% endif %}">
+                <a href="{{ path('admin_video_index') }}" class="nav-link">
+                    <i class="icon-film"></i>
+                    <span class="title">{{ 'admin.video.title'|trans }}</span>
+                    {% if 'admin_video' in app.request.attributes.get('_route') %}
+                        <span class="selected"></span>
+                    {% endif %}
+                    <span class="arrow
+                    {% if 'admin_video' in app.request.attributes.get('_route') %}open{% endif %}"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item ">
+                        <a href="{{ path('admin_video_new') }}" class="nav-link ">
+                            <i class="icon-film"></i>
+                            <span class="title">{{ 'admin.video.new'|trans }}</span>
+                        </a>
+                    </li>
+                    <li class="nav-item ">
+                        <a href="{{ path('admin_video_category_index') }}" class="nav-link ">
+                            <i class="icon-film"></i>
+                            <span class="title">{{ 'admin.video_category.title'|trans }}</span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li class="nav-item ">
+                                <a href="{{ path('admin_video_category_new') }}" class="nav-link ">
+                                    <i class="icon-film"></i>
+                                    <span class="title">{{ 'admin.video_category.new'|trans }}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="icon-layers"></i>
+                    <span class="title">CMS</span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item ">
+                        <a href="{{ path('admin_banner_index') }}" class="nav-link ">
+                            <i class="icon-picture"></i>
+                            <span class="title">{{ 'admin.banner.title'|trans }}</span>
+                        </a>
+                    </li>
+                    <li class="nav-item ">
+                        <a href="{{ path('admin_cms_downloads_index') }}" class="nav-link ">
+                            <i class="icon-link"></i>
+                            <span class="title">{{ 'admin.cms_downloads.title'|trans }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <!-- END SIDEBAR MENU -->
+    </div>
+    <!-- END SIDEBAR -->
+</div>
+
+{#
+<li class="nav-item start ">
+    <a href="{{ path('admin_dashboard') }}" class="nav-link nav-toggle">
+        <i class="icon-home"></i>
+        <span class="title">Dashboard</span>
+        <span class="arrow"></span>
+    </a>
+    <ul class="sub-menu">
+        <li class="nav-item start ">
+            <a href="index.html" class="nav-link ">
+                <i class="icon-bar-chart"></i>
+                <span class="title">Dashboard 1</span>
+            </a>
+        </li>
+    </ul>
+</li>#}

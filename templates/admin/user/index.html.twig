@@ -1,0 +1,131 @@
+{% extends 'admin/base.html.twig' %}
+{% block title %}{{ 'user.title'|trans }}{% endblock %}
+
+{% block page_content %}
+
+    {% embed 'admin/_partials/_default_table_list.html.twig' %}
+
+        {% block icon_list %}
+            <i class="flaticon-users"></i>
+        {% endblock %}
+
+        {% block caption_subject %}
+            {{ 'resource.caption'|trans({'%resourceName%': 'user.title'|trans, '%nbResults%' : users.nbResults}) }}
+        {% endblock %}
+
+        {% block head_tools_actions %}
+            <li class="m-portlet__nav-item">
+                <a href="{{ path('admin_user_new') ~ pagination.buildQuery }}"
+                   class="btn btn-accent m-btn m-btn--custom m-btn--icon">
+                    <span><i class="la la-plus"></i><span> {{ 'user.actions.new'|trans }}</span></span>
+                </a>
+            </li>
+        {% endblock %}
+        {% block head_tools_dropdown %}{% endblock %}
+
+        {% block filters_actions %}
+            <div class="row m--margin-bottom-20">
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label for="search">
+                        {{ 'resource.filters.search'|trans }}:
+                    </label>
+                    <input type="text" class="form-control m-input m-input--solid" data-col-index="0"
+                           placeholder="{{ 'resource.fields.title'|trans }}" name="search" id="search"
+                           value="{% if app.request.query.has('search') %}{{ app.request.query.get('search') }}{% endif %}">
+                </div>
+            </div>
+            <div class="m-separator m-separator--md m-separator--dashed"></div>
+            <div class="row m--margin-bottom-20">
+                <div class="col-lg-12">
+                    <button type="submit" class="btn btn-brand m-btn m-btn--icon">
+                        <span><i class="la la-search"></i><span>{{ 'resource.filters.search'|trans }}</span></span>
+                    </button>
+                    &nbsp;&nbsp;
+                    <a href="{{ path('admin_user_index') }}"
+                       class="btn btn-secondary m-btn m-btn--icon">
+                        <span><i class="la la-close"></i><span>{{ 'resource.actions.items.reset'|trans }}</span></span>
+                    </a>
+                </div>
+            </div>
+        {% endblock %}
+
+        {% block table_tr_th %}
+            <tr class="m-datatable__row">
+                <th>ID</th>
+                <th>{{ 'user.fields.email'|trans }}</th>
+                <th>{{ 'user.fields.username'|trans }}</th>
+                <th>{{ 'resource.toglleable.is_enabled_title'|trans }}</th>
+                <th>{{ 'user.fields.lastLogin'|trans }}</th>
+                <th>
+                    <a href="{{ path('admin_user_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('createdAt') }}">
+                        {{ 'resource.timestampable.createdAt'|trans }}
+                    </a>
+                </th>
+                <th>{{ 'resource.actions.title'|trans }}</th>
+            </tr>
+        {% endblock %}
+
+        {% block table_tr_td %}
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>
+                        {% if user.isEnabled == '1' %}
+                            <span class="m-badge  m-badge--success m-badge--wide">
+                                <i class="fa fa-check"></i>
+                            </span>
+                        {% else %}
+                            <span class="m-badge  m-badge--danger m-badge--wide">
+                                <i class="fa fa-remove"></i>
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.lastLogin is not null %}
+                            {{ user.lastLogin|date('d/m/Y H:i') }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>{{ user.createdAt|date('d/m/Y H:i') }}</td>
+                    <td>
+                        {% embed 'admin/_partials/_actions_btn_group.html.twig' %}
+                            {% block li_actions %}
+                                <a class="dropdown-item" href="javascript:;" data-toggle="modal"
+                                   data-target="#modalConfirmation"
+                                   data-path="{{ path('admin_user_delete', {id: user.id})|escape }}"
+                                   data-crf="{{ form_widget(delete_forms[user.id]._token)|escape }}"
+                                >
+                                    <i class="fa fa-trash"></i> {{ 'resource.actions.items.delete'|trans }}
+                                </a>
+                            {% endblock %}
+                        {% endembed %}
+                        <a href="{{ path('admin_user_edit', { id: user.id }) ~ pagination.buildQuery }}"
+                           class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"
+                           title="{{ 'resource.actions.items.edit'|trans }}"> <i class="la la-edit"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endblock %}
+
+        {% block list_info %}
+            {{ 'resource.pagination.list_info'|trans({
+                '%currentPageOffsetStart%': users.currentPageOffsetStart,
+                '%currentPageOffsetEnd%': users.currentPageOffsetEnd,
+                '%nbResults%': users.nbResults
+            }) }}
+        {% endblock %}
+
+        {% block list_pagination %}
+            {{ pagerfanta(users, 'twitter_bootstrap4',{
+                routeName: 'admin_user_index',
+                routeParams: app.request.query.all
+            }) }}
+        {% endblock %}
+
+    {% endembed %}
+
+{% endblock %}

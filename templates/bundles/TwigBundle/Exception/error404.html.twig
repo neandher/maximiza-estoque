@@ -1,0 +1,23 @@
+{% extends 'site/base.html.twig' %}
+
+{% block title %}{{ 'errors.404.title'|trans }}{% endblock %}
+
+{% block body %}
+    <body class="m--skin- m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default">
+    <!-- begin:: Page -->
+    <div class="m-grid m-grid--hor m-grid--root m-page">
+        <div class="m-grid__item m-grid__item--fluid m-grid  m-error-1"
+             style="background-image: url({{ asset('assets/media/img/bg1.jpg') }});">
+            <div class="m-error_container">
+					<span class="m-error_number">
+						<h1>404</h1>
+					</span>
+                <p class="m-error_desc">
+                    {{ 'errors.404.description'|trans }}
+                </p>
+            </div>
+        </div>
+    </div>
+    <!-- end:: Page -->
+    </body>
+{% endblock %}

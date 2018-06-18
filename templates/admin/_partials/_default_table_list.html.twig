@@ -1,0 +1,136 @@
+<div class="m-portlet m-portlet--mobile">
+    <div class="m-portlet__head">
+        {% block portlet_title %}
+            <div class="m-portlet__head-caption">
+                <div class="m-portlet__head-title">
+                    <h3 class="m-portlet__head-text">
+                        {% block icon_list %}
+                            <i class="flaticon-list"></i>
+                        {% endblock %}
+                        {% block caption_subject %}{% endblock %}
+                        <small>
+                        </small>
+                    </h3>
+                </div>
+            </div>
+        {% endblock %}
+        {% block head_tools %}
+            <div class="m-portlet__head-tools">
+                <ul class="m-portlet__nav">
+                    {% block head_tools_actions %}{% endblock %}
+                    {% block head_tools_dropdown %}
+                        <li class="m-portlet__nav-item"></li>
+                        <li class="m-portlet__nav-item">
+                            <div class="m-dropdown m-dropdown--inline m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push"
+                                 m-dropdown-toggle="hover" aria-expanded="true">
+                                <a href="#"
+                                   class="m-portlet__nav-link btn btn-lg btn-secondary  m-btn m-btn--icon m-btn--icon-only m-btn--pill  m-dropdown__toggle">
+                                    <i class="la la-ellipsis-h m--font-brand"></i>
+                                </a>
+                                <div class="m-dropdown__wrapper">
+                                    <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
+                                    <div class="m-dropdown__inner">
+                                        <div class="m-dropdown__body">
+                                            <div class="m-dropdown__content">
+                                                <ul class="m-nav">
+                                                    {% block head_tools_dropdown_actions %}{% endblock %}
+                                                    {#<li class="m-nav__item">
+                                                        <a href="" class="m-nav__link">
+                                                            <i class="m-nav__link-icon flaticon-share"></i>
+                                                            <span class="m-nav__link-text">
+                                                                Create Post
+                                                            </span>
+                                                        </a>
+                                                    </li>#}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    {% endblock %}
+                </ul>
+            </div>
+        {% endblock %}
+    </div>
+    <div class="m-portlet__body" style="padding-bottom: 1.2rem">
+        <!--begin: Search Form -->
+        <form method="get" action="" class="m-form m-form--fit">
+            {% block filters_actions %}{% endblock %}
+            <div class="clearfix"></div>
+            {#<br>#}
+            {% block body_hr_first %}
+                <hr>
+            {% endblock %}
+            {{ include('_partials/_flash_messages.html.twig') }}
+            <div class="m-section" style="margin-bottom: 0;">
+                <div class="m-section__content" style="margin-bottom: 0;">
+                    <div class="m-scrollable" data-axis="x" data-scrollable="true">
+                        <table class="table table-striped m-table table-hover">
+                            <thead>
+                            {% block table_tr_th %}{% endblock %}
+                            </thead>
+                            <tbody>
+                            {% block table_tr_td %}{% endblock %}
+                            </tbody>
+                            <tfoot>
+                            {% block table_tfoot %}{% endblock %}
+                            </tfoot>
+                        </table>
+                    </div>
+                    <hr>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-5 col-sm-5 col-xs-12">
+                            <div style="padding-top: 0.755em">
+                                {% block list_info %}{% endblock %}
+                            </div>
+                        </div>
+                        <div class="col-md-7 col-sm-7 col-xs-12">
+                            <div style="float: right">
+                                {% block list_pagination %}{% endblock %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--end: Search Form -->
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalConfirmation" tabindex="-1" role="basic"
+     aria-labelledby="modalConfirmationLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{ 'resource.delete_confirm.title'|trans }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5>{{ 'resource.delete_confirm.text'|trans }}</h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger m-btn m-btn--custom m-btn--icon m-btn--air"
+                        data-dismiss="modal">
+                    <span>
+                        <i class="fa fa-remove"></i>
+                        <span>{{ 'resource.actions.items.cancel'|trans }}</span>
+                    </span>
+                </button>
+                <button type="button"
+                        class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air delete-resource-form">
+                    <span>
+                        <i class="fa fa-check"></i>
+                        <span>{{ 'resource.delete_confirm.btns.confirm'|trans }}</span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal -->

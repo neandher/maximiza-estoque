@@ -1,0 +1,52 @@
+<div class="row">
+    <div class="col-md-12">
+
+        {% block form_start %}{% endblock %}
+
+        <div class="m-portlet m-portlet--rounded">
+            <div class="m-portlet__head">
+                <div class="m-portlet__head-caption">
+                    <div class="m-portlet__head-title">
+                        {% block icon_list %}
+                            <span class="m-portlet__head-icon">
+                                <i class="flaticon-list"></i>
+                            </span>
+                        {% endblock %}
+                        <h3 class="m-portlet__head-text">
+                            {% block caption_subject %}{% endblock %}
+                        </h3>
+                    </div>
+                </div>
+                <div class="m-portlet__head-tools">
+                    <ul class="m-portlet__nav">
+                        {% block actions %}
+                            {% include('admin/_partials/_form_submit_buttons.html.twig') %}
+                        <li class="m-portlet__nav-item">
+                            <a href="{{ path(route_index) ~ pagination.buildQuery }}"
+                               class="m-portlet__nav-link btn btn-danger m-btn m-btn--air">
+                                <span class="fa fa-arrow-left"></span> {{ 'resource.actions.items.go_back'|trans }}
+                            </a>
+                        </li>
+                        {% endblock %}
+                    </ul>
+                </div>
+            </div>
+            <div class="m-portlet__body">
+                {{ form_errors(form) }}
+                {% include('_partials/_flash_messages.html.twig') %}
+                <ul class="nav nav-tabs" role="tablist">
+                    {% block nav_tabs %}{% endblock %}
+                </ul>
+                <div class="tab-content"><br>
+                    {% block tab_pane %}{% endblock %}
+                </div>
+            </div>
+        </div>
+
+        {% block form_end %}
+            {{ form_widget(form._token) }}
+            {{ form_end(form, {'render_rest': false}) }}
+        {% endblock %}
+
+    </div>
+</div>

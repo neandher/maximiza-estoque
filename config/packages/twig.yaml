@@ -1,0 +1,9 @@
+twig:
+    paths: ['%kernel.project_dir%/templates']
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    form_themes:
+        - 'admin/_form/_fields.html.twig'
+        - 'bootstrap_4_layout.html.twig'
+    globals:
+        title: '%title%'
