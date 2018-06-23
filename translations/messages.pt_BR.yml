@@ -13,6 +13,7 @@ resource:
     filters:
         search: Busca
         num_items: Items por página
+        date: Data
         date_start: Data Inicial
         date_end: Data Final
     toglleable:
@@ -64,6 +65,9 @@ user:
         new: Novo Usuário
         edit: Editar Usuário
     fields:
+        firstName: Primeiro Nome
+        lastName: Segundo Nome
+        fullName: Name
         email: E-mail
         username: Usuário
         lastLogin: Último Login
@@ -83,3 +87,18 @@ user:
     login:
         title: Login
         title_small: Login
+
+stock:
+    title: Estoque Mostruário
+    title_single: Estoque Mostruário
+    total: Total
+    fields:
+        referency: Referência
+        quantity: Quantidade
+        type: Movimentação
+    types:
+        add: Entrada
+        remove: Saída
+    actions:
+        new: Nova Movimentação
+        edit: Editar Movimentação

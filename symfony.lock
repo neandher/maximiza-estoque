@@ -83,8 +83,20 @@
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
+    "justinrainbow/json-schema": {
+        "version": "5.2.7"
+    },
+    "league/flysystem": {
+        "version": "1.0.45"
+    },
     "monolog/monolog": {
         "version": "1.23.0"
+    },
+    "nfephp-org/sped-common": {
+        "version": "v5.0.26"
+    },
+    "nfephp-org/sped-nfe": {
+        "version": "v5.0.51"
     },
     "nikic/php-parser": {
         "version": "v4.0.2"

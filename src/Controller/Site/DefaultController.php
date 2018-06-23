@@ -19,6 +19,6 @@ class DefaultController extends AbstractController
      */
     public function index()
     {
-        return new Response('');
+        return $this->redirectToRoute('admin_stock_index');
     }
 }

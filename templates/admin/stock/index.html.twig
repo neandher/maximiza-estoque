@@ -1,0 +1,247 @@
+{% extends 'admin/base.html.twig' %}
+{% block title %}{{ 'stock.title'|trans }}{% endblock %}
+
+{% block page_content %}
+
+    {% embed 'admin/_partials/_default_table_list.html.twig' %}
+
+        {% block icon_list %}
+            <i class="flaticon-map"></i>
+        {% endblock %}
+
+        {% block caption_subject %}
+            {{ 'resource.caption'|trans({'%resourceName%': 'stock.title'|trans, '%nbResults%' : stocks.nbResults}) }}
+        {% endblock %}
+
+        {% block head_tools_actions %}
+            <li class="m-portlet__nav-item">
+                <a href="{{ path('admin_stock_new') ~ pagination.buildQuery }}"
+                   class="btn btn-accent m-btn m-btn--custom m-btn--icon">
+                    <span><i class="la la-plus-circle"></i><span> {{ 'stock.actions.new'|trans }}</span></span>
+                </a>
+            </li>
+        {% endblock %}
+        {% block head_tools_dropdown %}{% endblock %}
+
+        {% block filters_actions %}
+            <div class="row m--margin-bottom-20">
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label for="search">
+                        {{ 'resource.filters.search'|trans }}:
+                    </label>
+                    <input type="text" class="form-control m-input m-input--solid" data-col-index="0"
+                           placeholder="{{ 'stock.fields.referency'|trans }}" name="search" id="search"
+                           value="{% if app.request.query.has('search') %}{{ app.request.query.get('search') }}{% endif %}">
+                </div>
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label for="type">
+                        {{ 'stock.fields.type'|trans }}:
+                    </label>
+                    <select class="form-control m-input" name="type" id="type" onchange="submit();">
+                        <option value="">Todas</option>
+                        <option value="{{ constant('App\\StockTypes::TYPE_ADD') }}"
+                                {% if app.request.query.has('type') %}{% if app.request.query.get('type') == constant('App\\StockTypes::TYPE_ADD') %}selected{% endif %}{% endif %}>
+                            {{ ('stock.types.'~constant('App\\StockTypes::TYPE_ADD'))|trans }}
+                        </option>
+                        <option value="{{ constant('App\\StockTypes::TYPE_REMOVE') }}"
+                                {% if app.request.query.has('type') %}{% if app.request.query.get('type') == constant('App\\StockTypes::TYPE_REMOVE') %}selected{% endif %}{% endif %}>
+                            {{ ('stock.types.'~constant('App\\StockTypes::TYPE_REMOVE'))|trans }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label>
+                        {{ 'resource.filters.date'|trans }}:
+                    </label>
+                    <div class="input-daterange input-group" id="m_datepicker">
+                        <input type="text" class="form-control m-input" name="date_start" readonly
+                               placeholder="{{ 'resource.filters.date_start'|trans }}" id="m_datepicker_1"
+                               value="{% if app.request.query.has('date_start') %}{{ app.request.query.get('date_start') }}{% endif %}"/>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="la la-ellipsis-h"></i>
+                            </span>
+                        </div>
+                        <input type="text" class="form-control m-input" name="date_end" readonly
+                               placeholder="{{ 'resource.filters.date_end'|trans }}" id="m_datepicker_1"
+                               value="{% if app.request.query.has('date_end') %}{{ app.request.query.get('date_end') }}{% endif %}"/>
+                    </div>
+                </div>
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label for="user">
+                        {{ 'user.title_single'|trans }}:
+                    </label>
+                    <select class="form-control m-input" name="user" id="user" onchange="submit();">
+                        <option value=""></option>
+                        {% for user in users %}
+                            <option value="{{ user.id }}"
+                                    {% if app.request.query.has('user') %}{% if app.request.query.get('user') == user.id %}selected{% endif %}{% endif %}>{{ user.fullName }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="m-separator m-separator--md m-separator--dashed"></div>
+            <div class="row m--margin-bottom-20">
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label for="num_items">
+                        {{ 'resource.filters.num_items'|trans }}:
+                    </label>
+                    <input type="number" class="form-control col-md-4"
+                           name="num_items" id="num_items"
+                           value="{{ app.request.query.get('num_items', pagination.routeParams('num_items')) }}"
+                           min="5">
+                </div>
+            </div>
+            <div class="m-separator m-separator--md m-separator--dashed"></div>
+            <div class="row m--margin-bottom-20">
+                <div class="col-lg-12">
+                    <button type="submit" class="btn btn-brand m-btn m-btn--icon">
+                        <span><i class="la la-search"></i><span>{{ 'resource.filters.search'|trans }}</span></span>
+                    </button>
+                    &nbsp;&nbsp;
+                    <a href="{{ path('admin_stock_index') }}"
+                       class="btn btn-secondary m-btn m-btn--icon">
+                        <span><i class="la la-close"></i><span>{{ 'resource.actions.items.reset'|trans }}</span></span>
+                    </a>
+                </div>
+            </div>
+        {% endblock %}
+
+        {% block table_tr_th %}
+            <tr>
+                <th>ID</th>
+                <th>
+                    <a href="{{ path('admin_stock_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('referency') }}">
+                        {{ 'stock.fields.referency'|trans }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ path('admin_stock_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('quantity') }}">
+                        {{ 'stock.fields.quantity'|trans }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ path('admin_stock_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('type') }}">
+                        {{ 'stock.fields.type'|trans }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ path('admin_stock_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('user.firstName') }}">
+                        {{ 'user.title_single'|trans }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ path('admin_stock_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('createdAt') }}">
+                        {{ 'resource.timestampable.createdAt'|trans }}
+                    </a>
+                </th>
+                <th>{{ 'resource.actions.title'|trans }}</th>
+            </tr>
+        {% endblock %}
+
+        {% block table_tr_td %}
+            {% for stock in stocks %}
+                <tr>
+                    <td>{{ stock.id }}</td>
+                    <td>{{ stock.referency }}</td>
+                    <td>
+                        <span class="m-badge {% if stock.type == constant('App\\StockTypes::TYPE_ADD') %}m-badge--success{% else %}m-badge--info{% endif %} m-badge--wide">
+                            {{ stock.quantity }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="m-badge {% if stock.type == constant('App\\StockTypes::TYPE_ADD') %}m-badge--success{% else %}m-badge--info{% endif %} m-badge--wide">
+                            {{ ('stock.types.'~stock.type)|trans }}
+                        </span>
+                    </td>
+                    <td>{{ stock.user.fullName }}</td>
+                    <td>{{ stock.createdAt|date('d/m/Y H:i') }}</td>
+                    <td>
+                        {% embed 'admin/_partials/_actions_btn_group.html.twig' %}
+                            {% block li_actions %}
+                                <a class="dropdown-item" href="javascript:;" data-toggle="modal"
+                                   data-target="#modalConfirmation"
+                                   data-path="{{ path('admin_stock_delete', {id: stock.id})|escape }}"
+                                   data-crf="{{ form_widget(delete_forms[stock.id]._token)|escape }}"
+                                >
+                                    <i class="fa fa-trash"></i> {{ 'resource.actions.items.delete'|trans }}
+                                </a>
+                            {% endblock %}
+                        {% endembed %}
+                        <a href="{{ path('admin_stock_edit', { id: stock.id }) ~ pagination.buildQuery }}"
+                           class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"
+                           title="{{ 'resource.actions.items.edit'|trans }}"> <i class="la la-edit"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endblock %}
+
+        {% block list_info %}
+            {{ 'resource.pagination.list_info'|trans({
+                '%currentPageOffsetStart%': stocks.currentPageOffsetStart,
+                '%currentPageOffsetEnd%': stocks.currentPageOffsetEnd,
+                '%nbResults%': stocks.nbResults
+            }) }}
+        {% endblock %}
+
+        {% block list_pagination %}
+            {{ pagerfanta(stocks, 'twitter_bootstrap4',{
+                routeName: 'admin_stock_index',
+                routeParams: app.request.query.all
+            }) }}
+        {% endblock %}
+
+    {% endembed %}
+
+    {% embed 'admin/_partials/_default_table_list.html.twig' %}
+
+        {% block head_tools_dropdown %}{% endblock %}
+
+        {% block caption_subject %}
+            {{ 'stock.total'|trans }}
+        {% endblock %}
+
+        {% block body_hr_first %}{% endblock %}
+
+        {% block table_tr_th %}
+            <tr>
+                <th>{{ 'stock.types.add'|trans }}</th>
+                <th>{{ 'stock.types.remove'|trans }}</th>
+                <th>{{ 'stock.total'|trans }}</th>
+            </tr>
+        {% endblock %}
+
+        {% block table_tr_td %}
+            <tr>
+                <td>
+                    <span class="m-badge m-badge--success m-badge--wide">
+                    {{ total[constant('App\\StockTypes::TYPE_ADD')] }}
+                    </span>
+                </td>
+                <td>
+                    <span class="m-badge m-badge--info m-badge--wide">
+                    {{ total[constant('App\\StockTypes::TYPE_REMOVE')] }}
+                    </span>
+                </td>
+                <td>
+                    <span class="m-badge m-badge--brand m-badge--wide">
+                    {{ total['total'] }}
+                    </span>
+                </td>
+            </tr>
+        {% endblock %}
+
+    {% endembed %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {% embed 'admin/_partials/_block_javascripts.html.twig' %}
+        {% block javascripts_page_snippets %}
+            <script src="{{ asset('assets/widgets/bootstrap-datepicker.js') }}"></script>
+            <script src="{{ asset('assets/widgets/bootstrap-datepicker.pt-BR.min.js') }}"></script>
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

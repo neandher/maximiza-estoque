@@ -49,4 +49,10 @@ class UserRepository extends BaseRepository
         return $paginator;
     }
 
+    public function queryLatestForm()
+    {
+        return $this->createQueryBuilder('user')
+            ->orderBy('user.firstName', 'ASC')
+            ->addOrderBy('user.lastName', 'ASC');
+    }
 }

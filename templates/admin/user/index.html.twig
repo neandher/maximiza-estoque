@@ -52,6 +52,7 @@
         {% block table_tr_th %}
             <tr class="m-datatable__row">
                 <th>ID</th>
+                <th>{{ 'user.fields.fullName'|trans }}</th>
                 <th>{{ 'user.fields.email'|trans }}</th>
                 <th>{{ 'user.fields.username'|trans }}</th>
                 <th>{{ 'resource.toglleable.is_enabled_title'|trans }}</th>
@@ -69,6 +70,7 @@
             {% for user in users %}
                 <tr>
                     <td>{{ user.id }}</td>
+                    <td>{{ user.fullName }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.username }}</td>
                     <td>

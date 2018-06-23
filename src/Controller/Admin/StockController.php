@@ -3,26 +3,27 @@
 namespace App\Controller\Admin;
 
 use App\Controller\BaseController;
+use App\Entity\Stock;
 use App\Entity\User;
 use App\Event\FlashBagEvents;
-use App\Form\RegistrationType;
-use App\Form\UserEditType;
+use App\Form\StockType;
+use App\StockTypes;
 use App\Util\FlashBag;
 use App\Util\Pagination;
-use FOS\UserBundle\Form\Type\RegistrationFormType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Class UserController
+ * Class StockController
  * @package App\Controller\Admin
  *
- * @Route("/user", name="admin_user_")
+ * @Route("/stock", name="admin_stock_")
  */
-class UserController extends BaseController
+class StockController extends BaseController
 {
     /**
      * @var Pagination
@@ -32,16 +33,22 @@ class UserController extends BaseController
      * @var FlashBag
      */
     private $flashBag;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
 
     /**
-     * UserController constructor.
+     * StockController constructor.
      * @param Pagination $pagination
      * @param FlashBag $flashBag
+     * @param EventDispatcherInterface $dispatcher
      */
-    public function __construct(Pagination $pagination, FlashBag $flashBag)
+    public function __construct(Pagination $pagination, FlashBag $flashBag, EventDispatcherInterface $dispatcher)
     {
         $this->pagination = $pagination;
         $this->flashBag = $flashBag;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -51,19 +58,39 @@ class UserController extends BaseController
      */
     public function index(Request $request)
     {
-        $pagination = $this->pagination->handle($request, User::class);
+        $pagination = $this->pagination->handle($request, Stock::class);
 
-        $users = $this->getDoctrine()->getRepository(User::class)->findLatest($pagination);
+        /** @var Stock[] $stocks */
+        $stocks = $this->getDoctrine()->getRepository(Stock::class)->findLatest($pagination);
+
+        $users = $this->getDoctrine()->getRepository(User::class)->queryLatestForm()
+            ->getQuery()->getResult();
 
         $deleteForms = [];
-        foreach ($users as $user) {
-            $deleteForms[$user->getId()] = $this->createDeleteForm($user)->createView();
+        $total = [];
+        $totalAdd = 0;
+        $totalRemove = 0;
+
+        foreach ($stocks as $stock) {
+            $deleteForms[$stock->getId()] = $this->createDeleteForm($stock)->createView();
+            if ($stock->getType() == StockTypes::TYPE_ADD) {
+                $totalAdd += $stock->getQuantity();
+            }
+            if ($stock->getType() == StockTypes::TYPE_REMOVE) {
+                $totalRemove += $stock->getQuantity();
+            }
         }
 
-        return $this->render('admin/user/index.html.twig', [
-            'users' => $users,
+        $total[StockTypes::TYPE_ADD] = $totalAdd;
+        $total[StockTypes::TYPE_REMOVE] = $totalRemove;
+        $total['total'] = $totalAdd - $totalRemove;
+
+        return $this->render('admin/stock/index.html.twig', [
+            'stocks' => $stocks,
             'pagination' => $pagination,
-            'delete_forms' => $deleteForms
+            'delete_forms' => $deleteForms,
+            'total' => $total,
+            'users' => $users
         ]);
     }
 
@@ -75,20 +102,18 @@ class UserController extends BaseController
      */
     public function newAction(Request $request)
     {
-        $pagination = $this->pagination->handle($request, User::class);
+        $pagination = $this->pagination->handle($request, Stock::class);
 
-        $user = new User();
+        $stock = new Stock();
 
-        $form = $this->createForm(RegistrationType::class, $user);
+        $form = $this->createForm(StockType::class, $stock);
         $this->addDefaultSubmitButtons($form);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setEnabled(true);
-
             $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
+            $em->persist($stock);
             $em->flush();
 
             $this->flashBag->newMessage(
@@ -98,17 +123,17 @@ class UserController extends BaseController
 
             $handleSubmitButtons = $this->handleSubmitButtons(
                 $form,
-                'admin_user_new',
-                'admin_user_edit',
-                ['id' => $user->getId()],
+                'admin_stock_new',
+                'admin_stock_edit',
+                ['id' => $stock->getId()],
                 $pagination->getRouteParams()
             );
 
-            return $handleSubmitButtons ? $handleSubmitButtons : $this->redirectToRoute('admin_user_index');
+            return $handleSubmitButtons ? $handleSubmitButtons : $this->redirectToRoute('admin_stock_index');
         }
 
-        return $this->render('admin/user/new.html.twig', [
-            'user' => $user,
+        return $this->render('admin/stock/new.html.twig', [
+            'stock' => $stock,
             'form' => $form->createView(),
             'pagination' => $pagination
         ]);
@@ -118,17 +143,16 @@ class UserController extends BaseController
      * @Route("/{id}/edit", requirements={"id" : "\d+"}, name="edit")
      * @Method({"GET", "POST"})
      * @param Request $request
-     * @param User $user
+     * @param Stock $stock
      * @return Response
      */
-    public function editAction(User $user, Request $request)
+    public function editAction(Stock $stock, Request $request)
     {
-        $pagination = $this->pagination->handle($request, User::class);
+        $stock->normalizeQuantity();
 
-        $form = $this->createForm(RegistrationType::class, $user, [
-            'is_edit' => true,
-            'validation_groups' => 'Profile'
-        ]);
+        $pagination = $this->pagination->handle($request, Stock::class);
+
+        $form = $this->createForm(StockType::class, $stock);
 
         $this->addDefaultSubmitButtons($form);
 
@@ -137,7 +161,7 @@ class UserController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
+            $em->persist($stock);
             $em->flush();
 
             $this->flashBag->newMessage(
@@ -147,17 +171,17 @@ class UserController extends BaseController
 
             $handleSubmitButtons = $this->handleSubmitButtons(
                 $form,
-                'admin_user_new',
-                'admin_user_edit',
-                ['id' => $user->getId()],
+                'admin_stock_new',
+                'admin_stock_edit',
+                ['id' => $stock->getId()],
                 $pagination->getRouteParams()
             );
 
-            return $handleSubmitButtons ? $handleSubmitButtons : $this->redirectToRoute('admin_user_index');
+            return $handleSubmitButtons ? $handleSubmitButtons : $this->redirectToRoute('admin_stock_index');
         }
 
-        return $this->render('admin/user/edit.html.twig', [
-            'user' => $user,
+        return $this->render('admin/stock/edit.html.twig', [
+            'stock' => $stock,
             'form' => $form->createView(),
             'pagination' => $pagination
         ]);
@@ -167,21 +191,21 @@ class UserController extends BaseController
      * @Route("/{id}/delete", requirements={"id" : "\d+"}, name="delete")
      * @Method("DELETE")
      * @param Request $request
-     * @param User $user
+     * @param Stock $stock
      * @return Response
      */
-    public function deletAction(Request $request, User $user)
+    public function deletAction(Request $request, Stock $stock)
     {
-        $pagination = $this->pagination->handle($request, User::class);
+        $pagination = $this->pagination->handle($request, Stock::class);
 
-        $form = $this->createDeleteForm($user);
+        $form = $this->createDeleteForm($stock);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
             $em = $this->getDoctrine()->getManager();
-            $em->remove($user);
+            $em->remove($stock);
             $em->flush();
 
             $this->flashBag->newMessage(
@@ -195,19 +219,19 @@ class UserController extends BaseController
             );
         }
 
-        return $this->redirectToRoute('admin_user_index', $pagination->getRouteParams());
+        return $this->redirectToRoute('admin_stock_index', $pagination->getRouteParams());
     }
 
     /**
-     * @param User $user
+     * @param Stock $stock
      * @return FormInterface
      */
-    private function createDeleteForm(User $user)
+    private function createDeleteForm(Stock $stock)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('admin_user_delete', ['id' => $user->getId()]))
+            ->setAction($this->generateUrl('admin_stock_delete', ['id' => $stock->getId()]))
             ->setMethod('DELETE')
-            ->setData($user)
+            ->setData($stock)
             ->getForm();
     }
 }

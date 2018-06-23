@@ -30,7 +30,11 @@
         {% block tab_pane %}
             <div role="tabpanel" class="tab-pane active" id="geral">
                 <div class="row">
-                    <div class="col-md-6">{{ form_row(form.username, {'attr': {'autofocus': true}}) }}</div>
+                    <div class="col-md-6">{{ form_row(form.firstName, {'attr': {'autofocus': true}}) }}</div>
+                    <div class="col-md-6">{{ form_row(form.lastName) }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">{{ form_row(form.username) }}</div>
                     <div class="col-md-6">{{ form_row(form.email) }}</div>
                 </div>
                 <div class="row">
