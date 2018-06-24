@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use GuzzleHttp\Client;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +24,7 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/dfe", name="nfe")
+     * @Route("/nfe", name="nfe")
      */
     public function nfe()
     {

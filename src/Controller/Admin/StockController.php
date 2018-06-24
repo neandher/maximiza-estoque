@@ -6,12 +6,15 @@ use App\Controller\BaseController;
 use App\Entity\Stock;
 use App\Entity\User;
 use App\Event\FlashBagEvents;
+use App\Event\StockEvents;
+use App\Form\StockMultipleType;
 use App\Form\StockType;
 use App\StockTypes;
 use App\Util\FlashBag;
 use App\Util\Pagination;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -95,12 +98,12 @@ class StockController extends BaseController
     }
 
     /**
-     * @Route("/new", name="new")
+     * @Route("/new-old", name="new_old")
      * @Method({"GET", "POST"})
      * @param Request $request
      * @return Response
      */
-    public function newAction(Request $request)
+    public function newOldAction(Request $request)
     {
         $pagination = $this->pagination->handle($request, Stock::class);
 
@@ -134,6 +137,46 @@ class StockController extends BaseController
 
         return $this->render('admin/stock/new.html.twig', [
             'stock' => $stock,
+            'form' => $form->createView(),
+            'pagination' => $pagination
+        ]);
+    }
+
+    /**
+     * @Route("/new", name="new")
+     * @Method({"GET", "POST"})
+     * @param Request $request
+     * @return Response
+     */
+    public function newAction(Request $request)
+    {
+        $pagination = $this->pagination->handle($request, Stock::class);
+
+        $form = $this->createForm(StockMultipleType::class);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+
+            /** @var Stock[] $stock */
+            $stocks = $form->getData()['stocks'];
+            foreach ($stocks as $stock) {
+                $em->persist($stock);
+            }
+            $em->flush();
+
+            $this->dispatcher->dispatch(StockEvents::STOCK_CREATE_COMPLETED, (new GenericEvent($stocks)));
+
+            $this->flashBag->newMessage(
+                FlashBagEvents::MESSAGE_TYPE_SUCCESS,
+                FlashBagEvents::MESSAGE_SUCCESS_INSERTED
+            );
+
+            return $this->redirectToRoute('admin_stock_index', $pagination->getRouteParams());
+        }
+
+        return $this->render('admin/stock/new.html.twig', [
             'form' => $form->createView(),
             'pagination' => $pagination
         ]);
@@ -177,7 +220,7 @@ class StockController extends BaseController
                 $pagination->getRouteParams()
             );
 
-            return $handleSubmitButtons ? $handleSubmitButtons : $this->redirectToRoute('admin_stock_index');
+            return $handleSubmitButtons ? $handleSubmitButtons : $this->redirectToRoute('admin_stock_index', $pagination->getRouteParams());
         }
 
         return $this->render('admin/stock/edit.html.twig', [

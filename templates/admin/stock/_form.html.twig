@@ -1,9 +1,19 @@
 <div role="tabpanel" class="tab-pane active" id="geral">
-    <div class="row">
-        <div class="col-md-6">{{ form_row(form.type, {'attr': {'autofocus': true}}) }}</div>
-        <div class="col-md-6">{{ form_row(form.referency) }}</div>
+
+    <div id="stock" data-prototype="{% include 'admin/stock/collection.html.twig'
+        with {'item': form.stocks, 'prototype': true} %}">
+
+        {% for stock in form.stocks %}
+            {% include 'admin/stock/collection.html.twig'
+                with {'item' : stock, 'collection': true } %}
+        {% endfor %}
+
+        <div id="panel_add_stock">
+            <a href="#" class="btn btn-brand m-btn m-btn--icon m-btn--air" id="btn_add_stock">
+                <span><i class="la la-plus"></i><span>{{ 'resource.actions.items.add'|trans }}</span></span>
+            </a>
+            <div class="clearfix"></div>
+        </div>
     </div>
-    <div class="row">
-        <div class="col-md-6">{{ form_row(form.quantity) }}</div>
-    </div>
+
 </div>

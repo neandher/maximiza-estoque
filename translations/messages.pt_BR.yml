@@ -46,15 +46,15 @@ resource:
             delete: Deletar
             cancel: Cancelar
             go_back: Voltar
-            add: Add
+            add: Adicionar Item
 
 errors:
     404:
-        title: Oops! Page not found.
-        description: We can not find the page you're looking for.
+        title: Oops! Página não encontrada.
+        description: Não foi possível entrar a página procurada.
     500:
         title: Oops...
-        description: Looks like something went wrong.<br>We're working on it
+        description: Algo deu errado.<br>Estamos trabalhando para corrigir.
 
 Invalid credentials.: Login ou senha inválidos.
 

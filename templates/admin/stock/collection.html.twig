@@ -1,0 +1,23 @@
+{% if prototype is defined %}
+    <div class='row'>
+        <div class='col-md-6'>{{ form_row(item.vars.prototype.type)|e('html_attr') }}</div>
+        <div class='col-md-6'>{{ form_row(item.vars.prototype.referency)|e('html_attr') }}</div>
+    </div>
+    <div class='row'>
+        <div class='col-md-6'>{{ form_row(item.vars.prototype.quantity)|e('html_attr') }}</div>
+    </div>
+{% endif %}
+
+{% if collection is defined %}
+    <div class='m-portlet m-portlet--rounded'>
+        <div class='m-portlet__body'>
+            <div class='row'>
+                <div class='col-md-6'>{{ form_row(item.type) }}</div>
+                <div class='col-md-6'>{{ form_row(item.referency) }}</div>
+            </div>
+            <div class='row'>
+                <div class='col-md-6'>{{ form_row(item.quantity) }}</div>
+            </div>
+        </div>
+    </div>
+{% endif %}

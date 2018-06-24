@@ -1,18 +1,18 @@
 $(document).ready(function () {
-    cleaningItemOptionInit();
+    stockInit();
 });
 
-function cleaningItemOptionInit() {
+function stockInit() {
 
     var $collectionHolder;
 
-    var $addCleaningItemOptionLink = $('#btn_add_cleaningItemOption');
-    var $newLinkPanel = $('#panel_add_cleaningItemOption');
+    var $addStockLink = $('#btn_add_stock');
+    var $newLinkPanel = $('#panel_add_stock');
 
-    $collectionHolder = $('div#cleaningItemOption');
+    $collectionHolder = $('div#stock');
 
     $collectionHolder.find('div.m-portlet__body').each(function () {
-        addCleaningItemOptionFormDeleteLink($(this));
+        addStockFormDeleteLink($(this));
     });
 
     var index = $collectionHolder.find('div.m-portlet').length;
@@ -20,16 +20,16 @@ function cleaningItemOptionInit() {
     $collectionHolder.data('index', index);
 
     if (index == 0) {
-        addCleaningItemOptionForm($collectionHolder, $newLinkPanel);
+        addStockForm($collectionHolder, $newLinkPanel);
     }
 
-    $addCleaningItemOptionLink.on('click', function (e) {
+    $addStockLink.on('click', function (e) {
         e.preventDefault();
-        addCleaningItemOptionForm($collectionHolder, $newLinkPanel);
+        addStockForm($collectionHolder, $newLinkPanel);
     });
 }
 
-function addCleaningItemOptionForm($collectionHolder, $newLinkPanel) {
+function addStockForm($collectionHolder, $newLinkPanel) {
 
     var prototype = $collectionHolder.data('prototype');
     var index = $collectionHolder.data('index');
@@ -43,22 +43,22 @@ function addCleaningItemOptionForm($collectionHolder, $newLinkPanel) {
     var $newFormPanel = $('<div class="m-portlet m-portlet--rounded"></div>').append($newFormPanelBody);
     $newLinkPanel.before($newFormPanel);
 
-    $('.make-switch').bootstrapSwitch();
+    $("#stock_multiple_stocks_"+index+"_quantity").val('1');
 
-    addCleaningItemOptionFormDeleteLink($newFormPanelBody, $newFormPanel);
+    addStockFormDeleteLink($newFormPanelBody, $newFormPanel);
 
     return new_index;
 }
 
-function addCleaningItemOptionFormDeleteLink($newFormPanelBody, $newFormPanel) {
-    var $removeForm = $('<div class="row"><div class="col-md-3"><div class="form-group"><label class="form-control-label">Actions</label><br><div class="btn btn-sm btn-danger m-btn m-btn--icon m-btn--air" style="cursor: pointer"><span><i class="la la-trash-o"></i><span>Delete</span></span></div></div></div></div>');
+function addStockFormDeleteLink($newFormPanelBody, $newFormPanel) {
+    var $removeForm = $('<div class="row"><div class="col-md-3"><div class="form-group"><label class="form-control-label">Actions</label><br><div class="btn btn-sm btn-danger m-btn m-btn--icon m-btn--air" style="cursor: pointer"><span><i class="la la-trash-o"></i><span>Deletar</span></span></div></div></div></div>');
     $newFormPanelBody.append($removeForm);
 
     if ($newFormPanel == null) {
         $newFormPanel = $newFormPanelBody.parent('.m-portlet');
     }
 
-    var $collectionHolder = $('div#cleaningItemOption');
+    var $collectionHolder = $('div#stock');
 
     $removeForm.on('click', function (e) {
         e.preventDefault();
