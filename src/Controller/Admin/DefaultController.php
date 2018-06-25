@@ -20,9 +20,9 @@ class DefaultController extends AbstractController
      */
     public function dashboard()
     {
-        $total['add'] = $this->getDoctrine()->getRepository(Stock::class)->getTotalAdd()['totalAdd'];
-        $total['remove'] = $this->getDoctrine()->getRepository(Stock::class)->getTotalRemove()['totalRemove'];
-        $total['total'] = $this->getDoctrine()->getRepository(Stock::class)->getTotal()['total'];
+        $total['add'] = $this->getDoctrine()->getRepository(Stock::class)->getTotalAdd()['totalAdd']??0;
+        $total['remove'] = $this->getDoctrine()->getRepository(Stock::class)->getTotalRemove()['totalRemove']??0;
+        $total['total'] = $this->getDoctrine()->getRepository(Stock::class)->getTotal()['total']??0;
 
         return $this->render('admin/dashboard/index.html.twig', [
             'total' => $total
