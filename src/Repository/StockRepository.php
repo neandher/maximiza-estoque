@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Stock;
+use App\StockTypes;
 use App\Util\Pagination;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
@@ -62,5 +63,42 @@ class StockRepository extends BaseRepository
         $paginator->setCurrentPage($routeParams['page']);
 
         return $paginator;
+    }
+
+    /**
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getTotalAdd()
+    {
+        return $this->createQueryBuilder('stock')
+            ->addSelect('SUM(stock.quantity) as totalAdd')
+            ->where("stock.type = '" . StockTypes::TYPE_ADD . "'")
+            ->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getTotalRemove()
+    {
+        $qb = $this->createQueryBuilder('stock');
+        return $qb
+            ->addSelect('SUM(stock.quantity) as totalRemove')
+            ->where("stock.type = '" . StockTypes::TYPE_REMOVE . "'")
+            ->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getTotal()
+    {
+        $qb = $this->createQueryBuilder('stock');
+        return $qb
+            ->addSelect('SUM(stock.quantity) as total')
+            ->getQuery()->getOneOrNullResult();
     }
 }

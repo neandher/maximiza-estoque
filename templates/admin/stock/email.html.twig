@@ -1,0 +1,27 @@
+{% extends 'base_email.html.twig' %}
+
+{% block preview %}Movimentação de estoque realizada{% endblock %}
+{% block email_main_content %}
+    <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Olá,</p>
+    <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Uma nova movimentação de {{ ('stock.types.'~stocks[0].type)|trans|lower }} foi realizada por {{ user.fullName }}:</p>
+    <table align="center" cellpadding="0" cellspacing="0" border="0" style="border-collapse: separate;mso-table-lspace:0pt;mso-table-rspace:0pt;width: 100%;">
+        <tbody>
+        {#<tr>
+            <td colspan="3" valign="middle" height="40" style="font-family: sans-serif;text-align: center;font-size: 15px;">Itens</td>
+        </tr>#}
+        <tr style="background-color:#fff;">
+            <td width="290" valign="middle" height="54" style="font-family: sans-serif;font-size: 13px;text-align: center;">{{ 'stock.fields.referency'|trans }}</td>
+            <td width="290" valign="middle" height="54" style="font-family: sans-serif;font-size: 13px;text-align: center;">{{ 'stock.fields.quantity'|trans }}</td>
+        </tr>
+        {% for stock in stocks %}
+        <tr style="background-color:{% if loop.index0 % 2 == 0 %}#f4f5f8{% else %}#fff{% endif %};">
+            <td width="290" valign="middle" height="54" style="font-family: sans-serif;font-size: 13px;text-align: center;">{{ stock.referency }}</td>
+            <td width="290" valign="middle" height="54" style="font-family: sans-serif;font-size: 13px;text-align: center;">{{ stock.quantity }}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="3" height="20" style="font-size:0;line-height:0;">&nbsp;</td>
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}

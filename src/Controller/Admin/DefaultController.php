@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use GuzzleHttp\Client;
+use App\Entity\Stock;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +20,13 @@ class DefaultController extends AbstractController
      */
     public function dashboard()
     {
-        return $this->render('admin/dashboard/index.html.twig');
+        $total['add'] = $this->getDoctrine()->getRepository(Stock::class)->getTotalAdd()['totalAdd'];
+        $total['remove'] = $this->getDoctrine()->getRepository(Stock::class)->getTotalRemove()['totalRemove'];
+        $total['total'] = $this->getDoctrine()->getRepository(Stock::class)->getTotal()['total'];
+
+        return $this->render('admin/dashboard/index.html.twig', [
+            'total' => $total
+        ]);
     }
 
     /**

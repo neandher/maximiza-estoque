@@ -23,6 +23,7 @@ resource:
     timestampable:
         createdAt: Criado Em
         updatedAt: Atualizado Em
+        updatedBy: Atualizado Por
     delete_confirm:
         title: Confirmação
         text: Deseja confirmar a exclusão?
