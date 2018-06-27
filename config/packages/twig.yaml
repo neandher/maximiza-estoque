@@ -2,6 +2,9 @@ twig:
     paths: ['%kernel.project_dir%/templates']
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+    date:
+        timezone: America/Sao_Paulo
+        format: d/m/Y
     form_themes:
         - 'admin/_form/_fields.html.twig'
         - 'bootstrap_4_layout.html.twig'
