@@ -37,9 +37,20 @@
                     <div class="col-md-6">{{ form_row(form.username) }}</div>
                     <div class="col-md-6">{{ form_row(form.email) }}</div>
                 </div>
+                <div class="row">
+                    <div class="col-md-6">{{ form_row(form.receiveEmails) }}</div>
+                </div>
             </div>
         {% endblock %}
 
     {% endembed %}
 
+{% endblock %}
+
+{% block javascripts %}
+    {% embed 'admin/_partials/_block_javascripts.html.twig' %}
+        {% block javascripts_page_snippets %}
+            <script src="{{ asset('assets/widgets/bootstrap-switch.js') }}"></script>
+        {% endblock %}
+    {% endembed %}
 {% endblock %}

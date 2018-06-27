@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Form\Model\SwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -13,7 +14,9 @@ class ProfileType extends AbstractType
     {
         $builder
             ->add('firstName', TextType::class, ['label' => 'user.fields.firstName'])
-            ->add('lastName', TextType::class, ['label' => 'user.fields.lastName']);
+            ->add('lastName', TextType::class, ['label' => 'user.fields.lastName'])
+            ->add('receiveEmails', SwitchType::class, ['label' => 'user.fields.receiveEmails'])
+        ;
     }
 
     public function getParent()

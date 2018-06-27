@@ -67,7 +67,7 @@
                     <div {% block table_scroll %}
                         {% if item is defined %}
                             class="m-scrollable" data-scrollable="true" data-scrollbar-shown="true"
-                            {% if  item|length > 10 %}data-axis="xy" data-max-height="600"{% else %}data-axis="y"{% endif %}
+                            {% if  item|length > 10 %}data-axis="xy" data-max-height="600"{% else %}data-axis="x"{% endif %}
                         {% endif %}
                             {% endblock %}>
                         <table class="table table-striped m-table table-hover">

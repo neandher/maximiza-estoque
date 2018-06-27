@@ -56,6 +56,7 @@
                 <th>{{ 'user.fields.email'|trans }}</th>
                 <th>{{ 'user.fields.username'|trans }}</th>
                 <th>{{ 'resource.toglleable.is_enabled_title'|trans }}</th>
+                <th>{{ 'user.fields.receiveEmails'|trans }}</th>
                 <th>{{ 'user.fields.lastLogin'|trans }}</th>
                 <th>
                     <a href="{{ path('admin_user_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('createdAt') }}">
@@ -75,6 +76,17 @@
                     <td>{{ user.username }}</td>
                     <td>
                         {% if user.isEnabled == '1' %}
+                            <span class="m-badge  m-badge--success m-badge--wide">
+                                <i class="fa fa-check"></i>
+                            </span>
+                        {% else %}
+                            <span class="m-badge  m-badge--danger m-badge--wide">
+                                <i class="fa fa-remove"></i>
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.receiveEmails == '1' %}
                             <span class="m-badge  m-badge--success m-badge--wide">
                                 <i class="fa fa-check"></i>
                             </span>

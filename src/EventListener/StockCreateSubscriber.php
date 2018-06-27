@@ -83,7 +83,9 @@ class StockCreateSubscriber implements EventSubscriberInterface
 
         $emails = [];
         foreach ($users as $user) {
-            $emails[] = $user->getEmail();
+            if ($user->getReceiveEmails()) {
+                $emails[] = $user->getEmail();
+            }
         }
 
         $message = (new \Swift_Message())

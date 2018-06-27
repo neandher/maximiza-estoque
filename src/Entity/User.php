@@ -26,13 +26,18 @@ class User extends BaseUser
      * @ORM\Column(type="string", nullable=true)
      * @Assert\NotBlank(groups={"Registration", "Profile"})
      */
-    protected $firstName;
+    private $firstName;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      * @Assert\NotBlank(groups={"Registration", "Profile"})
      */
-    protected $lastName;
+    private $lastName;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $receiveEmails = true;
 
     public function __construct()
     {
@@ -66,5 +71,22 @@ class User extends BaseUser
     public function getFullName()
     {
         return $this->firstName . ' ' . $this->lastName;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getReceiveEmails(): ?bool
+    {
+        return $this->receiveEmails;
+    }
+
+    public function setReceiveEmails(?bool $receiveEmails): self
+    {
+        $this->receiveEmails = $receiveEmails;
+
+        return $this;
     }
 }

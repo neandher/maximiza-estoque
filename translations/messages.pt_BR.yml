@@ -73,6 +73,7 @@ user:
         email: E-mail
         username: Usuário
         lastLogin: Último Login
+        receiveEmails: Receber E-mails
     menu:
         profile: Meu Perfil
         profile_update: Atualizar Perfil
