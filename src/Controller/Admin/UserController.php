@@ -86,6 +86,7 @@ class UserController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setEnabled(true);
+            $user->setRoles(['ROLE_SUPER_ADMIN']);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
