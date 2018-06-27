@@ -22,6 +22,11 @@ security:
                 use_forward: false
                 use_referer: true
                 csrf_token_generator: security.csrf.token_manager
+            remember_me:
+                secret: "%kernel.secret%"
+                name: APP_ADMIN_REMEMBER_ME
+                lifetime: 31536000
+                remember_me_parameter: _remember_me
             logout:       true
             anonymous:    true
 
