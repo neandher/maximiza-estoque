@@ -3,7 +3,7 @@
 
 {% block page_content %}
 
-    {% embed 'admin/_partials/_default_table_list.html.twig' %}
+    {% embed 'admin/_partials/_default_table_list.html.twig' with {'item': stocks} %}
 
         {% block caption_subject %}
             {{ 'resource.caption'|trans({'%resourceName%': 'stock.title'|trans, '%nbResults%' : stocks.nbResults}) }}
