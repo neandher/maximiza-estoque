@@ -51,7 +51,7 @@ function addStockForm($collectionHolder, $newLinkPanel) {
 }
 
 function addStockFormDeleteLink($newFormPanelBody, $newFormPanel) {
-    var $removeForm = $('<div class="row"><div class="col-md-3"><div class="form-group"><label class="form-control-label">Actions</label><br><div class="btn btn-sm btn-danger m-btn m-btn--icon m-btn--air" style="cursor: pointer"><span><i class="la la-trash-o"></i><span>Deletar</span></span></div></div></div></div>');
+    var $removeForm = $('<div class="row"><div class="col-md-3"><div class="form-group"><label class="form-control-label">Ações</label><br><div class="btn btn-sm btn-danger m-btn m-btn--icon m-btn--air" style="cursor: pointer"><span><i class="la la-trash-o"></i><span>Deletar</span></span></div></div></div></div>');
     $newFormPanelBody.append($removeForm);
 
     if ($newFormPanel == null) {
