@@ -28,12 +28,4 @@ class DefaultController extends AbstractController
             'total' => $total
         ]);
     }
-
-    /**
-     * @Route("/nfe", name="nfe")
-     */
-    public function nfe()
-    {
-        return new Response('ola!');
-    }
 }

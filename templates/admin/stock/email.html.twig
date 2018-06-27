@@ -3,7 +3,7 @@
 {% block preview %}Movimentação de estoque realizada{% endblock %}
 {% block email_main_content %}
     <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Olá,</p>
-    <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Uma nova movimentação de {{ ('stock.types.'~stocks[0].type)|trans|lower }} foi realizada por {{ user.fullName }}:</p>
+    <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Uma nova movimentação de {{ ('stock.types.'~stocks[0].type)|trans|lower }} com {{ stocks|length }} registro(s), foi realizada por {{ user.fullName }}:</p>
     <table align="center" cellpadding="0" cellspacing="0" border="0" style="border-collapse: separate;mso-table-lspace:0pt;mso-table-rspace:0pt;width: 100%;">
         <tbody>
         {#<tr>

@@ -24,12 +24,6 @@
             {{ form_start(form, {'action': path('admin_stock_new') ~ pagination.buildQuery}) }}
         {% endblock %}
 
-        {% block icon_list %}
-            <span class="m-portlet__head-icon">
-                <i class="flaticon-map"></i>
-            </span>
-        {% endblock %}
-
         {% block caption_subject %}
             <span class="caption-subject font-green-sharp bold uppercase">
                 {{ 'stock.actions.new'|trans }}

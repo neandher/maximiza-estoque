@@ -4,7 +4,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        {% block icon_list %}<i class="flaticon-list"></i>{% endblock %}
+                        {% block icon_list %}{% endblock %}
                         {% block caption_subject %}{% endblock %}
                         <small>
                         </small>
@@ -64,7 +64,7 @@
             {{ include('_partials/_flash_messages.html.twig') }}
             <div class="m-section" style="margin-bottom: 0;">
                 <div class="m-section__content" style="margin-bottom: 0;">
-                    <div class="m-scrollable" data-axis="x" data-scrollable="true">
+                    <div class="m-scrollable" data-scrollable="true" data-axis="xy" data-max-height="600">
                         <table class="table table-striped m-table table-hover">
                             <thead>
                             {% block table_tr_th %}{% endblock %}

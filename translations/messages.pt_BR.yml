@@ -31,9 +31,10 @@ resource:
             confirm: Confirmar Exclusão
     tabs:
         details: Geral
-    caption: '%resourceName% (%nbResults% registros)'
+    #caption: '%resourceName% (%nbResults% registros)'
+    caption: '%resourceName%'
     pagination:
-        list_info: 'Exibindo %currentPageOffsetStart% a %currentPageOffsetEnd% de %nbResults% records'
+        list_info: 'Exibindo %currentPageOffsetStart% a %currentPageOffsetEnd% de %nbResults% registros'
     actions:
         title: Ações
         items:
@@ -97,9 +98,10 @@ stock:
         referency: Referência
         quantity: Quantidade
         type: Movimentação
+        xmlFile: Arquivo XML
     types:
         add: Entrada
         remove: Saída
     actions:
-        new: Nova Movimentação
+        new: Novo
         edit: Editar Movimentação

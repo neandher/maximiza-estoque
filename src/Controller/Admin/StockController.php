@@ -7,15 +7,19 @@ use App\Entity\Stock;
 use App\Entity\User;
 use App\Event\FlashBagEvents;
 use App\Event\StockEvents;
+use App\Form\StockImportXmlType;
 use App\Form\StockMultipleType;
 use App\Form\StockType;
 use App\StockTypes;
 use App\Util\FlashBag;
 use App\Util\Pagination;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -88,12 +92,15 @@ class StockController extends BaseController
         $total[StockTypes::TYPE_REMOVE] = $totalRemove;
         $total['total'] = $totalAdd - $totalRemove;
 
+        $formXml = $this->createForm(StockImportXmlType::class);
+
         return $this->render('admin/stock/index.html.twig', [
             'stocks' => $stocks,
             'pagination' => $pagination,
             'delete_forms' => $deleteForms,
             'total' => $total,
-            'users' => $users
+            'users' => $users,
+            'formXml' => $formXml->createView()
         ]);
     }
 
@@ -276,5 +283,63 @@ class StockController extends BaseController
             ->setMethod('DELETE')
             ->setData($stock)
             ->getForm();
+    }
+
+    /**
+     * @Route("/import-xml", name="import_xml")
+     * @Method("POST")
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function importXml(Request $request)
+    {
+        $form = $this->createForm(StockImportXmlType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $file */
+            $file = $form->getData()['file'];
+
+            $xml = file_get_contents($file->getRealPath());
+
+            $domDocument = new \DOMDocument();
+            $domDocument->loadXml($xml);
+            $nodeList = $domDocument->getElementsByTagName('det');
+
+            if ($nodeList->length > 0) {
+                $stocks = [];
+                $em = $this->getDoctrine()->getManager();
+
+                for ($i = 0; $i < $nodeList->length; $i++) {
+                    $referency = $nodeList->item($i)->getElementsByTagName('prod')->item(0)->getElementsByTagName('cProd')->item(0)->childNodes->item(0)->wholeText;
+                    $quantity = $nodeList->item($i)->getElementsByTagName('prod')->item(0)->getElementsByTagName('qCom')->item(0)->childNodes->item(0)->wholeText;
+
+                    $stock = new Stock();
+                    $stock->setReferency($referency)
+                        ->setQuantity($quantity)
+                        ->setType(StockTypes::TYPE_ADD);
+
+                    $stocks[] = $stock;
+                    $em->persist($stock);
+                }
+                $em->flush();
+
+                $this->dispatcher->dispatch(StockEvents::STOCK_CREATE_COMPLETED, (new GenericEvent($stocks)));
+
+                $this->flashBag->newMessage(
+                    FlashBagEvents::MESSAGE_TYPE_SUCCESS,
+                    'XML Importado com sucesso. Total de ' . $nodeList->length . ' registros importados'
+                );
+
+               return $this->redirectToRoute('admin_stock_index');
+            }
+        }
+
+        $this->flashBag->newMessage(
+            FlashBagEvents::MESSAGE_TYPE_SUCCESS,
+            'Nenhum registro importado'
+        );
+
+        return $this->redirectToRoute('admin_stock_index');
     }
 }
