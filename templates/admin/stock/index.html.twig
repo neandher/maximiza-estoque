@@ -164,20 +164,19 @@
                     <td>{{ stock.user.fullName }}</td>
                     <td>{{ stock.createdAt|date('d/m/Y H:i') }}</td>
                     <td>
-                        {% embed 'admin/_partials/_actions_btn_group.html.twig' %}
-                            {% block li_actions %}
-                                <a class="dropdown-item" href="javascript:;" data-toggle="modal"
-                                   data-target="#modalConfirmation"
-                                   data-path="{{ path('admin_stock_delete', {id: stock.id})|escape }}"
-                                   data-crf="{{ form_widget(delete_forms[stock.id]._token)|escape }}"
-                                >
-                                    <i class="fa fa-trash"></i> {{ 'resource.actions.items.delete'|trans }}
-                                </a>
-                            {% endblock %}
-                        {% endembed %}
                         <a href="{{ path('admin_stock_edit', { id: stock.id }) ~ pagination.buildQuery }}"
                            class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"
                            title="{{ 'resource.actions.items.edit'|trans }}"> <i class="la la-edit"></i>
+                        </a>
+                        <a href="javascript:;"
+                           class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"
+                           data-toggle="modal"
+                           data-target="#modalConfirmation"
+                           data-path="{{ path('admin_stock_delete', {id: stock.id})|escape }}"
+                           data-crf="{{ form_widget(delete_forms[stock.id]._token)|escape }}"
+                           title="{{ 'resource.actions.items.delete'|trans }}"
+                        >
+                            <i class="fa fa-trash"></i>
                         </a>
                     </td>
                 </tr>
