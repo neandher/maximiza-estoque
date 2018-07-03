@@ -17,3 +17,12 @@
     {% include "@FOSUser/Profile/edit_content.html.twig" %}
 {% endblock %}
 
+{% block javascripts %}
+    {% embed 'admin/_partials/_block_javascripts.html.twig' %}
+        {% block javascripts_page_snippets %}
+            <script src="{{ asset('assets/widgets/bootstrap-switch.js') }}"></script>
+        {% endblock %}
+    {% endembed %}
+{% endblock %}
+
+
