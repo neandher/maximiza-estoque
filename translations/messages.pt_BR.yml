@@ -74,6 +74,7 @@ user:
         username: Usuário
         lastLogin: Último Login
         receiveEmails: Receber E-mails
+        emailNotifications: Email Notificações
     menu:
         profile: Meu Perfil
         profile_update: Atualizar Perfil

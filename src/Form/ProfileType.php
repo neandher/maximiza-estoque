@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Form\Model\SwitchType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,6 +17,7 @@ class ProfileType extends AbstractType
             ->add('firstName', TextType::class, ['label' => 'user.fields.firstName'])
             ->add('lastName', TextType::class, ['label' => 'user.fields.lastName'])
             ->add('receiveEmails', SwitchType::class, ['label' => 'user.fields.receiveEmails'])
+            ->add('emailNotifications', EmailType::class, ['label' => 'user.fields.emailNotifications'])
         ;
     }
 

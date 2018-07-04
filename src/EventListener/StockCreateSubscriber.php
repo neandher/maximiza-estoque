@@ -84,7 +84,7 @@ class StockCreateSubscriber implements EventSubscriberInterface
         $emails = [];
         foreach ($users as $user) {
             if ($user->getReceiveEmails()) {
-                $emails[] = $user->getEmail();
+                $emails[] = $user->getEmailNotifications() ? $user->getEmailNotifications() : $user->getEmail();
             }
         }
 

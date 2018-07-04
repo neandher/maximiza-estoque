@@ -35,6 +35,12 @@ class User extends BaseUser
     private $lastName;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     * @Assert\Email()
+     */
+    private $emailNotifications;
+
+    /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $receiveEmails = true;
@@ -86,6 +92,18 @@ class User extends BaseUser
     public function setReceiveEmails(?bool $receiveEmails): self
     {
         $this->receiveEmails = $receiveEmails;
+
+        return $this;
+    }
+
+    public function getEmailNotifications(): ?string
+    {
+        return $this->emailNotifications;
+    }
+
+    public function setEmailNotifications(?string $emailNotifications): self
+    {
+        $this->emailNotifications = $emailNotifications;
 
         return $this;
     }
