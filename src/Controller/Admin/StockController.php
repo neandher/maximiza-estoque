@@ -19,6 +19,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -331,7 +332,7 @@ class StockController extends BaseController
                     'XML Importado com sucesso. Total de ' . $nodeList->length . ' registros importados'
                 );
 
-               return $this->redirectToRoute('admin_stock_index');
+                return $this->redirectToRoute('admin_stock_index');
             }
         }
 
@@ -341,5 +342,31 @@ class StockController extends BaseController
         );
 
         return $this->redirectToRoute('admin_stock_index');
+    }
+
+    /**
+     * @Route("/verify-referency", name="verify_referency", methods={"GET"}, options={"expose"="true"})
+     * @param Request $request
+     * @return JsonResponse|Response
+     */
+    public function verifyReferency(Request $request)
+    {
+        if (!$request->isXmlHttpRequest()) {
+            return new JsonResponse(['message' => 'Invalid request'], 400);
+        }
+
+        $referency = $request->query->get('referency') ?? null;
+
+        if (!$referency) {
+            return new JsonResponse(['message' => 'Invalid parameters'], 400);
+        }
+
+        $stock = $this->getDoctrine()->getRepository(Stock::class)->findOneBy(['referency' => $referency]);
+
+        if ($stock) {
+            return new JsonResponse(['message' => 'Success']);
+        }
+
+        return new JsonResponse(['message' => 'Not Found'], 404);
     }
 }

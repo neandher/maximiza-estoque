@@ -13,7 +13,13 @@
             <li class="m-portlet__nav-item">
                 <a href="{{ path('admin_stock_new') ~ pagination.buildQuery }}"
                    class="btn btn-accent m-btn m-btn--icon m-btn--air">
-                    <span><i class="la la-plus-circle"></i><span> {{ 'stock.actions.new'|trans }}</span></span>
+                    <span><i class="la la-plus"></i><span> {{ 'stock.actions.new'|trans }}</span></span>
+                </a>
+            </li>
+            <li class="m-portlet__nav-item" data-toggle="modal" data-target="#modalConferir">
+                <a href="javascript:void(0)"
+                   class="btn btn-accent m-btn m-btn--icon m-btn--air">
+                    <span><i class="la la-check"></i><span> Conferir Produto</span></span>
                 </a>
             </li>
         {% endblock %}
@@ -271,6 +277,47 @@
     {{ form_end(formXml) }}
     <!-- End ModalXml -->
 
+    <!-- ModalConferir -->
+    <div class="modal fade" id="modalConferir" tabindex="-1" role="basic" aria-labelledby="modalConferirLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Conferir Produto</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="m-alert m-alert--icon alert alert-danger m--hide" role="alert" id="m_form_1_msg">
+                        <div class="m-alert__icon">
+                            <i class="la la-warning"></i>
+                        </div>
+                        <div class="m-alert__text">
+                            Produto <span class="verify_referency_code"></span> não registrado no sistema!
+                        </div>
+                    </div>
+
+                    <div class="m-alert m-alert--icon alert alert-success m--hide" role="alert" id="m_form_2_msg">
+                        <div class="m-alert__icon">
+                            <i class="la la-check"></i>
+                        </div>
+                        <div class="m-alert__text">
+                            Produto <span class="verify_referency_code"></span> registrado no sistema!
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="verify_referency" class="form-control-label required">Referência</label>
+                        <input type="text" id="verify_referency" name="verify_referency" required="required"
+                               class="form-control">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End ModalConferir -->
+
 {% endblock %}
 
 {% block javascripts %}
@@ -278,6 +325,38 @@
         {% block javascripts_page_snippets %}
             <script src="{{ asset('assets/widgets/bootstrap-datepicker.js') }}"></script>
             <script src="{{ asset('assets/widgets/bootstrap-datepicker.pt-BR.min.js') }}"></script>
+            <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+            <script src="{{ asset('assets/custom/RoutingManager.js') }}"></script>
+            <script>
+                $('#modalConferir').on('shown.bs.modal', function (event) {
+                    let $referency = $('#verify_referency');
+                    $referency.focus();
+                    $referency.keyup(function (e) {
+                        e.preventDefault();
+                        let referencyVal = $(this).val();
+                        if (referencyVal.length === 6) {
+                            $referency.attr('disabled', true);
+                            $.get(RoutingManager.generate('admin_stock_verify_referency'), {referency: $referency.val()})
+                                .done(function () {
+                                    $('#m_form_2_msg').removeClass('m--hide');
+                                    $('#m_form_1_msg').addClass('m--hide');
+                                })
+                                .fail(function () {
+                                    $('#m_form_1_msg').removeClass('m--hide');
+                                    $('#m_form_2_msg').addClass('m--hide');
+                                })
+                                .always(function () {
+                                    $referency.attr('disabled', false);
+                                    $('.verify_referency_code').html($referency.val());
+                                    $referency.val('');
+                                    $referency.focus();
+                                });
+                        }
+                    });
+                });
+            </script>
+
         {% endblock %}
     {% endembed %}
 {% endblock %}
