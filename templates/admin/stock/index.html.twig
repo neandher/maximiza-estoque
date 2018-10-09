@@ -279,7 +279,7 @@
 
     <!-- ModalConferir -->
     <div class="modal fade" id="modalConferir" tabindex="-1" role="basic" aria-labelledby="modalConferirLabel">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Conferir Produto</h5>
@@ -294,7 +294,7 @@
                             <i class="la la-warning"></i>
                         </div>
                         <div class="m-alert__text">
-                            Produto <span class="verify_referency_code"></span> não registrado no sistema!
+                            <span style="font-size: 1.1rem">Produto <strong><span class="verify_referency_code"></span></strong> não registrado no sistema!</span>
                         </div>
                     </div>
 
@@ -303,7 +303,7 @@
                             <i class="la la-check"></i>
                         </div>
                         <div class="m-alert__text">
-                            Produto <span class="verify_referency_code"></span> registrado no sistema!
+                            <span style="font-size: 1.1rem">Produto <strong><span class="verify_referency_code"></span></strong> registrado no sistema!</span>
                         </div>
                     </div>
 
@@ -335,9 +335,10 @@
                     $referency.keyup(function (e) {
                         e.preventDefault();
                         let referencyVal = $(this).val();
-                        if (referencyVal.length === 6) {
+                        if (referencyVal.indexOf('#') !== -1) {
+                            let referencyCode = referencyVal.split('#')[0].substr(-6);
                             $referency.attr('disabled', true);
-                            $.get(RoutingManager.generate('admin_stock_verify_referency'), {referency: $referency.val()})
+                            $.get(RoutingManager.generate('admin_stock_verify_referency'), {referency: referencyCode})
                                 .done(function () {
                                     $('#m_form_2_msg').removeClass('m--hide');
                                     $('#m_form_1_msg').addClass('m--hide');
@@ -348,7 +349,7 @@
                                 })
                                 .always(function () {
                                     $referency.attr('disabled', false);
-                                    $('.verify_referency_code').html($referency.val());
+                                    $('.verify_referency_code').html(referencyVal);
                                     $referency.val('');
                                     $referency.focus();
                                 });
