@@ -245,7 +245,7 @@ class StockController extends BaseController
      * @param Stock $stock
      * @return Response
      */
-    public function deletAction(Request $request, Stock $stock)
+    public function delete(Request $request, Stock $stock)
     {
         $pagination = $this->pagination->handle($request, Stock::class);
 
@@ -268,6 +268,36 @@ class StockController extends BaseController
                 FlashBagEvents::MESSAGE_TYPE_ERROR,
                 FlashBagEvents::MESSAGE_ERROR_DELETED
             );
+        }
+
+        return $this->redirectToRoute('admin_stock_index', $pagination->getRouteParams());
+    }
+
+    /**
+     * @Route("/delete-items", name="delete_items")
+     * @Method("DELETE")
+     * @param Request $request
+     * @return Response
+     */
+    public function deleteItems(Request $request)
+    {
+        $pagination = $this->pagination->handle($request, Stock::class);
+
+        if ($request->request->has('ids')) {
+            $i = 0;
+            foreach (explode(',', $request->request->get('ids')) as $id) {
+                $stock = $this->getDoctrine()->getRepository(Stock::class)->findOneBy(['id' => $id]);
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($stock);
+                $em->flush();
+                $i++;
+            }
+            if ($i > 0) {
+                $this->flashBag->newMessage(
+                    FlashBagEvents::MESSAGE_TYPE_SUCCESS,
+                    $i . ' registro(s) deletado(s).'
+                );
+            }
         }
 
         return $this->redirectToRoute('admin_stock_index', $pagination->getRouteParams());

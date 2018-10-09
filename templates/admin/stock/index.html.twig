@@ -16,21 +16,27 @@
                     <span><i class="la la-plus"></i><span> {{ 'stock.actions.new'|trans }}</span></span>
                 </a>
             </li>
-            <li class="m-portlet__nav-item" data-toggle="modal" data-target="#modalConferir">
-                <a href="javascript:void(0)"
-                   class="btn btn-accent m-btn m-btn--icon m-btn--air">
-                    <span><i class="la la-check"></i><span> Conferir Produto</span></span>
-                </a>
-            </li>
+
         {% endblock %}
 
         {% block head_tools_dropdown_actions %}
             <li class="m-nav__item">
                 <a href="javascript;" class="m-nav__link" data-toggle="modal" data-target="#modalXml">
                     <i class="m-nav__link-icon flaticon-file"></i>
-                    <span class="m-nav__link-text">
-                        Importar XML
-                    </span>
+                    <span class="m-nav__link-text">Importar XML</span>
+                </a>
+            </li>
+            <li class="m-nav__item" data-toggle="modal" data-target="#modalConferir">
+                <a href="javascript:void(0)" class="m-nav__link">
+                    <i class="m-nav__link-icon la la-check"></i>
+                    <span class="m-nav__link-text"> Conferir Produto</span>
+                </a>
+            </li>
+            <li class="m-nav__item">
+                <a href="javascript:void(0)" class="m-nav__link" id="delete-items"
+                   data-path="{{ path('admin_stock_delete_items')|escape }}">
+                    <i class="m-nav__link-icon la la-trash"></i>
+                    <span class="m-nav__link-text"> Apagar Selecionados</span>
                 </a>
             </li>
         {% endblock %}
@@ -122,7 +128,10 @@
 
         {% block table_tr_th %}
             <tr>
-                <th>ID</th>
+                <th>
+                    <a href="javascript:void(0)" id="selectAll">#</a>
+                </th>
+                {#<th>ID</th>#}
                 <th>
                     <a href="{{ path('admin_stock_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('referency') }}">
                         {{ 'stock.fields.referency'|trans }}
@@ -155,7 +164,13 @@
         {% block table_tr_td %}
             {% for stock in stocks %}
                 <tr>
-                    <td>{{ stock.id }}</td>
+                    <td>
+                        <label class="m-checkbox m-checkbox--solid m-checkbox--success">
+                            <input type="checkbox" name="ids[]" id="ids" title="" value="{{ stock.id }}">
+                            <span></span>
+                        </label>
+                    </td>
+                    {#<td>{{ stock.id }}</td>#}
                     <td>{{ stock.referency }}</td>
                     <td>
                         <span class="m-badge {% if stock.type == constant('App\\StockTypes::TYPE_ADD') %}m-badge--success{% else %}m-badge--info{% endif %} m-badge--wide">
@@ -329,6 +344,43 @@
             <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
             <script src="{{ asset('assets/custom/RoutingManager.js') }}"></script>
             <script>
+
+                $('#selectAll').on('click', function (e) {
+                    e.preventDefault();
+                    $('table input[type="checkbox"]').each(function (index, element) {
+                        if (element.checked === true) {
+                            $(this).attr('checked', false);
+                        }
+                        else {
+                            $(this).attr('checked', true);
+                        }
+                    })
+                });
+
+                $('#delete-items').on('click', function () {
+                    let $form = $(document.createElement('form'));
+                    $form.attr({
+                        'action': $(this).data('path'),
+                        'method': 'POST'
+                    });
+                    $form.append($('<input/>', {
+                        type: 'hidden',
+                        name: '_method'
+                    }).val('DELETE'));
+
+                    let idsValues = [];
+                    $('input[id="ids"]:checked').each(function () {
+                        idsValues.push($(this).val())
+                    });
+
+                    $form.append($('<input/>', {
+                        type: 'hidden',
+                        name: 'ids'
+                    }).val(idsValues));
+                    $(this).parent().append($form);
+                    $form.submit();
+                });
+
                 $('#modalConferir').on('shown.bs.modal', function (event) {
                     let $referency = $('#verify_referency');
                     $referency.focus();
