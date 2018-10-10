@@ -31,8 +31,8 @@ resource:
             confirm: Confirmar Exclusão
     tabs:
         details: Geral
-    #caption: '%resourceName% (%nbResults% registros)'
-    caption: '%resourceName%'
+    caption: '%resourceName% (%nbResults% registros)'
+    #caption: '%resourceName%'
     pagination:
         list_info: 'Exibindo %currentPageOffsetStart% a %currentPageOffsetEnd% de %nbResults% registros'
     actions:
