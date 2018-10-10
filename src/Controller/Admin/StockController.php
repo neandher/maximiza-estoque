@@ -285,13 +285,15 @@ class StockController extends BaseController
 
         if ($request->request->has('ids')) {
             $i = 0;
+            $em = $this->getDoctrine()->getManager();
             foreach (explode(',', $request->request->get('ids')) as $id) {
                 $stock = $this->getDoctrine()->getRepository(Stock::class)->findOneBy(['id' => $id]);
-                $em = $this->getDoctrine()->getManager();
-                $em->remove($stock);
-                $em->flush();
-                $i++;
+                if ($stock) {
+                    $em->remove($stock);
+                    $i++;
+                }
             }
+            $em->flush();
             if ($i > 0) {
                 $this->flashBag->newMessage(
                     FlashBagEvents::MESSAGE_TYPE_SUCCESS,

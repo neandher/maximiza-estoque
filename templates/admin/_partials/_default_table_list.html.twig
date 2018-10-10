@@ -64,12 +64,13 @@
             {{ include('_partials/_flash_messages.html.twig') }}
             <div class="m-section" style="margin-bottom: 0;">
                 <div class="m-section__content" style="margin-bottom: 0;">
-                    <div {% block table_scroll %}
+                    {#<div {% block table_scroll %}
                         {% if item is defined %}
                             class="m-scrollable" data-scrollable="true" data-scrollbar-shown="true"
                             {% if  item|length > 10 %}data-axis="xy" data-max-height="600"{% else %}data-axis="x"{% endif %}
                         {% endif %}
-                            {% endblock %}>
+                            {% endblock %}>#}
+                    <div class="table-responsive">
                         <table class="table table-striped m-table table-hover">
                             <thead>
                             {% block table_tr_th %}{% endblock %}
