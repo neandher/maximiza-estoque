@@ -46,9 +46,16 @@ class Stock
     private $type;
 
     /**
-     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2)
+     * @Assert\NotBlank()
      */
     private $amount;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2)
+     * @Assert\NotBlank()
+     */
+    private $unitPrice;
 
     public function getId()
     {
@@ -86,11 +93,11 @@ class Stock
 
     public function setQuantity(int $quantity): self
     {
-        $opertator = '';
+        $operator = '';
         if ($this->type == StockTypes::TYPE_REMOVE) {
-            $opertator = '-';
+            $operator = '-';
         }
-        $this->quantity = $opertator . $quantity;
+        $this->quantity = $operator . $quantity;
 
         return $this;
     }
@@ -122,6 +129,18 @@ class Stock
     public function setAmount($amount): self
     {
         $this->amount = $amount;
+
+        return $this;
+    }
+
+    public function getUnitPrice()
+    {
+        return $this->unitPrice;
+    }
+
+    public function setUnitPrice($unitPrice): self
+    {
+        $this->unitPrice = $unitPrice;
 
         return $this;
     }

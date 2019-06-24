@@ -176,7 +176,9 @@ class StockController extends BaseController
 
             /** @var Stock[] $stock */
             $stocks = $form->getData()['stocks'];
+            /** @var Stock $stock */
             foreach ($stocks as $stock) {
+                $stock->setAmount($stock->getUnitPrice() * $stock->getQuantity());
                 $em->persist($stock);
             }
             $em->flush();
@@ -218,6 +220,7 @@ class StockController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $stock->setAmount($stock->getUnitPrice() * $stock->getQuantity());
             $em = $this->getDoctrine()->getManager();
             $em->persist($stock);
             $em->flush();
@@ -351,12 +354,14 @@ class StockController extends BaseController
                 for ($i = 0; $i < $nodeList->length; $i++) {
                     $referency = $nodeList->item($i)->getElementsByTagName('prod')->item(0)->getElementsByTagName('cProd')->item(0)->childNodes->item(0)->wholeText;
                     $quantity = $nodeList->item($i)->getElementsByTagName('prod')->item(0)->getElementsByTagName('qCom')->item(0)->childNodes->item(0)->wholeText;
-                    $vProd = $nodeList->item($i)->getElementsByTagName('prod')->item(0)->getElementsByTagName('vProd')->item(0)->childNodes->item(0)->wholeText;
+                    $amount = $nodeList->item($i)->getElementsByTagName('prod')->item(0)->getElementsByTagName('vProd')->item(0)->childNodes->item(0)->wholeText;
+                    $unitPrice = $nodeList->item($i)->getElementsByTagName('prod')->item(0)->getElementsByTagName('vUnCom')->item(0)->childNodes->item(0)->wholeText;
 
                     $stock = new Stock();
                     $stock->setReferency($referency)
                         ->setQuantity($quantity)
-                        ->setAmount($vProd)
+                        ->setUnitPrice($unitPrice)
+                        ->setAmount($amount)
                         ->setType(StockTypes::TYPE_ADD);
 
                     $stocks[] = $stock;

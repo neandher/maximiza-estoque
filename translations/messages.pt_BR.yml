@@ -99,7 +99,8 @@ stock:
     fields:
         referency: Referência
         quantity: Quantidade
-        amount: Valor
+        amount: Valor Total
+        unitPrice: Valor Unitário
         type: Movimentação
         xmlFile: Arquivo XML
     types:

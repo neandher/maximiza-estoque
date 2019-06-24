@@ -5,6 +5,7 @@
     </div>
     <div class='row'>
         <div class='col-md-6'>{{ form_row(item.vars.prototype.quantity)|e('html_attr') }}</div>
+        <div class='col-md-6'>{{ form_row(item.vars.prototype.unitPrice)|e('html_attr') }}</div>
     </div>
 {% endif %}
 
@@ -17,6 +18,7 @@
             </div>
             <div class='row'>
                 <div class='col-md-6'>{{ form_row(item.quantity) }}</div>
+                <div class='col-md-6'>{{ form_row(item.unitPrice) }}</div>
             </div>
         </div>
     </div>

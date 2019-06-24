@@ -22,6 +22,7 @@ class StockType extends AbstractType
             ])
             ->add('referency', TextType::class, ['label' => 'stock.fields.referency'])
             ->add('quantity', NumberType::class, ['label' => 'stock.fields.quantity'])
+            ->add('unitPrice', NumberType::class, ['label' => 'stock.fields.unitPrice'])
             ;
     }
 

@@ -143,6 +143,11 @@
                     </a>
                 </th>
                 <th>
+                    <a href="{{ path('admin_stock_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('unitPrice') }}">
+                        {{ 'stock.fields.unitPrice'|trans }}
+                    </a>
+                </th>
+                <th>
                     <a href="{{ path('admin_stock_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('amount') }}">
                         {{ 'stock.fields.amount'|trans }}
                     </a>
@@ -182,6 +187,7 @@
                             {{ stock.quantity }}
                         </span>
                     </td>
+                    <td>{{ stock.unitPrice|number_format }}</td>
                     <td>{{ stock.amount|number_format }}</td>
                     <td>
                         <span class="m-badge {% if stock.type == constant('App\\StockTypes::TYPE_ADD') %}m-badge--success{% else %}m-badge--info{% endif %} m-badge--wide">
