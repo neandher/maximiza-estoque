@@ -5,6 +5,10 @@ twig:
     date:
         timezone: America/Sao_Paulo
         format: d/m/Y
+    number_format:
+        decimals: 2
+        decimal_point: ','
+        thousands_separator: '.'
     form_themes:
         - 'admin/_form/_fields.html.twig'
         - 'bootstrap_4_layout.html.twig'

@@ -143,6 +143,11 @@
                     </a>
                 </th>
                 <th>
+                    <a href="{{ path('admin_stock_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('amount') }}">
+                        {{ 'stock.fields.amount'|trans }}
+                    </a>
+                </th>
+                <th>
                     <a href="{{ path('admin_stock_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('type') }}">
                         {{ 'stock.fields.type'|trans }}
                     </a>
@@ -177,6 +182,7 @@
                             {{ stock.quantity }}
                         </span>
                     </td>
+                    <td>{{ stock.amount|number_format }}</td>
                     <td>
                         <span class="m-badge {% if stock.type == constant('App\\StockTypes::TYPE_ADD') %}m-badge--success{% else %}m-badge--info{% endif %} m-badge--wide">
                             {{ ('stock.types.'~stock.type)|trans }}
@@ -254,6 +260,23 @@
                 <td>
                     <span class="m-badge m-badge--brand m-badge--wide">
                     {{ total['total'] }}
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="m-badge m-badge--success m-badge--wide">
+                    {{ total['total_add_amount']|number_format }}
+                    </span>
+                </td>
+                <td>
+                    <span class="m-badge m-badge--info m-badge--wide">
+                    {{ total['total_remove_amount']|number_format }}
+                    </span>
+                </td>
+                <td>
+                    <span class="m-badge m-badge--brand m-badge--wide">
+                    {{ total['total_amount']|number_format }}
                     </span>
                 </td>
             </tr>
@@ -350,8 +373,7 @@
                     $('table input[type="checkbox"]').each(function (index, element) {
                         if (element.checked === true) {
                             $(this).attr('checked', false);
-                        }
-                        else {
+                        } else {
                             $(this).attr('checked', true);
                         }
                     })

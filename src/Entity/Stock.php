@@ -45,6 +45,11 @@ class Stock
      */
     private $type;
 
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    private $amount;
+
     public function getId()
     {
         return $this->id;
@@ -107,5 +112,17 @@ class Stock
         if($this->type == StockTypes::TYPE_REMOVE){
             $this->quantity = (int)(str_replace('-', '', (string) $this->quantity));
         }
+    }
+
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    public function setAmount($amount): self
+    {
+        $this->amount = $amount;
+
+        return $this;
     }
 }

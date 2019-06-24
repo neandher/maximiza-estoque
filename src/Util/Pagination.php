@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 class Pagination
 {
 
-    const NUM_ITEMS = 15;
+    const NUM_ITEMS = 30;
     const SORTING_DIRECTION = 'asc';
 
     /**

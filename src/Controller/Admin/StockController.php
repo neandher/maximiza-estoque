@@ -78,20 +78,27 @@ class StockController extends BaseController
         $total = [];
         $totalAdd = 0;
         $totalRemove = 0;
+        $totalAddAmount = 0;
+        $totalRemoveAmount = 0;
 
         foreach ($stocks as $stock) {
             $deleteForms[$stock->getId()] = $this->createDeleteForm($stock)->createView();
             if ($stock->getType() == StockTypes::TYPE_ADD) {
                 $totalAdd += $stock->getQuantity();
+                $totalAddAmount += $stock->getAmount();
             }
             if ($stock->getType() == StockTypes::TYPE_REMOVE) {
                 $totalRemove += $stock->getQuantity();
+                $totalRemoveAmount += $stock->getAmount();
             }
         }
 
         $total[StockTypes::TYPE_ADD] = $totalAdd;
+        $total['total_add_amount'] = $totalAddAmount;
         $total[StockTypes::TYPE_REMOVE] = $totalRemove;
+        $total['total_remove_amount'] = $totalRemoveAmount;
         $total['total'] = $totalAdd - $totalRemove;
+        $total['total_amount'] = $totalAddAmount - $totalRemoveAmount;
 
         $formXml = $this->createForm(StockImportXmlType::class);
 
@@ -344,10 +351,12 @@ class StockController extends BaseController
                 for ($i = 0; $i < $nodeList->length; $i++) {
                     $referency = $nodeList->item($i)->getElementsByTagName('prod')->item(0)->getElementsByTagName('cProd')->item(0)->childNodes->item(0)->wholeText;
                     $quantity = $nodeList->item($i)->getElementsByTagName('prod')->item(0)->getElementsByTagName('qCom')->item(0)->childNodes->item(0)->wholeText;
+                    $vProd = $nodeList->item($i)->getElementsByTagName('prod')->item(0)->getElementsByTagName('vProd')->item(0)->childNodes->item(0)->wholeText;
 
                     $stock = new Stock();
                     $stock->setReferency($referency)
                         ->setQuantity($quantity)
+                        ->setAmount($vProd)
                         ->setType(StockTypes::TYPE_ADD);
 
                     $stocks[] = $stock;
