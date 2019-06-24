@@ -24,6 +24,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Class StockController
@@ -404,7 +408,11 @@ class StockController extends BaseController
         $stock = $this->getDoctrine()->getRepository(Stock::class)->findOneBy(['referency' => $referency]);
 
         if ($stock) {
-            return new JsonResponse(['message' => 'Success']);
+            $encoders = [new JsonEncoder()];
+            $normalizers = [new DateTimeNormalizer(), new ObjectNormalizer()];
+            $serializer = new Serializer($normalizers, $encoders);
+            $jsonContent = $serializer->serialize($stock, 'json');
+            return JsonResponse::fromJsonString($jsonContent);
         }
 
         return new JsonResponse(['message' => 'Not Found'], 404);

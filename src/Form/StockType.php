@@ -22,10 +22,11 @@ class StockType extends AbstractType
                 'label' => 'stock.fields.type',
                 'choices' => ['stock.types.add' => StockTypes::TYPE_ADD, 'stock.types.remove' => StockTypes::TYPE_REMOVE],
             ])
-            ->add('referency', TextType::class, ['label' => 'stock.fields.referency'])
+            ->add('referency', TextType::class, [
+                'label' => 'stock.fields.referency'
+            ])
             ->add('quantity', NumberType::class, ['label' => 'stock.fields.quantity'])
-            ->add('unitPrice', MoneyCustomType::class, ['label' => 'stock.fields.unitPrice'])
-            ;
+            ->add('unitPrice', MoneyCustomType::class, ['label' => 'stock.fields.unitPrice']);
     }
 
     public function configureOptions(OptionsResolver $resolver)

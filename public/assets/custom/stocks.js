@@ -43,7 +43,18 @@ function addStockForm($collectionHolder, $newLinkPanel) {
     var $newFormPanel = $('<div class="m-portlet m-portlet--rounded"></div>').append($newFormPanelBody);
     $newLinkPanel.before($newFormPanel);
 
-    $("#stock_multiple_stocks_"+index+"_quantity").val('1');
+    $("#stock_multiple_stocks_" + index + "_quantity").val('1');
+
+    $("#stock_multiple_stocks_" + index + "_referency").keyup((event) => {
+        const referencyCode = $(event.currentTarget).val();
+        if (referencyCode.length >= 8) {
+            $.get(RoutingManager.generate('admin_stock_verify_referency'), {referency: referencyCode})
+                .done((stock) => {
+                    $("#stock_multiple_stocks_" + index + "_unitPrice").val(stock.unitPrice.toString().replace('.', ','));
+                })
+            ;
+        }
+    });
 
     addStockFormDeleteLink($newFormPanelBody, $newFormPanel);
 
