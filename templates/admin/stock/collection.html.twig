@@ -7,7 +7,6 @@
         <div class='col-md-6'>{{ form_row(item.vars.prototype.quantity)|e('html_attr') }}</div>
         <div class='col-md-6'>{{ form_row(item.vars.prototype.unitPrice)|e('html_attr') }}</div>
     </div>
-    {% dump(item.vars.prototype) %}
 {% endif %}
 
 {% if collection is defined %}
