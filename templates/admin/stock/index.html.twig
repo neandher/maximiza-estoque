@@ -291,10 +291,9 @@
     {% endembed %}
 
     <!-- ModalXml -->
-    {{ form_start(formXml, {'action': path('admin_stock_import_xml')}) }}
     <div class="modal fade" id="modalXml" tabindex="-1" role="basic"
          aria-labelledby="modalXmlLabel">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Importar XML</h5>
@@ -303,22 +302,18 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    {{ form_row(formXml.file) }}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger m-btn m-btn--custom m-btn--icon m-btn--air"
-                            data-dismiss="modal">
-                        <span><i class="fa fa-remove"></i><span>{{ 'resource.actions.items.cancel'|trans }}</span></span>
-                    </button>
-                    <button type="submit"
-                            class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air">
-                        <span><i class="fa fa-check"></i><span>Importar</span></span>
-                    </button>
+                    <div class="m-dropzone dropzone m-dropzone--primary"
+                         action="{{ path('admin_stock_import_xml') }}" id="m-dropzone-two">
+                        <div class="m-dropzone__msg dz-message needsclick">
+                            <h3 class="m-dropzone__msg-title">Arraste os arquivos aqui ou clique para
+                                selecionar.</h3>
+                            <span class="m-dropzone__msg-desc">Somente arquivos XML</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    {{ form_end(formXml) }}
     <!-- End ModalXml -->
 
     <!-- ModalConferir -->
@@ -372,6 +367,7 @@
             <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
             <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
             <script src="{{ asset('assets/custom/RoutingManager.js') }}"></script>
+            <script src="{{ asset('assets/widgets/dropzone.js') }}"></script>
             <script>
 
                 $('#selectAll').on('click', function (e) {
@@ -429,7 +425,7 @@
                                 })
                                 .always(function () {
                                     $referency.attr('disabled', false);
-                                    $('.verify_referency_code').html(referencyVal);
+                                    $('.verify_referency_code').html(referencyCode);
                                     $referency.val('');
                                     $referency.focus();
                                 });

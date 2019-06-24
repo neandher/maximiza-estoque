@@ -3,9 +3,11 @@
 namespace App\Form;
 
 use App\Entity\Stock;
+use App\Form\Model\MoneyCustomType;
 use App\StockTypes;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -22,7 +24,7 @@ class StockType extends AbstractType
             ])
             ->add('referency', TextType::class, ['label' => 'stock.fields.referency'])
             ->add('quantity', NumberType::class, ['label' => 'stock.fields.quantity'])
-            ->add('unitPrice', NumberType::class, ['label' => 'stock.fields.unitPrice'])
+            ->add('unitPrice', MoneyCustomType::class, ['label' => 'stock.fields.unitPrice'])
             ;
     }
 

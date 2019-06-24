@@ -12,9 +12,9 @@ use App\Form\StockMultipleType;
 use App\Form\StockType;
 use App\StockTypes;
 use App\Util\FlashBag;
+use App\Util\Helpers;
 use App\Util\Pagination;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\Form\FormInterface;
@@ -100,7 +100,7 @@ class StockController extends BaseController
         $total['total'] = $totalAdd - $totalRemove;
         $total['total_amount'] = $totalAddAmount - $totalRemoveAmount;
 
-        $formXml = $this->createForm(StockImportXmlType::class);
+        //$formXml = $this->createForm(StockImportXmlType::class);
 
         return $this->render('admin/stock/index.html.twig', [
             'stocks' => $stocks,
@@ -108,7 +108,7 @@ class StockController extends BaseController
             'delete_forms' => $deleteForms,
             'total' => $total,
             'users' => $users,
-            'formXml' => $formXml->createView()
+            //'formXml' => $formXml->createView()
         ]);
     }
 
@@ -295,13 +295,15 @@ class StockController extends BaseController
 
         if ($request->request->has('ids')) {
             $i = 0;
+            $em = $this->getDoctrine()->getManager();
             foreach (explode(',', $request->request->get('ids')) as $id) {
                 $stock = $this->getDoctrine()->getRepository(Stock::class)->findOneBy(['id' => $id]);
-                $em = $this->getDoctrine()->getManager();
-                $em->remove($stock);
-                $em->flush();
-                $i++;
+                if ($stock) {
+                    $em->remove($stock);
+                    $i++;
+                }
             }
+            $em->flush();
             if ($i > 0) {
                 $this->flashBag->newMessage(
                     FlashBagEvents::MESSAGE_TYPE_SUCCESS,
@@ -330,62 +332,56 @@ class StockController extends BaseController
      * @Route("/import-xml", name="import_xml")
      * @Method("POST")
      * @param Request $request
-     * @return RedirectResponse
+     * @return JsonResponse|RedirectResponse
      */
     public function importXml(Request $request)
     {
-        $form = $this->createForm(StockImportXmlType::class);
-        $form->handleRequest($request);
+        if (!$request->isXmlHttpRequest())
+            return new JsonResponse(['message' => 'Requisição inválida.'], 403);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var UploadedFile $file */
-            $file = $form->getData()['file'];
+        $form = $this->createForm(StockImportXmlType::class, null, ['csrf_protection' => false]);
 
-            $xml = file_get_contents($file->getRealPath());
+        $data['file'] = $request->files->all()['file'];
+        $form->submit($data);
 
-            $domDocument = new \DOMDocument();
-            $domDocument->loadXml($xml);
-            $nodeList = $domDocument->getElementsByTagName('det');
+        if (!$form->isValid())
+            return new JsonResponse(['message' => Helpers::getErrorsFromForm($form, 'string')], 403);
 
-            if ($nodeList->length > 0) {
-                $stocks = [];
-                $em = $this->getDoctrine()->getManager();
+        /** @var UploadedFile $file */
+        $file = $data['file'];
 
-                for ($i = 0; $i < $nodeList->length; $i++) {
-                    $referency = $nodeList->item($i)->getElementsByTagName('prod')->item(0)->getElementsByTagName('cProd')->item(0)->childNodes->item(0)->wholeText;
-                    $quantity = $nodeList->item($i)->getElementsByTagName('prod')->item(0)->getElementsByTagName('qCom')->item(0)->childNodes->item(0)->wholeText;
-                    $amount = $nodeList->item($i)->getElementsByTagName('prod')->item(0)->getElementsByTagName('vProd')->item(0)->childNodes->item(0)->wholeText;
-                    $unitPrice = $nodeList->item($i)->getElementsByTagName('prod')->item(0)->getElementsByTagName('vUnCom')->item(0)->childNodes->item(0)->wholeText;
+        $xml = file_get_contents($file->getRealPath());
 
-                    $stock = new Stock();
-                    $stock->setReferency($referency)
-                        ->setQuantity($quantity)
-                        ->setUnitPrice($unitPrice)
-                        ->setAmount($amount)
-                        ->setType(StockTypes::TYPE_ADD);
+        $domDocument = new \DOMDocument();
+        $domDocument->loadXml($xml);
+        $nodeList = $domDocument->getElementsByTagName('det');
 
-                    $stocks[] = $stock;
-                    $em->persist($stock);
-                }
-                $em->flush();
+        if ($nodeList->length > 0) {
+            $stocks = [];
+            $em = $this->getDoctrine()->getManager();
 
-                $this->dispatcher->dispatch(StockEvents::STOCK_CREATE_COMPLETED, (new GenericEvent($stocks)));
+            for ($i = 0; $i < $nodeList->length; $i++) {
+                $referency = $nodeList->item($i)->getElementsByTagName('prod')->item(0)->getElementsByTagName('cProd')->item(0)->childNodes->item(0)->wholeText;
+                $quantity = $nodeList->item($i)->getElementsByTagName('prod')->item(0)->getElementsByTagName('qCom')->item(0)->childNodes->item(0)->wholeText;
+                $amount = $nodeList->item($i)->getElementsByTagName('prod')->item(0)->getElementsByTagName('vProd')->item(0)->childNodes->item(0)->wholeText;
+                $unitPrice = $nodeList->item($i)->getElementsByTagName('prod')->item(0)->getElementsByTagName('vUnCom')->item(0)->childNodes->item(0)->wholeText;
 
-                $this->flashBag->newMessage(
-                    FlashBagEvents::MESSAGE_TYPE_SUCCESS,
-                    'XML Importado com sucesso. Total de ' . $nodeList->length . ' registros importados'
-                );
+                $stock = new Stock();
+                $stock->setReferency($referency)
+                    ->setQuantity($quantity)
+                    ->setUnitPrice($unitPrice)
+                    ->setAmount($amount)
+                    ->setType(StockTypes::TYPE_ADD);
 
-                return $this->redirectToRoute('admin_stock_index');
+                $stocks[] = $stock;
+                $em->persist($stock);
             }
+            $em->flush();
+
+            $this->dispatcher->dispatch(StockEvents::STOCK_CREATE_COMPLETED, (new GenericEvent($stocks)));
         }
 
-        $this->flashBag->newMessage(
-            FlashBagEvents::MESSAGE_TYPE_SUCCESS,
-            'Nenhum registro importado'
-        );
-
-        return $this->redirectToRoute('admin_stock_index');
+        return new JsonResponse(['message' => 'success', 'items' => $nodeList->length]);
     }
 
     /**

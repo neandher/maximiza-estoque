@@ -47,7 +47,6 @@ class Stock
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2)
-     * @Assert\NotBlank()
      */
     private $amount;
 
@@ -116,8 +115,8 @@ class Stock
 
     public function normalizeQuantity()
     {
-        if($this->type == StockTypes::TYPE_REMOVE){
-            $this->quantity = (int)(str_replace('-', '', (string) $this->quantity));
+        if ($this->type == StockTypes::TYPE_REMOVE) {
+            $this->quantity = (int)(str_replace('-', '', (string)$this->quantity));
         }
     }
 
