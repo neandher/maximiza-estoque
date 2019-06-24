@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Stock;
 use App\StockTypes;
 use App\Util\Pagination;
+use Doctrine\ORM\NonUniqueResultException;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -67,38 +68,41 @@ class StockRepository extends BaseRepository
 
     /**
      * @return mixed
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     public function getTotalAdd()
     {
         return $this->createQueryBuilder('stock')
             ->addSelect('SUM(stock.quantity) as totalAdd')
+            ->addSelect('SUM(stock.amount) as totalAddAmount')
             ->where("stock.type = '" . StockTypes::TYPE_ADD . "'")
             ->getQuery()->getOneOrNullResult();
     }
 
     /**
      * @return mixed
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     public function getTotalRemove()
     {
         $qb = $this->createQueryBuilder('stock');
         return $qb
             ->addSelect('SUM(stock.quantity) as totalRemove')
+            ->addSelect('SUM(stock.amount) as totalRemoveAmount')
             ->where("stock.type = '" . StockTypes::TYPE_REMOVE . "'")
             ->getQuery()->getOneOrNullResult();
     }
 
     /**
      * @return mixed
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     public function getTotal()
     {
         $qb = $this->createQueryBuilder('stock');
         return $qb
             ->addSelect('SUM(stock.quantity) as total')
+            ->addSelect('SUM(stock.amount) as totalAmount')
             ->getQuery()->getOneOrNullResult();
     }
 }

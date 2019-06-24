@@ -97,8 +97,8 @@ class StockController extends BaseController
         $total['total_add_amount'] = $totalAddAmount;
         $total[StockTypes::TYPE_REMOVE] = $totalRemove;
         $total['total_remove_amount'] = $totalRemoveAmount;
-        $total['total'] = $totalAdd - $totalRemove;
-        $total['total_amount'] = $totalAddAmount - $totalRemoveAmount;
+        $total['total'] = $totalAdd + $totalRemove;
+        $total['total_amount'] = $totalAddAmount + $totalRemoveAmount;
 
         //$formXml = $this->createForm(StockImportXmlType::class);
 
