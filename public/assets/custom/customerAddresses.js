@@ -20,7 +20,7 @@ function customerAddressInit() {
     $collectionHolder.data('index', index);
 
     if (index === 0) {
-        addCustomerAddressForm($collectionHolder, $newLinkPanel);
+        // addCustomerAddressForm($collectionHolder, $newLinkPanel);
     }
 
     $addCustomerAddressLink.on('click', function (e) {
