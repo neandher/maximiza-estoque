@@ -1,0 +1,23 @@
+{% if prototype is defined %}
+    <div class='row'>
+        <div class='col-md-6'>{{ form_row(item.description)|e('html_attr') }}</div>
+    </div>
+{% endif %}
+
+{% if collection is defined %}
+    <div class='m-portlet m-portlet--rounded'>
+        <div class='m-portlet__body'>
+            <div class='row'>
+                <div class='col-md-6'>{{ form_row(item.description, {attr: {readonly: true}}) }}</div>
+                {% if item.vars.data.id is defined %}
+                <div class='col-md-6'>
+                    <div class="form-group">
+                        <label for="customer_observations_user_full_name" class="form-control-label required">&nbsp;</label>
+                        <div class="form-control" style="border: none;">Por {{ item.vars.data.user.fullName }} - {{ item.vars.data.createdAt|date('d/m/Y H:i') }}</div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endif %}

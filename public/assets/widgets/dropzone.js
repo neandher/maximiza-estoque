@@ -11,6 +11,10 @@ var DropzoneDemo = {
             dictRemoveFile: "Remover da lista",
             init: function () {
                 let hasError = false;
+                this.on('sending', function (file, xhr, formData) {
+                    formData.append("type", $('#xml_type').val());
+                    formData.append("brand", $('#xml_brand').val());
+                });
                 this.on('success', function () {
                     hasError = false;
                 });

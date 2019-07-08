@@ -102,6 +102,19 @@
             <div class="m-separator m-separator--md m-separator--dashed"></div>
             <div class="row m--margin-bottom-20">
                 <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label for="brand">
+                        {{ 'brand.title_single'|trans }}:
+                    </label>
+                    <select class="form-control m-input" name="brand" id="brand" onchange="submit();">
+                        <option value=""></option>
+                        {% for brand in brands %}
+                            <option value="{{ brand.id }}"
+                                    {% if app.request.query.has('brand') %}{% if app.request.query.get('brand') == brand.id %}selected{% endif %}{% endif %}>{{ brand.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
                     <label for="num_items">
                         {{ 'resource.filters.num_items'|trans }}:
                     </label>
@@ -131,10 +144,15 @@
                 <th>
                     <a href="javascript:void(0)" id="selectAll">#</a>
                 </th>
-                {#<th>ID</th>#}
+                <th>Cód.</th>
                 <th>
                     <a href="{{ path('admin_stock_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('referency') }}">
                         {{ 'stock.fields.referency'|trans }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ path('admin_stock_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('brand.name') }}">
+                        {{ 'brand.title_single'|trans }}
                     </a>
                 </th>
                 <th>
@@ -180,8 +198,9 @@
                             <span></span>
                         </label>
                     </td>
-                    {#<td>{{ stock.id }}</td>#}
+                    <td>{{ stock.id }}</td>
                     <td>{{ stock.referency }}</td>
+                    <td>{% if stock.brand %}{{ stock.brand.name }}{% else %}-{% endif %}</td>
                     <td>
                         <span class="m-badge {% if stock.type == constant('App\\StockTypes::TYPE_ADD') %}m-badge--success{% else %}m-badge--info{% endif %} m-badge--wide">
                             {{ stock.quantity }}
@@ -302,7 +321,36 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="m-dropzone dropzone m-dropzone--primary"
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="required" for="xml_brand">{{ 'brand.title_single'|trans }}</label>
+                                <select class="form-control m-input" name="xml_brand" id="xml_brand">
+                                    <option value=""></option>
+                                    {% for brand in brands %}
+                                        <option value="{{ brand.id }}"
+                                                {% if app.request.query.has('brand') %}{% if app.request.query.get('brand') == brand.id %}selected{% endif %}{% endif %}>{{ brand.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="xml_type" class="required">{{ 'stock.fields.type'|trans }}</label>
+                                <select class="form-control m-input" name="xml_type" id="xml_type">
+                                    <option value=""></option>
+                                    <option value="{{ constant('App\\StockTypes::TYPE_ADD') }}">
+                                        {{ ('stock.types.'~constant('App\\StockTypes::TYPE_ADD'))|trans }}
+                                    </option>
+                                    <option value="{{ constant('App\\StockTypes::TYPE_REMOVE') }}">
+                                        {{ ('stock.types.'~constant('App\\StockTypes::TYPE_REMOVE'))|trans }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="m-dropzone dropzone m-dropzone--primary m--hide"
                          action="{{ path('admin_stock_import_xml') }}" id="m-dropzone-two">
                         <div class="m-dropzone__msg dz-message needsclick">
                             <h3 class="m-dropzone__msg-title">Arraste os arquivos aqui ou clique para
@@ -429,6 +477,23 @@
                                     $referency.val('');
                                     $referency.focus();
                                 });
+                        }
+                    });
+                });
+
+                $('#modalXml').on('shown.bs.modal', function (event) {
+                    $('#xml_brand').change(function (_event) {
+                        if ($(_event.currentTarget).val() > 0 && $('#xml_type').val() != '') {
+                            $('#m-dropzone-two').removeClass('m--hide');
+                        } else {
+                            $('#m-dropzone-two').addClass('m--hide');
+                        }
+                    });
+                    $('#xml_type').change(function (_event) {
+                        if ($(_event.currentTarget).val() !== '' && $('#xml_brand').val() > 0) {
+                            $('#m-dropzone-two').removeClass('m--hide');
+                        } else {
+                            $('#m-dropzone-two').addClass('m--hide');
                         }
                     });
                 });

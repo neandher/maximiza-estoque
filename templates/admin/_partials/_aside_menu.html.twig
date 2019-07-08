@@ -12,6 +12,10 @@
                 </span>
             </a>
         </li>
+        <li class="m-menu__section ">
+            <h4 class="m-menu__section-text">Acesso</h4>
+            <i class="m-menu__section-icon flaticon-more-v3"></i>
+        </li>
         <li class="m-menu__item " aria-haspopup="true">
             <a href="{{ path('admin_user_index') }}" class="m-menu__link ">
                 <span class="m-menu__item-here"></span>
@@ -23,6 +27,21 @@
                 </span>
             </a>
         </li>
+        <li class="m-menu__section ">
+            <h4 class="m-menu__section-text">Principal</h4>
+            <i class="m-menu__section-icon flaticon-more-v3"></i>
+        </li>
+        <li class="m-menu__item " aria-haspopup="true">
+            <a href="{{ path('admin_customer_index') }}" class="m-menu__link ">
+                <span class="m-menu__item-here"></span>
+                <i class="m-menu__link-icon flaticon-profile"></i>
+                <span class="m-menu__link-title">
+                    <span class="m-menu__link-wrap">
+                        <span class="m-menu__link-text">{{ 'customer.title'|trans }}</span>
+                    </span>
+                </span>
+            </a>
+        </li>
         <li class="m-menu__item " aria-haspopup="true">
             <a href="{{ path('admin_stock_index') }}" class="m-menu__link ">
                 <span class="m-menu__item-here"></span>
@@ -30,6 +49,43 @@
                 <span class="m-menu__link-title">
                     <span class="m-menu__link-wrap">
                         <span class="m-menu__link-text">{{ 'stock.title'|trans }}</span>
+                    </span>
+                </span>
+            </a>
+        </li>
+        <li class="m-menu__section ">
+            <h4 class="m-menu__section-text">Configurações</h4>
+            <i class="m-menu__section-icon flaticon-more-v3"></i>
+        </li>
+        <li class="m-menu__item " aria-haspopup="true">
+            <a href="{{ path('admin_brand_index') }}" class="m-menu__link ">
+                <span class="m-menu__item-here"></span>
+                <i class="m-menu__link-icon flaticon-interface-10"></i>
+                <span class="m-menu__link-title">
+                    <span class="m-menu__link-wrap">
+                        <span class="m-menu__link-text">{{ 'brand.title'|trans }}</span>
+                    </span>
+                </span>
+            </a>
+        </li>
+        <li class="m-menu__item " aria-haspopup="true">
+            <a href="{{ path('admin_customer_state_index') }}" class="m-menu__link ">
+                <span class="m-menu__item-here"></span>
+                <i class="m-menu__link-icon flaticon-layers"></i>
+                <span class="m-menu__link-title">
+                    <span class="m-menu__link-wrap">
+                        <span class="m-menu__link-text">{{ 'customerState.title'|trans }}</span>
+                    </span>
+                </span>
+            </a>
+        </li>
+        <li class="m-menu__item " aria-haspopup="true">
+            <a href="{{ path('admin_customer_category_index') }}" class="m-menu__link ">
+                <span class="m-menu__item-here"></span>
+                <i class="m-menu__link-icon flaticon-layers"></i>
+                <span class="m-menu__link-title">
+                    <span class="m-menu__link-wrap">
+                        <span class="m-menu__link-text">{{ 'customerCategory.title'|trans }}</span>
                     </span>
                 </span>
             </a>

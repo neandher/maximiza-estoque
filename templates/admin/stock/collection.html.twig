@@ -4,9 +4,19 @@
         <div class='col-md-6'>{{ form_row(item.vars.prototype.referency)|e('html_attr') }}</div>
     </div>
     <div class='row'>
+        <div class='col-md-6'>{{ form_row(item.vars.prototype.brand)|e('html_attr') }}</div>
         <div class='col-md-6'>{{ form_row(item.vars.prototype.quantity)|e('html_attr') }}</div>
-        <div class='col-md-6'>{{ form_row(item.vars.prototype.unitPrice)|e('html_attr') }}</div>
     </div>
+    <div class='row'>
+        <div class='col-md-6'>{{ form_row(item.vars.prototype.unitPrice)|e('html_attr') }}</div>
+        <div class='col-md-6'>{{ form_row(item.vars.prototype.barCode)|e('html_attr') }}</div>
+    </div>
+    <div class='m-form__seperator m-form__seperator--dashed'></div>
+    <div class='row'>
+        <div class='col-md-6'>{{ form_row(item.vars.prototype.customer)|e('html_attr') }}</div>
+        <div class='col-md-6'>{{ form_row(item.vars.prototype.paymentMethod)|e('html_attr') }}</div>
+    </div>
+    <div class='m-form__seperator m-form__seperator--dashed'></div>
 {% endif %}
 
 {% if collection is defined %}
@@ -17,9 +27,19 @@
                 <div class='col-md-6'>{{ form_row(item.referency) }}</div>
             </div>
             <div class='row'>
+                <div class='col-md-6'>{{ form_row(item.brand) }}</div>
                 <div class='col-md-6'>{{ form_row(item.quantity) }}</div>
-                <div class='col-md-6'>{{ form_row(item.unitPrice) }}</div>
             </div>
+            <div class='row'>
+                <div class='col-md-6'>{{ form_row(item.unitPrice) }}</div>
+                <div class='col-md-6'>{{ form_row(item.barCode) }}</div>
+            </div>
+            <div class='m-form__seperator m-form__seperator--dashed'></div>
+            <div class='row'>
+                <div class='col-md-6'>{{ form_row(item.customer) }}</div>
+                <div class='col-md-6'>{{ form_row(item.paymentMethod) }}</div>
+            </div>
+            <div class='m-form__seperator m-form__seperator--dashed'></div>
         </div>
     </div>
 {% endif %}

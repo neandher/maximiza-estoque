@@ -44,6 +44,7 @@ function addStockForm($collectionHolder, $newLinkPanel) {
     $newLinkPanel.before($newFormPanel);
 
     $("#stock_multiple_stocks_" + index + "_quantity").val('1');
+    $("#stock_multiple_stocks_" + index + "_referency").focus();
 
     $("#stock_multiple_stocks_" + index + "_referency").keyup((event) => {
         const referencyCode = $(event.currentTarget).val();

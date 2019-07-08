@@ -1,0 +1,214 @@
+{% extends 'admin/base.html.twig' %}
+{% block title %}{{ 'customer.title'|trans }}{% endblock %}
+
+{% block page_content %}
+
+    {% embed 'admin/_partials/_default_table_list.html.twig' with {'item': customers} %}
+
+        {% block caption_subject %}
+            {{ 'resource.caption'|trans({'%resourceName%': 'customer.title'|trans, '%nbResults%' : customers.nbResults}) }}
+        {% endblock %}
+
+        {% block head_tools_actions %}
+            <li class="m-portlet__nav-item">
+                <a href="{{ path('admin_customer_new') ~ pagination.buildQuery }}"
+                   class="btn btn-accent m-btn m-btn--icon m-btn--air">
+                    <span><i class="la la-plus-circle"></i><span> {{ 'customer.actions.new'|trans }}</span></span>
+                </a>
+            </li>
+        {% endblock %}
+
+        {% block head_tools_dropdown %}{% endblock %}
+
+        {% block filters_actions %}
+            <div class="row m--margin-bottom-20">
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label for="search">
+                        {{ 'resource.filters.search'|trans }}:
+                    </label>
+                    <input type="text" class="form-control m-input m-input--solid" data-col-index="0"
+                           placeholder="{{ 'resource.fields.name'|trans }}" name="search" id="search"
+                           value="{% if app.request.query.has('search') %}{{ app.request.query.get('search') }}{% endif %}">
+                </div>
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label for="state">
+                        {{ 'customerState.title_single'|trans }}:
+                    </label>
+                    <select class="form-control m-input m-select2" name="state" id="state" onchange="submit();">
+                        <option value=""></option>
+                        {% for state in states %}
+                            <option value="{{ state.id }}"
+                                    {% if app.request.query.has('state') %}{% if app.request.query.get('state') == state.id %}selected{% endif %}{% endif %}>{{ state.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label for="category">
+                        {{ 'customerCategory.title_single'|trans }}:
+                    </label>
+                    <select class="form-control m-input m-select2" name="category" id="category" onchange="submit();">
+                        <option value=""></option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}"
+                                    {% if app.request.query.has('category') %}{% if app.request.query.get('category') == category.id %}selected{% endif %}{% endif %}>{{ category.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label for="city">
+                        {{ 'address.fields.city'|trans }}:
+                    </label>
+                    <input type="text" class="form-control m-input m-input--solid" data-col-index="0"
+                           placeholder="{{ 'address.fields.city'|trans }}" name="city" id="city"
+                           value="{% if app.request.query.has('city') %}{{ app.request.query.get('city') }}{% endif %}">
+                </div>
+            </div>
+            <div class="m-separator m-separator--md m-separator--dashed"></div>
+            <div class="row m--margin-bottom-20">
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label for="num_items">
+                        {{ 'resource.filters.num_items'|trans }}:
+                    </label>
+                    <input type="number" class="form-control col-md-4"
+                           name="num_items" id="num_items"
+                           value="{{ app.request.query.get('num_items', pagination.routeParams('num_items')) }}"
+                           min="5">
+                </div>
+            </div>
+            <div class="m-separator m-separator--md m-separator--dashed"></div>
+            <div class="row m--margin-bottom-20">
+                <div class="col-lg-12">
+                    <button type="submit" class="btn btn-brand m-btn m-btn--icon">
+                        <span><i class="la la-search"></i><span>{{ 'resource.filters.search'|trans }}</span></span>
+                    </button>
+                    &nbsp;&nbsp;
+                    <a href="{{ path('admin_customer_index') }}"
+                       class="btn btn-secondary m-btn m-btn--icon">
+                        <span><i class="la la-close"></i><span>{{ 'resource.actions.items.reset'|trans }}</span></span>
+                    </a>
+                </div>
+            </div>
+        {% endblock %}
+
+        {% block table_tr_th %}
+            <tr>
+                <th>
+                    <a href="{{ path('admin_customer_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('name') }}">
+                        {{ 'resource.fields.name'|trans }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ path('admin_customer_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('email') }}">
+                        {{ 'customer.fields.email'|trans }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ path('admin_customer_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('phoneNumber') }}">
+                        {{ 'customer.fields.phoneNumber'|trans }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ path('admin_customer_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('state.name') }}">
+                        {{ 'customerState.title_single'|trans }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ path('admin_customer_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('category.name') }}">
+                        {{ 'customerCategory.title_single'|trans }}
+                    </a>
+                </th>
+                <th>{{ 'address.title'|trans }}</th>
+                <th>{{ 'brand.title'|trans }}</th>
+                {#<th>
+                    <a href="{{ path('admin_customer_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('user.firstName') }}">
+                        {{ 'user.title_single'|trans }}
+                    </a>
+                </th>#}
+                <th>
+                    <a href="{{ path('admin_customer_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('createdAt') }}">
+                        {{ 'resource.timestampable.createdAt'|trans }}
+                    </a>
+                </th>
+                <th>{{ 'resource.actions.title'|trans }}</th>
+            </tr>
+        {% endblock %}
+
+        {% block table_tr_td %}
+            {% for customer in customers %}
+                <tr>
+                    <td style="font-weight: 400">
+                        <a href="{{ path('admin_customer_edit', {'id': customer.id}) }}" title="Editar">
+                            {{ customer.name }}
+                        </a>
+                    </td>
+                    <td>{{ customer.email }}</td>
+                    <td>{{ customer.phoneNumber }}</td>
+                    <td>{{ customer.state.name }}</td>
+                    <td>{{ customer.category.name }}</td>
+                    <td>
+                        {% for addresses in customer.customerAddresses %}
+                            <span class="m-badge m-badge--success m-badge--wide"
+                                  style="margin-bottom: 15px; text-align: left">
+								{{ addresses.address.street }} <br> {{ addresses.address.district }}
+                                - {{ addresses.address.city }} - {{ addresses.address.uf.code }}
+							</span><br>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for brands in customer.customerBrands %}
+                            <span class="m-badge m-badge--success m-badge--wide"
+                                  style="margin-bottom: 15px; text-align: left">
+								{{ brands.brand.name }}
+							</span><br>
+                        {% endfor %}
+                    </td>
+                    {#<td>{{ customer.user.fullName }}</td>#}
+                    <td>{{ customer.createdAt|date('d/m/Y H:i') }}</td>
+                    <td>
+                        <a href="{{ path('admin_customer_edit', { id: customer.id }) ~ pagination.buildQuery }}"
+                           class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"
+                           title="{{ 'resource.actions.items.edit'|trans }}"> <i class="la la-edit"></i>
+                        </a>
+                        <a href="javascript:;"
+                           class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"
+                           data-toggle="modal"
+                           data-target="#modalConfirmation"
+                           data-path="{{ path('admin_customer_delete', {id: customer.id})|escape }}"
+                           data-crf="{{ form_widget(delete_forms[customer.id]._token)|escape }}"
+                           title="{{ 'resource.actions.items.delete'|trans }}"
+                        >
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endblock %}
+
+        {% block list_info %}
+            {{ 'resource.pagination.list_info'|trans({
+                '%currentPageOffsetStart%': customers.currentPageOffsetStart,
+                '%currentPageOffsetEnd%': customers.currentPageOffsetEnd,
+                '%nbResults%': customers.nbResults
+            }) }}
+        {% endblock %}
+
+        {% block list_pagination %}
+            {{ pagerfanta(customers, 'twitter_bootstrap4',{
+                routeName: 'admin_customer_index',
+                routeParams: app.request.query.all
+            }) }}
+        {% endblock %}
+
+    {% endembed %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {% embed 'admin/_partials/_block_javascripts.html.twig' %}
+        {% block javascripts_page_snippets %}
+            <script src="{{ asset('assets/widgets/select2.js') }}"></script>
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

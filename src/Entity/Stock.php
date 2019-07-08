@@ -56,6 +56,27 @@ class Stock
      */
     private $unitPrice;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $barCode;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Brand")
+     * @Assert\NotBlank()
+     */
+    private $brand;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Customer")
+     */
+    private $customer;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $paymentMethod;
+
     public function getId()
     {
         return $this->id;
@@ -140,6 +161,54 @@ class Stock
     public function setUnitPrice($unitPrice): self
     {
         $this->unitPrice = $unitPrice;
+
+        return $this;
+    }
+
+    public function getBarCode(): ?string
+    {
+        return $this->barCode;
+    }
+
+    public function setBarCode(?string $barCode): self
+    {
+        $this->barCode = $barCode;
+
+        return $this;
+    }
+
+    public function getBrand(): ?Brand
+    {
+        return $this->brand;
+    }
+
+    public function setBrand(?Brand $brand): self
+    {
+        $this->brand = $brand;
+
+        return $this;
+    }
+
+    public function getCustomer(): ?Customer
+    {
+        return $this->customer;
+    }
+
+    public function setCustomer(?Customer $customer): self
+    {
+        $this->customer = $customer;
+
+        return $this;
+    }
+
+    public function getPaymentMethod(): ?string
+    {
+        return $this->paymentMethod;
+    }
+
+    public function setPaymentMethod(?string $paymentMethod): self
+    {
+        $this->paymentMethod = $paymentMethod;
 
         return $this;
     }

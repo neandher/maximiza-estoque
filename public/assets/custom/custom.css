@@ -1,3 +1,19 @@
-.m-login__logo img{
+.m-login__logo img {
     max-width: 95px;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+}
+
+.m-form .m-form__seperator.m-form__seperator--dashed {
+    border-top: 1px dashed #ebedf2;
+}
+.m-form .m-form__seperator {
+    border-top: 1px solid #ebedf2;
+}
+.m-form .m-form__seperator {
+    display: block;
+    height: 0;
+    margin: 20px auto;
 }

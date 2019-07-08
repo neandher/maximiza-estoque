@@ -6,7 +6,7 @@
     {% embed 'admin/_partials/_default_resource.html.twig' with {'route_index' : 'admin_stock_index'} %}
 
         {% block form_start %}
-            {{ form_start(form, {'action': path('admin_stock_edit', {id : stock.id}) ~ pagination.buildQuery}) }}
+            {{ form_start(form, {'action': path('admin_stock_edit', {id : stock.id}) ~ pagination.buildQuery, attr: {'class': 'm-form'}}) }}
         {% endblock %}
 
         {% block icon_list %}
@@ -34,9 +34,19 @@
                     <div class="col-md-6">{{ form_row(form.referency) }}</div>
                 </div>
                 <div class="row">
+                    <div class="col-md-6">{{ form_row(form.brand) }}</div>
                     <div class="col-md-6">{{ form_row(form.quantity) }}</div>
-                    <div class="col-md-6">{{ form_row(form.unitPrice) }}</div>
                 </div>
+                <div class="row">
+                    <div class="col-md-6">{{ form_row(form.unitPrice) }}</div>
+                    <div class="col-md-6">{{ form_row(form.barCode) }}</div>
+                </div>
+                <div class='m-form__seperator m-form__seperator--dashed'></div>
+                <div class="row">
+                    <div class="col-md-6">{{ form_row(form.customer) }}</div>
+                    <div class="col-md-6">{{ form_row(form.paymentMethod) }}</div>
+                </div>
+                <div class='m-form__seperator m-form__seperator--dashed'></div>
             </div>
         {% endblock %}
 

@@ -35,6 +35,10 @@ class StockRepository extends BaseRepository
             $qb->andWhere('stock.user = :user')->setParameter('user', $routeParams['user']);
         }
 
+        if (isset($routeParams['brand']) && !empty($routeParams['brand'])) {
+            $qb->andWhere('stock.brand = :brand')->setParameter('brand', $routeParams['brand']);
+        }
+
         if ((isset($routeParams['date_start']) && !empty($routeParams['date_start'])) && (isset($routeParams['date_end']) && !empty($routeParams['date_end']))) {
 
             $routeParams['date_start'] .= ' 00:00';

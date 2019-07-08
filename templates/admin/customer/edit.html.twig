@@ -1,0 +1,56 @@
+{% extends 'admin/base.html.twig' %}
+{% block title %}{{ 'customer.actions.edit'|trans }}{% endblock %}
+
+{% block page_content %}
+
+    {% embed 'admin/_partials/_default_resource.html.twig' with {'route_index' : 'admin_customer_index'} %}
+
+        {% block form_start %}
+            {{ form_start(form, {'action': path('admin_customer_edit', {id : customer.id}) ~ pagination.buildQuery}) }}
+        {% endblock %}
+
+        {% block icon_list %}
+            <span class="m-portlet__head-icon">
+                <i class="flaticon-profile"></i>
+            </span>
+        {% endblock %}
+
+        {% block caption_subject %}
+            <span class="caption-subject font-green-sharp bold uppercase">
+                {{ 'customer.actions.edit'|trans }}
+            </span>
+        {% endblock %}
+
+        {% block nav_tabs %}
+            <li class="nav-item">
+                <a href="#geral" class="nav-link active" data-toggle="tab">{{ 'resource.tabs.details'|trans }}</a>
+            </li>
+            <li class="nav-item">
+                <a href="#addresses" class="nav-link" data-toggle="tab">{{ 'address.title'|trans }}</a>
+            </li>
+            <li class="nav-item">
+                <a href="#brands" class="nav-link" data-toggle="tab">{{ 'brand.title'|trans }}</a>
+            </li>
+            <li class="nav-item">
+                <a href="#obs" class="nav-link" data-toggle="tab">{{ 'customerObservations.title'|trans }}</a>
+            </li>
+        {% endblock %}
+
+        {% block tab_pane %}
+            {% include 'admin/customer/_form.html.twig' with {'form': form} %}
+        {% endblock %}
+
+    {% endembed %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {% embed 'admin/_partials/_block_javascripts.html.twig' %}
+        {% block javascripts_page_snippets %}
+            <script src="{{ asset('assets/widgets/input-mask.js') }}"></script>
+            <script src="{{ asset('assets/custom/customerAddresses.js') }}"></script>
+            <script src="{{ asset('assets/custom/customerBrands.js') }}"></script>
+            <script src="{{ asset('assets/custom/customerObservations.js') }}"></script>
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

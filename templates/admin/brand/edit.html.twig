@@ -1,0 +1,36 @@
+{% extends 'admin/base.html.twig' %}
+{% block title %}{{ 'brand.actions.edit'|trans }}{% endblock %}
+
+{% block page_content %}
+
+    {% embed 'admin/_partials/_default_resource.html.twig' with {'route_index' : 'admin_brand_index'} %}
+
+        {% block form_start %}
+            {{ form_start(form, {'action': path('admin_brand_edit', {id : brand.id}) ~ pagination.buildQuery}) }}
+        {% endblock %}
+
+        {% block icon_list %}
+            <span class="m-portlet__head-icon">
+                <i class="flaticon-interface-10"></i>
+            </span>
+        {% endblock %}
+
+        {% block caption_subject %}
+            <span class="caption-subject font-green-sharp bold uppercase">
+                {{ 'brand.actions.edit'|trans }}
+            </span>
+        {% endblock %}
+
+        {% block nav_tabs %}
+            <li class="nav-item">
+                <a href="#geral" class="nav-link active" data-toggle="tab">{{ 'resource.tabs.details'|trans }}</a>
+            </li>
+        {% endblock %}
+
+        {% block tab_pane %}
+            {% include 'admin/brand/_form.html.twig' with {'form': form} %}
+        {% endblock %}
+
+    {% endembed %}
+
+{% endblock %}

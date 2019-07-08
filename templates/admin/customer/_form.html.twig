@@ -1,0 +1,68 @@
+<div role="tabpanel" class="tab-pane active" id="geral">
+    <div class="row">
+        <div class="col-md-6">{{ form_row(form.name, {'attr': {'autofocus': true}}) }}</div>
+        <div class="col-md-6">{{ form_row(form.email) }}</div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">{{ form_row(form.cnpj, {'attr': {'class':'maskCnpj'}}) }}</div>
+        <div class="col-md-6">{{ form_row(form.phoneNumber, {'attr': {'class':'maskPhoneNumber'}}) }}</div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">{{ form_row(form.state) }}</div>
+        <div class="col-md-6">{{ form_row(form.category) }}</div>
+    </div>
+</div>
+
+<div role="tabpanel" class="tab-pane" id="addresses">
+    <div id="customerAddress" data-prototype="{% include 'admin/customer/collection/_customerAddresses.html.twig'
+        with {'item': form.customerAddresses.vars.prototype.address, 'prototype': true} %}">
+
+        {% for customerAddress in form.customerAddresses %}
+            {% include 'admin/customer/collection/_customerAddresses.html.twig'
+                with {'item' : customerAddress.address, 'collection': true } %}
+        {% endfor %}
+
+        <div id="panel_add_customerAddress">
+            <a href="#" class="btn btn-brand m-btn m-btn--icon m-btn--air" id="btn_add_customerAddress">
+                <span><i class="la la-plus"></i><span>{{ 'resource.actions.items.add'|trans }}</span></span>
+            </a>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+
+<div role="tabpanel" class="tab-pane" id="brands">
+    <div id="customerBrand" data-prototype="{% include 'admin/customer/collection/_customerBrands.html.twig'
+        with {'item': form.customerBrands.vars.prototype, 'prototype': true} %}">
+
+        {% for customerBrand in form.customerBrands %}
+            {% include 'admin/customer/collection/_customerBrands.html.twig'
+                with {'item' : customerBrand, 'collection': true } %}
+        {% endfor %}
+
+        <div id="panel_add_customerBrand">
+            <a href="#" class="btn btn-brand m-btn m-btn--icon m-btn--air" id="btn_add_customerBrand">
+                <span><i class="la la-plus"></i><span>{{ 'resource.actions.items.add'|trans }}</span></span>
+            </a>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+
+<div role="tabpanel" class="tab-pane" id="obs">
+    <div id="customerObservation" data-prototype="{% include 'admin/customer/collection/_customerObservations.html.twig'
+        with {'item': form.customerObservations.vars.prototype, 'prototype': true} %}">
+
+        {% for customerObservation in form.customerObservations %}
+            {% include 'admin/customer/collection/_customerObservations.html.twig'
+                with {'item' : customerObservation, 'collection': true } %}
+        {% endfor %}
+
+        <div id="panel_add_customerObservation">
+            <a href="#" class="btn btn-brand m-btn m-btn--icon m-btn--air" id="btn_add_customerObservation">
+                <span><i class="la la-plus"></i><span>{{ 'resource.actions.items.add'|trans }}</span></span>
+            </a>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>

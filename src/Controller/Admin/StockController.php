@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Controller\BaseController;
+use App\Entity\Brand;
 use App\Entity\Stock;
 use App\Entity\User;
 use App\Event\FlashBagEvents;
@@ -78,6 +79,9 @@ class StockController extends BaseController
         $users = $this->getDoctrine()->getRepository(User::class)->queryLatestForm()
             ->getQuery()->getResult();
 
+        $brands = $this->getDoctrine()->getRepository(Brand::class)->queryLatestForm()
+            ->getQuery()->getResult();
+
         $deleteForms = [];
         $total = [];
         $totalAdd = 0;
@@ -112,6 +116,7 @@ class StockController extends BaseController
             'delete_forms' => $deleteForms,
             'total' => $total,
             'users' => $users,
+            'brands' => $brands
             //'formXml' => $formXml->createView()
         ]);
     }
@@ -360,6 +365,16 @@ class StockController extends BaseController
         $domDocument->loadXml($xml);
         $nodeList = $domDocument->getElementsByTagName('det');
 
+        if (!$request->request->get('type') || !$request->request->get('brand')) {
+            return new JsonResponse(['message' => 'invalid_request',], 400);
+        }
+
+        $brand = $this->getDoctrine()->getRepository(Brand::class)->findOneBy(['id' => $request->request->get('brand')]);
+
+        if (!$brand) {
+            return new JsonResponse(['message' => 'invalid_request',], 400);
+        }
+
         if ($nodeList->length > 0) {
             $stocks = [];
             $em = $this->getDoctrine()->getManager();
@@ -375,7 +390,8 @@ class StockController extends BaseController
                     ->setQuantity($quantity)
                     ->setUnitPrice($unitPrice)
                     ->setAmount($amount)
-                    ->setType(StockTypes::TYPE_ADD);
+                    ->setType($request->request->get('type'))
+                    ->setBrand($brand);
 
                 $stocks[] = $stock;
                 $em->persist($stock);

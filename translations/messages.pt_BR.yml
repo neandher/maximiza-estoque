@@ -10,6 +10,8 @@ resource:
             deleted: Houve um erro ao deletar o registro
     fields:
         title: Título
+        name: Nome
+        description: Descrição
     filters:
         search: Busca
         num_items: Items por página
@@ -103,9 +105,61 @@ stock:
         unitPrice: Valor Unitário
         type: Movimentação
         xmlFile: Arquivo XML
+        barCode: Código de Barras
+        paymentMethod: Forma de Pagamento
     types:
         add: Entrada
         remove: Saída
+    paymentMethods:
+        cheque: Cheque
+        cartao: Cartão
+        dinheiro: Dinheiro
     actions:
         new: Novo
         edit: Editar Movimentação
+address:
+    title: Endereços
+    title_single: Endereço
+    fields:
+        street: Rua
+        district: Bairro
+        city: Cidade
+        zipCode: Cep
+        uf: UF
+        complement: Complemento
+
+customer:
+    title: Clientes
+    title_single: Cliente
+    fields:
+        email: E-mail
+        cnpj: CNPJ
+        phoneNumber: Telefone
+    actions:
+        new: Novo Cliente
+        edit: Editar Cliente
+
+customerObservations:
+    title: Observações
+    title_single: Observação
+
+brand:
+    title: Marcas
+    title_single: Marca
+    actions:
+        new: Nova Marca
+        edit: Editar Marca
+
+customerState:
+    title: Status Cliente
+    title_single: Status
+    actions:
+        new: Novo Status
+        edit: Editar Status
+
+customerCategory:
+    title: Categoria Cliente
+    title_single: Categoria
+    actions:
+        new: Nova Categoria
+        edit: Editar Categoria

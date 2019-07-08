@@ -1,0 +1,33 @@
+{% if prototype is defined %}
+    <div class='row'>
+        <div class='col-md-6'>{{ form_row(item.street)|e('html_attr') }}</div>
+        <div class='col-md-6'>{{ form_row(item.district)|e('html_attr') }}</div>
+    </div>
+    <div class='row'>
+        <div class='col-md-6'>{{ form_row(item.city)|e('html_attr') }}</div>
+        <div class='col-md-6'>{{ form_row(item.uf)|e('html_attr') }}</div>
+    </div>
+    <div class='row'>
+        <div class='col-md-6'>{{ form_row(item.zipCode, {'attr': {'class':'maskCep'}})|e('html_attr') }}</div>
+        <div class='col-md-6'>{{ form_row(item.complement)|e('html_attr') }}</div>
+    </div>
+{% endif %}
+
+{% if collection is defined %}
+    <div class='m-portlet m-portlet--rounded'>
+        <div class='m-portlet__body'>
+            <div class='row'>
+                <div class='col-md-6'>{{ form_row(item.street) }}</div>
+                <div class='col-md-6'>{{ form_row(item.district) }}</div>
+            </div>
+            <div class='row'>
+                <div class='col-md-6'>{{ form_row(item.city) }}</div>
+                <div class='col-md-6'>{{ form_row(item.uf) }}</div>
+            </div>
+            <div class='row'>
+                <div class='col-md-6'>{{ form_row(item.zipCode, {'attr': {'class':'maskCep'}}) }}</div>
+                <div class='col-md-6'>{{ form_row(item.complement) }}</div>
+            </div>
+        </div>
+    </div>
+{% endif %}

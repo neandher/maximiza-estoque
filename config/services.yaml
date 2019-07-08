@@ -43,3 +43,11 @@ services:
     App\EventListener\StockSubscriber:
         tags:
             - { name: doctrine.event_subscriber }
+
+    App\EventListener\CustomerSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }
+
+    App\EventListener\CustomerObservationSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }
