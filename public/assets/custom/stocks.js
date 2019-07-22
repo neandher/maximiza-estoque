@@ -43,17 +43,26 @@ function addStockForm($collectionHolder, $newLinkPanel) {
     var $newFormPanel = $('<div class="m-portlet m-portlet--rounded"></div>').append($newFormPanelBody);
     $newLinkPanel.before($newFormPanel);
 
+    var messageExist = document.createElement('span');
+    messageExist.id = "message_exist_" + index;
+    $("label[for='stock_multiple_stocks_" + index + "_referency']").append(messageExist);
+
     $("#stock_multiple_stocks_" + index + "_quantity").val('1');
     $("#stock_multiple_stocks_" + index + "_referency").focus();
 
     $("#stock_multiple_stocks_" + index + "_referency").keyup((event) => {
-        const referencyCode = $(event.currentTarget).val();
+
+        referencyCode = $(event.currentTarget).val();
         if (referencyCode.length >= 8) {
             $.get(RoutingManager.generate('admin_stock_verify_referency'), {referency: referencyCode})
                 .done((stock) => {
                     $("#stock_multiple_stocks_" + index + "_unitPrice").val(stock.unitPrice.toString().replace('.', ','));
+                    $("#message_exist_" + index).html(` <span class="m-badge m-badge--info m-badge--wide">Referência encontrada</span>`);
                 })
-            ;
+                .fail(() => {
+                    $("#message_exist_" + index).html(` <span class="m-badge m-badge--warning m-badge--wide">Referência não encontrada</span>`);
+                    $("#stock_multiple_stocks_" + index + "_unitPrice").val('');
+                });
         }
     });
 

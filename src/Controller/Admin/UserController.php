@@ -8,6 +8,7 @@ use App\Event\FlashBagEvents;
 use App\Form\RegistrationType;
 use App\Util\FlashBag;
 use App\Util\Pagination;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,6 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * @package App\Controller\Admin
  *
  * @Route("/user", name="admin_user_")
+ * @IsGranted("ROLE_LEVEL_2")
  */
 class UserController extends BaseController
 {
@@ -84,7 +86,7 @@ class UserController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setEnabled(true);
-            $user->setRoles(['ROLE_SUPER_ADMIN']);
+            // $user->setRoles(['ROLE_SUPER_ADMIN']);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);

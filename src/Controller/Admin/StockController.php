@@ -15,6 +15,7 @@ use App\StockTypes;
 use App\Util\FlashBag;
 use App\Util\Helpers;
 use App\Util\Pagination;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
@@ -259,6 +260,7 @@ class StockController extends BaseController
 
     /**
      * @Route("/{id}/delete", requirements={"id" : "\d+"}, name="delete")
+     * @IsGranted("ROLE_LEVEL_2")
      * @Method("DELETE")
      * @param Request $request
      * @param Stock $stock
@@ -294,6 +296,7 @@ class StockController extends BaseController
 
     /**
      * @Route("/delete-items", name="delete_items")
+     * @IsGranted("ROLE_LEVEL_2")
      * @Method("DELETE")
      * @param Request $request
      * @return Response

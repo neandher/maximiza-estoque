@@ -77,6 +77,7 @@ user:
         lastLogin: Último Login
         receiveEmails: Receber E-mails
         emailNotifications: Email Notificações
+        roles: Nível de Permissão
     menu:
         profile: Meu Perfil
         profile_update: Atualizar Perfil
