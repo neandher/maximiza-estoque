@@ -193,8 +193,8 @@ bill:
         amount: Valor
         note: Observações
         dueDate: Data de Vencimento
-        paymentDate: Data de Pagamento
-        amountPaid: Valor Pago
+        paymentDate: Data de Pagamento ou Recebimento
+        amountPaid: Valor Pago ou Recebido
         createdAt: Data de Criação
         status: Status
         type: Movimentação

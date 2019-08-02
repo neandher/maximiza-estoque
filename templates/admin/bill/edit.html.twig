@@ -6,7 +6,7 @@
     {% embed 'admin/_partials/_default_resource.html.twig' with {'route_index' : 'admin_bill_index'} %}
 
         {% block form_start %}
-            {{ form_start(form, {'action': path('admin_bill_edit', {id : bill.id}) ~ pagination.buildQuery}) }}
+            {{ form_start(form, {'action': path('admin_bill_edit', {id : bill.id}) ~ pagination.buildQuery, attr: {'class': 'm-form'}}) }}
         {% endblock %}
 
         {% block icon_list %}
