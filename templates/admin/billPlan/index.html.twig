@@ -1,0 +1,119 @@
+{% extends 'admin/base.html.twig' %}
+{% block title %}{{ 'billPlan.title'|trans }}{% endblock %}
+
+{% block page_content %}
+
+    {% embed 'admin/_partials/_default_table_list.html.twig' %}
+
+        {% block icon_list %}
+            <i class="flaticon-list"></i>
+        {% endblock %}
+
+        {% block caption_subject %}
+            {{ 'resource.caption'|trans({'%resourceName%': 'billPlan.title'|trans, '%nbResults%' : billPlans.nbResults}) }}
+        {% endblock %}
+
+        {% block head_tools_actions %}
+            <li class="m-portlet__nav-item">
+                <a href="{{ path('admin_bill_plan_new') ~ pagination.buildQuery }}"
+                   class="btn btn-accent m-btn m-btn--custom m-btn--icon">
+                    <span><i class="la la-plus"></i><span> {{ 'billPlan.actions.new'|trans }}</span></span>
+                </a>
+            </li>
+        {% endblock %}
+        {% block head_tools_dropdown %}{% endblock %}
+
+        {% block filters_actions %}
+            <div class="row m--margin-bottom-20">
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label for="search">
+                        {{ 'resource.filters.search'|trans }}:
+                    </label>
+                    <input type="text" class="form-control m-input m-input--solid" data-col-index="0"
+                           placeholder="{{ 'resource.fields.name'|trans }}" name="search" id="search"
+                           value="{% if app.request.query.has('search') %}{{ app.request.query.get('search') }}{% endif %}">
+                </div>
+            </div>
+            <div class="m-separator m-separator--md m-separator--dashed"></div>
+            <div class="row m--margin-bottom-20">
+                <div class="col-lg-12">
+                    <button type="submit" class="btn btn-brand m-btn m-btn--icon">
+                        <span><i class="la la-search"></i><span>{{ 'resource.filters.search'|trans }}</span></span>
+                    </button>
+                    &nbsp;&nbsp;
+                    <a href="{{ path('admin_bill_plan_index') }}"
+                       class="btn btn-secondary m-btn m-btn--icon">
+                        <span><i class="la la-close"></i><span>{{ 'resource.actions.items.reset'|trans }}</span></span>
+                    </a>
+                </div>
+            </div>
+        {% endblock %}
+
+        {% block table_tr_th %}
+            <tr>
+                <th>ID</th>
+                <th>
+                    <a href="{{ path('admin_bill_plan_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('name') }}">
+                        {{ 'resource.fields.name'|trans }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ path('admin_bill_plan_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('billPlanCategory') }}">
+                        {{ 'billPlanCategory.title_single'|trans }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ path('admin_bill_plan_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('createdAt') }}">
+                        {{ 'resource.timestampable.createdAt'|trans }}
+                    </a>
+                </th>
+                <th>{{ 'resource.actions.title'|trans }}</th>
+
+            </tr>
+        {% endblock %}
+
+        {% block table_tr_td %}
+            {% for billPlan in billPlans %}
+                <tr>
+                    <td>{{ billPlan.id }}</td>
+                    <td>{{ billPlan.description }}</td>
+                    <td>{{ billPlan.billPlanCategory.description }}</td>
+                    <td>{{ billPlan.createdAt|date('d/m/Y H:i') }}</td>
+                    <td>
+                        <a href="{{ path('admin_bill_plan_edit', { id: billPlan.id }) ~ pagination.buildQuery }}"
+                           class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"
+                           name="{{ 'resource.actions.items.edit'|trans }}"> <i class="la la-edit"></i>
+                        </a>
+                        <a href="javascript:;"
+                           class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"
+                           data-toggle="modal"
+                           data-target="#modalConfirmation"
+                           data-path="{{ path('admin_bill_plan_delete', {id: billPlan.id})|escape }}"
+                           data-crf="{{ form_widget(delete_forms[billPlan.id]._token)|escape }}"
+                           title="{{ 'resource.actions.items.delete'|trans }}"
+                        >
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endblock %}
+
+        {% block list_info %}
+            {{ 'resource.pagination.list_info'|trans({
+                '%currentPageOffsetStart%': billPlans.currentPageOffsetStart,
+                '%currentPageOffsetEnd%': billPlans.currentPageOffsetEnd,
+                '%nbResults%': billPlans.nbResults
+            }) }}
+        {% endblock %}
+
+        {% block list_pagination %}
+            {{ pagerfanta(billPlans, 'twitter_bootstrap4',{
+                routeName: 'admin_bill_plan_index',
+                routeParams: app.request.query.all
+            }) }}
+        {% endblock %}
+
+    {% endembed %}
+
+{% endblock %}

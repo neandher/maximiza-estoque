@@ -1,0 +1,23 @@
+<div role="tabpanel" class="tab-pane active" id="geral">
+    <div class="row">
+        <div class="col-md-6">{{ form_row(form.type, {'attr': {'autofocus': true}}) }}</div>
+        <div class="col-md-6">{{ form_row(form.billPlan) }}</div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">{{ form_row(form.description) }}</div>
+    </div>
+    <div class='m-form__seperator m-form__seperator--dashed'></div>
+    <div class="row">
+        <div class="col-md-6">{{ form_row(form.dueDate) }}</div>
+        <div class="col-md-6">{{ form_row(form.amount) }}</div>
+    </div>
+    <div class='m-form__seperator m-form__seperator--dashed'></div>
+    <div class="row">
+        <div class="col-md-6">{{ form_row(form.paymentDate) }}</div>
+        <div class="col-md-6">{{ form_row(form.amountPaid) }}</div>
+    </div>
+    <div class='m-form__seperator m-form__seperator--dashed'></div>
+    <div class="row">
+        <div class="col-md-6">{{ form_row(form.note) }}</div>
+    </div>
+</div>

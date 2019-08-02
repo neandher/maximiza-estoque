@@ -1,0 +1,47 @@
+{% extends 'admin/base.html.twig' %}
+{% block title %}{{ 'bill.actions.new'|trans }}{% endblock %}
+
+{% block page_content %}
+
+    {% embed 'admin/_partials/_default_resource.html.twig' with {'route_index' : 'admin_bill_index'} %}
+
+        {% block form_start %}
+            {{ form_start(form, {'action': path('admin_bill_new') ~ pagination.buildQuery, attr: {'class': 'm-form'}}) }}
+        {% endblock %}
+
+        {% block icon_list %}
+            <span class="m-portlet__head-icon">
+                <i class="flaticon-list"></i>
+            </span>
+        {% endblock %}
+
+        {% block caption_subject %}
+            <span class="caption-subject font-green-sharp bold uppercase">
+                {{ 'bill.actions.new'|trans }}
+            </span>
+        {% endblock %}
+
+        {% block nav_tabs %}
+            <li class="nav-item">
+                <a href="#geral" class="nav-link active" data-toggle="tab">{{ 'resource.tabs.details'|trans }}</a>
+            </li>
+        {% endblock %}
+
+        {% block tab_pane %}
+            {% include 'admin/bill/_form.html.twig' with {'form': form} %}
+        {% endblock %}
+
+    {% endembed %}
+{% endblock %}
+
+{% block javascripts %}
+    {% embed 'admin/_partials/_block_javascripts.html.twig' %}
+        {% block javascripts_page_snippets %}
+            <script src="{{ asset('assets/widgets/bootstrap-datepicker.js') }}"></script>
+            <script src="{{ asset('assets/widgets/bootstrap-datepicker.pt-BR.min.js') }}"></script>
+            <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+            <script src="{{ asset('assets/custom/RoutingManager.js') }}"></script>
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

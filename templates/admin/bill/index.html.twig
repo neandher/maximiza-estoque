@@ -1,0 +1,393 @@
+{% extends 'admin/base.html.twig' %}
+{% block title %}{{ 'bill.title'|trans }}{% endblock %}
+
+{% block page_content %}
+
+    {% embed 'admin/_partials/_default_table_list.html.twig' %}
+
+        {% block icon_list %}
+            <i class="flaticon-list"></i>
+        {% endblock %}
+
+        {% block caption_subject %}
+            {{ 'resource.caption'|trans({'%resourceName%': 'bill.title'|trans, '%nbResults%' : bills.nbResults}) }}
+        {% endblock %}
+
+        {% block head_tools_actions %}
+            <li class="m-portlet__nav-item">
+                <a href="{{ path('admin_bill_new') ~ pagination.buildQuery }}"
+                   class="btn btn-accent m-btn m-btn--custom m-btn--icon">
+                    <span><i class="la la-plus"></i><span> {{ 'bill.actions.new'|trans }}</span></span>
+                </a>
+            </li>
+        {% endblock %}
+        {% block head_tools_dropdown %}{% endblock %}
+
+        {% block filters_actions %}
+            <span class="m--hide js-bil-plans-receive"
+                  data-bill-plans-receive="{{ billPlansReceive|json_encode|e('html_attr') }}"></span>
+            <span class="m--hide js-bil-plans-pay"
+                  data-bill-plans-pay="{{ billPlansPay|json_encode|e('html_attr') }}"></span>
+            <div class="row m--margin-bottom-20">
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label for="search">
+                        {{ 'resource.filters.search'|trans }}:
+                    </label>
+                    <input type="text" class="form-control m-input m-input--solid" data-col-index="0"
+                           placeholder="{{ 'resource.fields.description'|trans }}" name="search" id="search"
+                           value="{% if app.request.query.has('search') %}{{ app.request.query.get('search') }}{% endif %}">
+                </div>
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label>
+                        {{ 'resource.filters.date'|trans }}:
+                    </label>
+                    <div class="input-daterange input-group" id="m_datepicker">
+                        <input type="text" class="form-control m-input" name="date_start" readonly
+                               placeholder="{{ 'resource.filters.date_start'|trans }}" id="m_datepicker_1"
+                               value="{% if app.request.query.has('date_start') %}{{ app.request.query.get('date_start') }}{% endif %}"/>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="la la-ellipsis-h"></i>
+                            </span>
+                        </div>
+                        <input type="text" class="form-control m-input" name="date_end" readonly
+                               placeholder="{{ 'resource.filters.date_end'|trans }}" id="m_datepicker_1"
+                               value="{% if app.request.query.has('date_end') %}{{ app.request.query.get('date_end') }}{% endif %}"/>
+                    </div>
+                </div>
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label for="type">
+                        {{ 'bill.fields.type'|trans }}:
+                    </label>
+                    <select class="form-control m-input" name="type" id="type" onchange="submit();">
+                        <option value="">Todos</option>
+                        {% for type,name in constant('App\\Entity\\Bill::BILL_TYPES') %}
+                            <option value="{{ type }}"
+                                    {% if app.request.query.has('type') %}{% if app.request.query.get('type') == type %}selected{% endif %}{% endif %}>
+                                {{ name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label for="type">
+                        {{ 'bill.fields.status'|trans }}:
+                    </label>
+                    <select class="form-control m-input" name="status" id="status" onchange="submit();">
+                        <option value="">Todos</option>
+                        {% for status,name in constant('App\\Entity\\Bill::BILL_STATUS') %}
+                            <option value="{{ status }}"
+                                    {% if app.request.query.has('status') %}{% if app.request.query.get('status') == status %}selected{% endif %}{% endif %}>
+                                {{ name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="m-separator m-separator--md m-separator--dashed"></div>
+            <div class="row m--margin-bottom-20">
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label for="num_items">
+                        {{ 'resource.filters.num_items'|trans }}:
+                    </label>
+                    <input type="number" class="form-control col-md-4"
+                           name="num_items" id="num_items"
+                           value="{{ app.request.query.get('num_items', pagination.routeParams('num_items')) }}"
+                           min="5">
+                </div>
+            </div>
+            <div class="m-separator m-separator--md m-separator--dashed"></div>
+            <div class="row m--margin-bottom-20">
+                <div class="col-lg-12">
+                    <button type="submit" class="btn btn-brand m-btn m-btn--icon">
+                        <span><i class="la la-search"></i><span>{{ 'resource.filters.search'|trans }}</span></span>
+                    </button>
+                    &nbsp;&nbsp;
+                    <a href="{{ path('admin_bill_index') }}"
+                       class="btn btn-secondary m-btn m-btn--icon">
+                        <span><i class="la la-close"></i><span>{{ 'resource.actions.items.reset'|trans }}</span></span>
+                    </a>
+                </div>
+            </div>
+        {% endblock %}
+
+        {% block table_tr_th %}
+            <tr>
+                <th>ID</th>
+                <th>
+                    <a href="{{ path('admin_bill_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('description') }}">
+                        {{ 'resource.fields.description'|trans }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ path('admin_bill_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('type') }}">
+                        {{ 'bill.fields.type'|trans }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ path('admin_bill_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('amount') }}">
+                        {{ 'bill.fields.amount'|trans }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ path('admin_bill_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('dueDate') }}">
+                        {{ 'bill.fields.dueDate'|trans }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ path('admin_bill_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('status') }}">
+                        {{ 'bill.fields.status'|trans }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ path('admin_bill_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('billPlan.description') }}">
+                        {{ 'billPlan.title_single'|trans }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ path('admin_bill_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('createdAt') }}">
+                        {{ 'resource.timestampable.createdAt'|trans }}
+                    </a>
+                </th>
+                <th>{{ 'resource.actions.title'|trans }}</th>
+
+            </tr>
+        {% endblock %}
+
+        {% block table_tr_td %}
+            {% for bill in bills %}
+                <tr>
+                    <td>{{ bill.id }}</td>
+                    <td>{{ bill.description }}</td>
+                    <td>{{ ('bill.types.' ~ bill.type) |trans }}</td>
+                    <td>
+                        {{ bill.amount | number_format | amountLabel(bill.type) }}
+                    </td>
+                    <td>{{ bill.dueDate|date('d/m/Y') }}</td>
+                    <td>
+                        {% if bill.isOverDue %}
+                            <span class="m-badge m-badge--wide m-badge--danger">{{ 'bill.status.overDue'|trans }}</span>
+                        {% else %}
+                            <span class="m-badge m-badge--wide m-badge--{% if bill.status == constant('App\\Entity\\Bill::BILL_STATUS_PAID') %}success {% else %}warning{% endif %}">
+                                {{ ('bill.status.' ~ bill.status) | trans }}
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td>{{ bill.billPlan.descriptionWithType }}</td>
+                    <td>{{ bill.createdAt|date('d/m/Y H:i') }}</td>
+                    <td>
+                        <a href="{{ path('admin_bill_edit', { id: bill.id }) ~ pagination.buildQuery }}"
+                           class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"
+                           name="{{ 'resource.actions.items.edit'|trans }}"> <i class="la la-edit"></i>
+                        </a>
+                        <a href="javascript:;"
+                           class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"
+                           data-toggle="modal"
+                           data-target="#modalConfirmation"
+                           data-path="{{ path('admin_bill_delete', {id: bill.id})|escape }}"
+                           data-crf="{{ form_widget(delete_forms[bill.id]._token)|escape }}"
+                           title="{{ 'resource.actions.items.delete'|trans }}"
+                        >
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endblock %}
+
+        {% block list_info %}
+            {{ 'resource.pagination.list_info'|trans({
+                '%currentPageOffsetStart%': bills.currentPageOffsetStart,
+                '%currentPageOffsetEnd%': bills.currentPageOffsetEnd,
+                '%nbResults%': bills.nbResults
+            }) }}
+        {% endblock %}
+
+        {% block list_pagination %}
+            {{ pagerfanta(bills, 'twitter_bootstrap4',{
+                routeName: 'admin_bill_index',
+                routeParams: app.request.query.all
+            }) }}
+        {% endblock %}
+
+    {% endembed %}
+
+    {% if (app.request.query.has('type') and app.request.query.get('type') == constant('App\\Entity\\Bill::BILL_TYPE_PAY'))
+        or not app.request.query.has('type') or app.request.query.get('type') is empty %}
+        {% embed 'admin/_partials/_default_table_list.html.twig' %}
+            {% block modal_confirmation %}{% endblock %}
+            {% block pagination_content %}{% endblock %}
+            {% block portlet_body_style %}style="padding-bottom: 0"{% endblock %}
+            {% block head_tools_dropdown %}{% endblock %}
+            {% block table_scroll %}{% endblock %}
+            {% block caption_subject %}
+                Total Despesas
+            {% endblock %}
+            {% block body_hr_first %}{% endblock %}
+            {% block table_tr_th %}
+                <tr>
+                    <th>A pagar</th>
+                    <th>Pago</th>
+                    <th>Vencido</th>
+                    <th>Total</th>
+                </tr>
+            {% endblock %}
+            {% block table_tr_td %}
+                <tr>
+                    <td>{{ totalPayOpen | number_format | amountLabel(constant('App\\Entity\\Bill::BILL_TYPE_PAY')) }}</td>
+                    <td>{{ totalPayPaid | number_format | amountLabel(constant('App\\Entity\\Bill::BILL_TYPE_PAY')) }}</td>
+                    <td>{{ totalPayOverDue | number_format | amountLabel(constant('App\\Entity\\Bill::BILL_TYPE_PAY')) }}</td>
+                    <td>{{ totalPay | number_format | amountLabel(constant('App\\Entity\\Bill::BILL_TYPE_PAY')) }}</td>
+                </tr>
+            {% endblock %}
+            {% block after_form %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="chart_div_pay"></div>
+                    </div>
+                </div>
+            {% endblock %}
+        {% endembed %}
+    {% endif %}
+
+    {% if (app.request.query.has('type') and app.request.query.get('type') == constant('App\\Entity\\Bill::BILL_TYPE_RECEIVE'))
+        or not app.request.query.has('type') or app.request.query.get('type') is empty %}
+        {% embed 'admin/_partials/_default_table_list.html.twig' %}
+            {% block modal_confirmation %}{% endblock %}
+            {% block pagination_content %}{% endblock %}
+            {% block portlet_body_style %}style="padding-bottom: 0"{% endblock %}
+            {% block head_tools_dropdown %}{% endblock %}
+            {% block table_scroll %}{% endblock %}
+            {% block caption_subject %}
+                Total Receitas
+            {% endblock %}
+            {% block body_hr_first %}{% endblock %}
+            {% block table_tr_th %}
+                <tr>
+                    <th>A receber</th>
+                    <th>Recebido</th>
+                    <th>Vencido</th>
+                    <th>Total</th>
+                </tr>
+            {% endblock %}
+            {% block table_tr_td %}
+                <tr>
+                    <td>{{ totalReceiveOpen | number_format | amountLabel(constant('App\\Entity\\Bill::BILL_TYPE_RECEIVE')) }}</td>
+                    <td>{{ totalReceivePaid | number_format | amountLabel(constant('App\\Entity\\Bill::BILL_TYPE_RECEIVE')) }}</td>
+                    <td>{{ totalReceiveOverDue | number_format | amountLabel(constant('App\\Entity\\Bill::BILL_TYPE_RECEIVE')) }}</td>
+                    <td>{{ totalReceive | number_format | amountLabel(constant('App\\Entity\\Bill::BILL_TYPE_RECEIVE')) }}</td>
+                </tr>
+            {% endblock %}
+            {% block after_form %}
+                <div id="chart_div_receive"></div>
+            {% endblock %}
+        {% endembed %}
+    {% endif %}
+
+    {% if not app.request.query.has('type') or app.request.query.get('type') is empty %}
+        {% embed 'admin/_partials/_default_table_list.html.twig' %}
+            {% block modal_confirmation %}{% endblock %}
+            {% block pagination_content %}{% endblock %}
+            {% block portlet_body_style %}style="padding-bottom: 0"{% endblock %}
+            {% block head_tools_dropdown %}{% endblock %}
+            {% block table_scroll %}{% endblock %}
+            {% block caption_subject %}
+                Geral
+            {% endblock %}
+            {% block body_hr_first %}{% endblock %}
+            {% block table_tr_th %}
+                <tr>
+                    <th>A receber - A pagar</th>
+                    <th>Recebido - Pago</th>
+                    <th>Receita - Despesa</th>
+                </tr>
+            {% endblock %}
+            {% block table_tr_td %}
+                <tr>
+                    <td>
+                        <span class="m--font-{% if cfTotalToPayAndReceive < 0 %}danger{% else %}success{% endif %}">
+                            R$ {{ cfTotalToPayAndReceive | number_format }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="m--font-{% if cfTotalPaidAndReceived < 0 %}danger{% else %}success{% endif %}">
+                            R$ {{ cfTotalPaidAndReceived | number_format }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="m--font-{% if cfTotal < 0 %}danger{% else %}success{% endif %}">
+                            R$ {{ cfTotal | number_format }}
+                        </span>
+                    </td>
+                </tr>
+            {% endblock %}
+        {% endembed %}
+    {% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {% embed 'admin/_partials/_block_javascripts.html.twig' %}
+        {% block javascripts_page_snippets %}
+            <script src="{{ asset('assets/widgets/bootstrap-datepicker.js') }}"></script>
+            <script src="{{ asset('assets/widgets/bootstrap-datepicker.pt-BR.min.js') }}"></script>
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+
+                // Load the Visualization API and the corechart package.
+                google.charts.load('current', {'packages': ['corechart']});
+
+                // Set a callback to run when the Google Visualization API is loaded.
+                google.charts.setOnLoadCallback(drawChart);
+
+                // Callback that creates and populates a data table,
+                // instantiates the pie chart, passes in the data and
+                // draws it.
+                function drawChart() {
+
+                    // Set chart options
+                    var options = {
+                        // 'title': 'Gráfico',
+                        'width': '100%',
+                        'height': 300
+                    };
+
+                    // Pay
+                    var data = new google.visualization.DataTable();
+                    data.addColumn('string', 'Topping');
+                    data.addColumn('number', 'Slices');
+
+                    var plansPay = $('.js-bil-plans-pay').data('billPlansPay');
+                    var hasPlansPay = false;
+                    Object.keys(plansPay).forEach(function (key) {
+                        data.addRow([key, plansPay[key]]);
+                        hasPlansPay = true;
+                    });
+
+                    if (hasPlansPay) {
+                        var chart = new google.visualization.PieChart(document.getElementById('chart_div_pay'));
+                        chart.draw(data, options);
+                    }
+
+                    // Receive
+                    var data = new google.visualization.DataTable();
+                    data.addColumn('string', 'Topping');
+                    data.addColumn('number', 'Slices');
+
+                    var plansReceive = $('.js-bil-plans-receive').data('billPlansReceive');
+                    var hasPlansReceive = false;
+                    Object.keys(plansReceive).forEach(function (key) {
+                        data.addRow([key, plansReceive[key]]);
+                        hasPlansReceive = true;
+                    });
+
+                    if (hasPlansReceive) {
+                        // Instantiate and draw our chart, passing in some options.
+                        var chart = new google.visualization.PieChart(document.getElementById('chart_div_receive'));
+                        chart.draw(data, options);
+                    }
+                }
+            </script>
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

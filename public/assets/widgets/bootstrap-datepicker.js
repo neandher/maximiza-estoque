@@ -1,9 +1,10 @@
 var BootstrapDatepicker = {
     init: function () {
-        $("#m_datepicker_1, #m_datepicker_1_validate").datepicker({
+        $("#m_datepicker_1, #m_datepicker_1_validate, .js-datepicker").datepicker({
             todayHighlight: !0,
             orientation: "bottom left",
             autoclose: true,
+            clearBtn: true,
             language: 'pt-BR',
             templates: {leftArrow: '<i class="la la-angle-left"></i>', rightArrow: '<i class="la la-angle-right"></i>'}
         }), $("#m_datepicker_1_modal").datepicker({

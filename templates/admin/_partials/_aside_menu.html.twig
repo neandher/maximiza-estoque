@@ -28,19 +28,8 @@
             </a>
         </li>
         <li class="m-menu__section ">
-            <h4 class="m-menu__section-text">Principal</h4>
+            <h4 class="m-menu__section-text">Estoque</h4>
             <i class="m-menu__section-icon flaticon-more-v3"></i>
-        </li>
-        <li class="m-menu__item " aria-haspopup="true">
-            <a href="{{ path('admin_customer_index') }}" class="m-menu__link ">
-                <span class="m-menu__item-here"></span>
-                <i class="m-menu__link-icon flaticon-profile"></i>
-                <span class="m-menu__link-title">
-                    <span class="m-menu__link-wrap">
-                        <span class="m-menu__link-text">{{ 'customer.title'|trans }}</span>
-                    </span>
-                </span>
-            </a>
         </li>
         <li class="m-menu__item " aria-haspopup="true">
             <a href="{{ path('admin_stock_index') }}" class="m-menu__link ">
@@ -53,10 +42,6 @@
                 </span>
             </a>
         </li>
-        <li class="m-menu__section ">
-            <h4 class="m-menu__section-text">Configurações</h4>
-            <i class="m-menu__section-icon flaticon-more-v3"></i>
-        </li>
         <li class="m-menu__item " aria-haspopup="true">
             <a href="{{ path('admin_brand_index') }}" class="m-menu__link ">
                 <span class="m-menu__item-here"></span>
@@ -64,6 +49,17 @@
                 <span class="m-menu__link-title">
                     <span class="m-menu__link-wrap">
                         <span class="m-menu__link-text">{{ 'brand.title'|trans }}</span>
+                    </span>
+                </span>
+            </a>
+        </li>
+        <li class="m-menu__item " aria-haspopup="true">
+            <a href="{{ path('admin_customer_index') }}" class="m-menu__link ">
+                <span class="m-menu__item-here"></span>
+                <i class="m-menu__link-icon flaticon-profile"></i>
+                <span class="m-menu__link-title">
+                    <span class="m-menu__link-wrap">
+                        <span class="m-menu__link-text">{{ 'customer.title'|trans }}</span>
                     </span>
                 </span>
             </a>
@@ -90,5 +86,43 @@
                 </span>
             </a>
         </li>
+        <li class="m-menu__section ">
+            <h4 class="m-menu__section-text">Financeiro</h4>
+            <i class="m-menu__section-icon flaticon-more-v3"></i>
+        </li>
+        <li class="m-menu__item " aria-haspopup="true">
+            <a href="{{ path('admin_bill_index') }}" class="m-menu__link ">
+                <span class="m-menu__item-here"></span>
+                <i class="m-menu__link-icon flaticon-interface-10"></i>
+                <span class="m-menu__link-title">
+                    <span class="m-menu__link-wrap">
+                        <span class="m-menu__link-text">{{ 'bill.title'|trans }}</span>
+                    </span>
+                </span>
+            </a>
+        </li>
+        <li class="m-menu__item " aria-haspopup="true">
+            <a href="{{ path('admin_bill_plan_index') }}" class="m-menu__link ">
+                <span class="m-menu__item-here"></span>
+                <i class="m-menu__link-icon flaticon-interface-10"></i>
+                <span class="m-menu__link-title">
+                    <span class="m-menu__link-wrap">
+                        <span class="m-menu__link-text">{{ 'billPlan.title'|trans }}</span>
+                    </span>
+                </span>
+            </a>
+        </li>
+        <li class="m-menu__item " aria-haspopup="true">
+            <a href="{{ path('admin_bill_plan_category_index') }}" class="m-menu__link ">
+                <span class="m-menu__item-here"></span>
+                <i class="m-menu__link-icon flaticon-interface-10"></i>
+                <span class="m-menu__link-title">
+                    <span class="m-menu__link-wrap">
+                        <span class="m-menu__link-text">{{ 'billPlanCategory.title'|trans }}</span>
+                    </span>
+                </span>
+            </a>
+        </li>
+
     </ul>
 </div>

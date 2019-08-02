@@ -108,6 +108,7 @@ stock:
         xmlFile: Arquivo XML
         barCode: Código de Barras
         paymentMethod: Forma de Pagamento
+        obs: Observações
     types:
         add: Entrada
         remove: Saída
@@ -164,3 +165,46 @@ customerCategory:
     actions:
         new: Nova Categoria
         edit: Editar Categoria
+
+billPlanCategory:
+    title: Categorias Plano de Contas
+    title_single: Categoria Plano de Conta
+    actions:
+        new: Nova Categoria
+        edit: Editar Categoria
+    fields:
+        description: Descrição
+        type: Tipo
+
+billPlan:
+    title: Plano de Contas
+    title_single: Plano de Conta
+    fields:
+        description: Descrição
+    actions:
+        new: Novo Plano de Conta
+        edit: Editar Plano de Conta
+
+bill:
+    title: Contas
+    title_single: Conta
+    fields:
+        description: Descrição
+        amount: Valor
+        note: Observações
+        dueDate: Data de Vencimento
+        paymentDate: Data de Pagamento
+        amountPaid: Valor Pago
+        createdAt: Data de Criação
+        status: Status
+        type: Movimentação
+    types:
+        pay: Despesa
+        receive: Receita
+    status:
+        open: Em aberto
+        paid: Pago
+        overDue: Vencido
+    actions:
+        new: Nova Conta
+        edit: Editar Conta

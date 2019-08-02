@@ -77,6 +77,11 @@ class Stock
      */
     private $paymentMethod;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $obs;
+
     public function getId()
     {
         return $this->id;
@@ -209,6 +214,18 @@ class Stock
     public function setPaymentMethod(?string $paymentMethod): self
     {
         $this->paymentMethod = $paymentMethod;
+
+        return $this;
+    }
+
+    public function getObs(): ?string
+    {
+        return $this->obs;
+    }
+
+    public function setObs(?string $obs): self
+    {
+        $this->obs = $obs;
 
         return $this;
     }

@@ -17,6 +17,10 @@
         <div class='col-md-6'>{{ form_row(item.vars.prototype.paymentMethod)|e('html_attr') }}</div>
     </div>
     <div class='m-form__seperator m-form__seperator--dashed'></div>
+    <div class='row'>
+        <div class='col-md-12'>{{ form_row(item.vars.prototype.obs)|e('html_attr') }}</div>
+    </div>
+    <div class='m-form__seperator m-form__seperator--dashed'></div>
 {% endif %}
 
 {% if collection is defined %}
@@ -38,6 +42,10 @@
             <div class='row'>
                 <div class='col-md-6'>{{ form_row(item.customer) }}</div>
                 <div class='col-md-6'>{{ form_row(item.paymentMethod) }}</div>
+            </div>
+            <div class='m-form__seperator m-form__seperator--dashed'></div>
+            <div class='row'>
+                <div class='col-md-12'>{{ form_row(item.obs) }}</div>
             </div>
             <div class='m-form__seperator m-form__seperator--dashed'></div>
         </div>

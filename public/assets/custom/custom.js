@@ -56,3 +56,29 @@ function showTabError() {
         return false;
     });
 }
+
+$('#bill_type').change(function () {
+
+    var billPlan = $('#bill_billPlan');
+
+    if ($(this).val().length > 0) {
+
+        billPlan.html($("<option></option>").attr("value", 0).text('carregando...'));
+
+        $.getJSON(Routing.generate("admin_bill_plan_list_form_json", {"bill_type": $(this).val()}), function (data) {
+
+            billPlan.children().remove();
+
+            billPlan.html($("<option></option>"));
+
+            $.each(data, function (key, value) {
+                billPlan.append($("<option></option>")
+                    .attr("value", value.id)
+                    .text(value.billPlanCategory.description + ' - ' + value.description));
+            });
+        })
+    }
+    else {
+        billPlan.html($("<option></option>"));
+    }
+});
