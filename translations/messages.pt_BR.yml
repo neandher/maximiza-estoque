@@ -204,6 +204,7 @@ bill:
     status:
         open: Em aberto
         paid: Pago
+        received: Recebido
         overDue: Vencido
     actions:
         new: Nova Conta

@@ -169,7 +169,16 @@
                             <span class="m-badge m-badge--wide m-badge--danger">{{ 'bill.status.overDue'|trans }}</span>
                         {% else %}
                             <span class="m-badge m-badge--wide m-badge--{% if bill.status == constant('App\\Entity\\Bill::BILL_STATUS_PAID') %}success {% else %}warning{% endif %}">
-                                {{ ('bill.status.' ~ bill.status) | trans }}
+                                {% if bill.status == constant('App\\Entity\\Bill::BILL_STATUS_PAID') %}
+                                    {% if bill.type == constant('App\\Entity\\Bill::BILL_TYPE_PAY') %}
+                                        {{ ('bill.status.' ~ bill.status) | trans }}
+                                    {% endif %}
+                                    {% if bill.type == constant('App\\Entity\\Bill::BILL_TYPE_RECEIVE') %}
+                                        {{ ('bill.status.received') | trans }}
+                                    {% endif %}
+                                {% else %}
+                                    {{ ('bill.status.' ~ bill.status) | trans }}
+                                {% endif %}
                             </span>
                         {% endif %}
                     </td>
