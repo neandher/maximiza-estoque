@@ -68,7 +68,6 @@ class Bill
      * @ORM\Column(type="datetime")
      * @Assert\NotBlank()
      * @Assert\Date()
-     * @Assert\NotNull()
      */
     private $dueDate;
 
@@ -160,7 +159,7 @@ class Bill
         return $this->dueDate;
     }
 
-    public function setDueDate(\DateTimeInterface $dueDate): self
+    public function setDueDate(?\DateTimeInterface $dueDate): self
     {
         $this->dueDate = $dueDate;
 
