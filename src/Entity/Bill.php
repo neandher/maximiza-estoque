@@ -68,6 +68,7 @@ class Bill
      * @ORM\Column(type="datetime")
      * @Assert\NotBlank()
      * @Assert\Date()
+     * @Assert\NotNull()
      */
     private $dueDate;
 
