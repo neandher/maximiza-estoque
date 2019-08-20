@@ -93,6 +93,11 @@ class Customer
      */
     private $category;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $fantasyName;
+
     public function __construct()
     {
         $this->customerAddresses = new ArrayCollection();
@@ -284,5 +289,17 @@ class Customer
 
     public function getNameWithCategory(){
         return $this->getCategory()->getName() . ' - ' . $this->getName();
+    }
+
+    public function getFantasyName(): ?string
+    {
+        return $this->fantasyName;
+    }
+
+    public function setFantasyName(?string $fantasyName): self
+    {
+        $this->fantasyName = $fantasyName;
+
+        return $this;
     }
 }

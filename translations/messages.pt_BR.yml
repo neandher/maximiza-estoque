@@ -134,6 +134,8 @@ customer:
     title: Clientes
     title_single: Cliente
     fields:
+        name: Razão Social
+        fantasyName: Nome Fantasia
         email: E-mail
         cnpj: CNPJ
         phoneNumber: Telefone

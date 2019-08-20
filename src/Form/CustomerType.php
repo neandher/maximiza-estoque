@@ -21,7 +21,10 @@ class CustomerType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'resource.fields.name'
+                'label' => 'customer.fields.name'
+            ])
+            ->add('fantasyName', TextType::class, [
+                'label' => 'customer.fields.fantasyName'
             ])
             ->add('email', EmailType::class, [
                 'label' => 'customer.fields.email'

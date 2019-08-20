@@ -1,14 +1,17 @@
 <div role="tabpanel" class="tab-pane active" id="geral">
     <div class="row">
         <div class="col-md-6">{{ form_row(form.name, {'attr': {'autofocus': true}}) }}</div>
+        <div class="col-md-6">{{ form_row(form.fantasyName) }}</div>
+    </div>
+    <div class="row">
         <div class="col-md-6">{{ form_row(form.email) }}</div>
-    </div>
-    <div class="row">
         <div class="col-md-6">{{ form_row(form.cnpj, {'attr': {'class':'maskCnpj'}}) }}</div>
-        <div class="col-md-6">{{ form_row(form.phoneNumber, {'attr': {'class':'maskPhoneNumber'}}) }}</div>
     </div>
     <div class="row">
+        <div class="col-md-6">{{ form_row(form.phoneNumber, {'attr': {'class':'maskPhoneNumber'}}) }}</div>
         <div class="col-md-6">{{ form_row(form.state) }}</div>
+    </div>
+    <div class="row">
         <div class="col-md-6">{{ form_row(form.category) }}</div>
     </div>
 </div>
