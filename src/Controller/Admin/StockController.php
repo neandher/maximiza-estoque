@@ -436,4 +436,21 @@ class StockController extends BaseController
 
         return new JsonResponse(['message' => 'Not Found'], 404);
     }
+
+    /**
+     * @Route("/balance", name="balance")
+     * @param Request $request
+     * @return Response
+     */
+    public function balance(Request $request)
+    {
+        $pagination = $this->pagination->handle($request, Stock::class);
+
+        $stocks = $this->getDoctrine()->getRepository(Stock::class)->balancePaginator($pagination);
+
+        return $this->render('admin/stock/balance.html.twig', [
+            'stocks' => $stocks,
+            'pagination' => $pagination,
+        ]);
+    }
 }

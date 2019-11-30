@@ -6,6 +6,7 @@ use App\Entity\Stock;
 use App\StockTypes;
 use App\Util\Pagination;
 use Doctrine\ORM\NonUniqueResultException;
+use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -108,5 +109,42 @@ class StockRepository extends BaseRepository
             ->addSelect('SUM(stock.quantity) as total')
             ->addSelect('SUM(stock.amount) as totalAmount')
             ->getQuery()->getOneOrNullResult();
+    }
+
+    public function balance(Pagination $pagination)
+    {
+        $routeParams = $pagination->getRouteParams();
+
+        $conn = $this->getEntityManager()
+            ->getConnection();
+
+        $where = 'where id > 0';
+
+        if (isset($routeParams['search']) && !empty($routeParams['search'])) {
+            $where .= ' and referency like "%' . $routeParams['search'] . '%" ';
+        }
+
+        $sql = '
+                select distinct referency, (select SUM(stock.quantity) from stock where referency = stk.referency ) as saldo 
+                from stock as stk ' . $where . '
+                group by referency                
+                order by referency asc
+            ';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    public function balancePaginator(Pagination $pagination)
+    {
+        $routeParams = $pagination->getRouteParams();
+
+        $paginator = new Pagerfanta(new ArrayAdapter($this->balance($pagination)));
+
+        $paginator->setMaxPerPage($routeParams['num_items']);
+        $paginator->setCurrentPage($routeParams['page']);
+
+        return $paginator;
     }
 }

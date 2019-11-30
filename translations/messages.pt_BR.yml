@@ -96,9 +96,11 @@ user:
         title_small: Login
 
 stock:
-    title: Estoque Mostruário
-    title_single: Estoque Mostruário
+    title: Estoque Movimentação
+    titleBalance: Estoque Saldo
+    title_single: Estoque Movimentação
     total: Total
+    balance: Saldo
     fields:
         referency: Referência
         quantity: Quantidade
