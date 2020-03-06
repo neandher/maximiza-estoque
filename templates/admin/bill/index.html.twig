@@ -87,6 +87,31 @@
             <div class="m-separator m-separator--md m-separator--dashed"></div>
             <div class="row m--margin-bottom-20">
                 <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label for="user">
+                        {{ 'user.title_single'|trans }}:
+                    </label>
+                    <select class="form-control m-input" name="user" id="user" onchange="submit();">
+                        <option value=""></option>
+                        {% for user in users %}
+                            <option value="{{ user.id }}"
+                                    {% if app.request.query.has('user') %}{% if app.request.query.get('user') == user.id %}selected{% endif %}{% endif %}>{{ user.fullName }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label for="user">
+                        Exportar
+                    </label>
+                    <select class="form-control m-input" name="exp" id="exp" onchange="submit();">
+                        <option value=""></option>
+                        <option value="excel"
+                                {% if app.request.query.has('exp') %}{% if app.request.query.get('exp') == 'excel' %}selected{% endif %}{% endif %}>
+                            Excel
+                        </option>
+                    </select>
+                </div>
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
                     <label for="num_items">
                         {{ 'resource.filters.num_items'|trans }}:
                     </label>
@@ -183,7 +208,7 @@
                         {% endif %}
                     </td>
                     <td>{{ bill.billPlan.descriptionWithType }}</td>
-                    <td>{{ bill.createdAt|date('d/m/Y H:i') }}</td>
+                    <td>{{ bill.createdAt|date('d/m/Y H:i') }} por {{ bill.user.fullName }}</td>
                     <td>
                         <a href="{{ path('admin_bill_edit', { id: bill.id }) ~ pagination.buildQuery }}"
                            class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"

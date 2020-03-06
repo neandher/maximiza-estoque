@@ -66,6 +66,7 @@ class StockType extends AbstractType
             ])
             ->add('obs', TextareaType::class, [
                 'label' => 'stock.fields.obs',
+                'required' => false,
                 'attr' => [
                     'rows' => 5
                 ]

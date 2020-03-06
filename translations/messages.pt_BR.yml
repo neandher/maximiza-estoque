@@ -202,6 +202,7 @@ bill:
         createdAt: Data de Criação
         status: Status
         type: Movimentação
+        paymentMethod: Forma de Pagamento
     types:
         pay: Despesa
         receive: Receita

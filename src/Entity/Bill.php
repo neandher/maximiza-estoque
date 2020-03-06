@@ -89,6 +89,31 @@ class Bill
      */
     private $billPlan;
 
+    /**
+     * @ORM\Column(type="string", length=60, nullable=true)
+     */
+    private $paymentMethod;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $referency;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $quantity;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Customer")
+     */
+    private $customer;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     */
+    private $user;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -233,5 +258,65 @@ class Bill
             $isDateOverDue = true;
         }
         return $isDateOverDue;
+    }
+
+    public function getPaymentMethod(): ?string
+    {
+        return $this->paymentMethod;
+    }
+
+    public function setPaymentMethod(?string $paymentMethod): self
+    {
+        $this->paymentMethod = $paymentMethod;
+
+        return $this;
+    }
+
+    public function getReferency(): ?string
+    {
+        return $this->referency;
+    }
+
+    public function setReferency(?string $referency): self
+    {
+        $this->referency = $referency;
+
+        return $this;
+    }
+
+    public function getQuantity(): ?int
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity(?int $quantity): self
+    {
+        $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    public function getCustomer(): ?Customer
+    {
+        return $this->customer;
+    }
+
+    public function setCustomer(?Customer $customer): self
+    {
+        $this->customer = $customer;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
     }
 }

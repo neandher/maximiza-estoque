@@ -51,3 +51,7 @@ services:
     App\EventListener\CustomerObservationSubscriber:
         tags:
             - { name: doctrine.event_subscriber }
+
+    App\EventListener\BillSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }

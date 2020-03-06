@@ -4,12 +4,16 @@ namespace App\Form;
 
 use App\Entity\Bill;
 use App\Entity\BillPlan;
+use App\Entity\Customer;
 use App\Form\Model\MoneyCustomType;
 use App\Repository\BillPlanRepository;
+use App\Repository\CustomerRepository;
+use App\StockPaymentMethods;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -60,7 +64,25 @@ class BillType extends AbstractType
                     'label' => 'bill.fields.amountPaid',
                     // 'attr' => ['onkeydown' => 'Formata(this,20,event,2);']
                 ]
-            );
+            )
+            ->add('paymentMethod', ChoiceType::class, [
+                'label' => 'bill.fields.paymentMethod',
+                'choices' => array_flip(StockPaymentMethods::PAYMENT_METHODS),
+            ])
+            ->add('referency', TextType::class, [
+                'label' => 'stock.fields.referency'
+            ])
+            ->add('quantity', NumberType::class, ['label' => 'stock.fields.quantity'])
+            ->add('customer', EntityType::class, [
+                'class' => Customer::class,
+                'query_builder' => function (CustomerRepository $er) {
+                    return $er->queryLatestForm();
+                },
+                'choice_label' => 'getNameWithCategory',
+                'label' => 'customer.title_single',
+                'required' => false
+            ])
+        ;
 
         $formModifier = function (FormInterface $form, $billType = null) {
 

@@ -5,13 +5,21 @@
     </div>
     <div class="row">
         <div class="col-md-6">{{ form_row(form.description) }}</div>
+        <div class="col-md-6">{{ form_row(form.paymentMethod) }}</div>
+    </div>
+    <div class='m-form__seperator m-form__seperator--dashed'></div>
+    <div class="row">
+        <div class="col-md-6">{{ form_row(form.referency) }}</div>
+        <div class="col-md-6">{{ form_row(form.quantity) }}</div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">{{ form_row(form.customer) }}</div>
     </div>
     <div class='m-form__seperator m-form__seperator--dashed'></div>
     <div class="row">
         <div class="col-md-6">{{ form_row(form.dueDate) }}</div>
         <div class="col-md-6">{{ form_row(form.amount) }}</div>
     </div>
-    <div class='m-form__seperator m-form__seperator--dashed'></div>
     <div class="row">
         <div class="col-md-6">{{ form_row(form.paymentDate) }}</div>
         <div class="col-md-6">{{ form_row(form.amountPaid) }}</div>

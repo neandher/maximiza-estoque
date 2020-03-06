@@ -62,6 +62,10 @@ class BillRepository extends BaseRepository
             $qb->andWhere('bill.status = :status')->setParameter('status', $routeParams['status']);
         }
 
+        if (isset($routeParams['user']) && !empty($routeParams['user'])) {
+            $qb->andWhere('bill.user = :user')->setParameter('user', $routeParams['user']);
+        }
+
         if (!empty($routeParams['bill_status_desc'])) {
 
             if ($routeParams['bill_status_desc'] == Bill::BILL_STATUS_PAID) {

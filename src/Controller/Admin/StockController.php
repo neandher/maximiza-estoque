@@ -390,10 +390,10 @@ class StockController extends BaseController
 
                 $stock = new Stock();
                 $stock->setReferency($referency)
+                    ->setType($request->request->get('type'))
                     ->setQuantity($quantity)
                     ->setUnitPrice($unitPrice)
-                    ->setAmount($amount)
-                    ->setType($request->request->get('type'))
+                    ->setAmount($stock->getQuantity() * $amount)
                     ->setBrand($brand);
 
                 $stocks[] = $stock;
