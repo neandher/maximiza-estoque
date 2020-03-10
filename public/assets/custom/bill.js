@@ -6,7 +6,7 @@ $(document).ready(function () {
     $("#bill_referency").keyup((event) => {
 
         const referencyCode = $(event.currentTarget).val();
-        if (referencyCode.length >= 8) {
+        if (referencyCode.length >= 6) {
             $.get(RoutingManager.generate('admin_stock_verify_referency'), {referency: referencyCode})
                 .done((stock) => {
                     $("#bill_quantity").val('1');

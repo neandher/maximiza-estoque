@@ -53,7 +53,7 @@ function addStockForm($collectionHolder, $newLinkPanel) {
     $("#stock_multiple_stocks_" + index + "_referency").keyup((event) => {
 
         referencyCode = $(event.currentTarget).val();
-        if (referencyCode.length >= 8) {
+        if (referencyCode.length >= 6) {
             $.get(RoutingManager.generate('admin_stock_verify_referency'), {referency: referencyCode})
                 .done((stock) => {
                     $("#stock_multiple_stocks_" + index + "_unitPrice").val(stock.unitPrice.toString().replace('.', ','));
