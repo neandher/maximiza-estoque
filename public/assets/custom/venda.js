@@ -1,0 +1,150 @@
+$('#modalVenda').on('shown.bs.modal', function (event) {
+
+    let $referency = $('#venda_referencia');
+    $referency.focus();
+    $($referency).keyup((e) => {
+        e.preventDefault();
+        let referencyVal = $(e.currentTarget).val();
+        if (referencyVal.length >= 6) {
+            $('#venda_btn_add').attr('disabled', true);
+            $.get(RoutingManager.generate('admin_stock_verify_referency'), {referency: referencyVal})
+                .done((stock) => {
+                    $('#venda_marca_referencia').val(stock.brand.name);
+                    $("#venda_valor").val(stock.unitPrice.toString().replace('.', ','));
+                })
+                .fail(() => {
+                    $('#venda_marca_referencia').val('');
+                    $("#venda_valor").val('');
+                })
+                .always(function () {
+                    $referency.attr('disabled', false);
+                    $('#venda_btn_add').attr('disabled', false);
+                });
+        }
+    });
+
+    $('#venda_desconto').keyup((e) => {
+        e.preventDefault();
+        let descontoValor = $(e.currentTarget).val();
+
+        $('#venda_exibe_desconto').html('RS 0,00');
+
+        if (venda.subtotal && venda.subtotal > 0 && descontoValor) {
+            const descontoNumber = Number(descontoValor.toString().replace(',', '.'));
+            venda.discount = descontoNumber;
+            venda.total = venda.subtotal - descontoNumber;
+        } else {
+            venda.total = venda.subtotal;
+        }
+
+        $('#venda_exibe_desconto').html(formatCurrency(descontoValor));
+        $('#venda_exibe_total').html(formatCurrency(venda.total));
+    });
+});
+
+let venda = {
+    subtotal: 0,
+    discount: 0,
+    total: 0,
+    client: '',
+    paymentMethod: '',
+    orderItems: []
+};
+
+let vendaItemsCount = 1;
+
+function vendaAddItem() {
+    let vendaItem = {
+        referency: '',
+        quantity: 1,
+        subtotal: 0,
+        // discount: 0,
+        total: 0,
+        price: 0
+    };
+
+    const referency = $('#venda_referencia').val();
+    const quantity = Number($('#venda_quantidade').val());
+    const price = Number($('#venda_valor').val().toString().replace(',', '.'));
+    // const discount = Number($('#venda_desconto').val().toString().replace(',', '.'));
+
+    vendaItem.quantity = quantity;
+    vendaItem.referency = referency;
+    vendaItem.price = price;
+    vendaItem.subtotal = price * quantity;
+    vendaItem.total = vendaItem.subtotal;
+
+    venda.subtotal += vendaItem.subtotal;
+    venda.total += vendaItem.total;
+    venda.orderItems.push(vendaItem);
+
+    $vendaTableBody = $('#vendaTableBody');
+    // $vendaTableBody.append('<tr id=\'venda_item_'+vendaItemsCount+'\'><td>' + referency + '</td><td>' + formatCurrency(price) + '</td><td>' + quantity + '</td><td>' + formatCurrency(vendaItem.total) + '</td><td><i class=\'fa fa-trash\' onclick=\'vendaRemoveItem('+vendaItemsCount+')\'></td></tr>');
+    $vendaTableBody.append('<tr id=\'venda_item_'+vendaItemsCount+'\'><td>' + referency + '</td><td>' + formatCurrency(price) + '</td><td>' + quantity + '</td><td>' + formatCurrency(vendaItem.total) + '</td></tr>');
+
+    $('#venda_exibe_subtotal').html(formatCurrency(venda.subtotal));
+    $('#venda_exibe_total').html(formatCurrency(venda.total));
+
+    $('#venda_referencia').val('');
+    $('#venda_quantidade').val(1);
+    $('#venda_valor').val('');
+    $('#venda_marca_referencia').val('');
+    $('#venda_referencia').focus();
+
+    vendaItemsCount++;
+}
+
+function vendaRemoveItem(item) {
+    console.log(item);
+}
+
+function finalizaVenda() {
+    $('#venda_btn_finaliza').attr('disabled', true);
+
+    venda.client = $('#venda_cliente').val() === '' ? '-' : $('#venda_cliente').val();
+    venda.paymentMethod = $('#venda_forma_pagamento').val();
+    venda.subtotal = venda.subtotal.toString();
+    venda.discount = venda.discount.toString();
+    venda.total = venda.total.toString();
+    venda.orderItems.forEach(el => {
+        el.price = el.price.toString();
+        el.subtotal = el.subtotal.toString();
+        el.total = el.total.toString();
+    });
+
+    $.post(RoutingManager.generate('admin_order_new'), JSON.stringify(venda))
+        .done((res) => {
+            alert('Venda realizada com sucesso.');
+
+            $('#vendaTableBody').html('');
+            $('#venda_referencia').val('');
+            $('#venda_quantidade').val(1);
+            $('#venda_valor').val('');
+            $('#venda_marca_referencia').val('');
+            $('#venda_desconto').val('R$ 0,00');
+            $('#venda_forma_pagamento').prop("selectedIndex", 0).val();
+            $('#venda_cliente').val('');
+            $('#venda_exibe_subtotal').html('R$ 0,00');
+            $('#venda_exibe_total').html('R$ 0,00');
+            $('#venda_exibe_desconto').html('R$ 0,00');
+            $('#venda_referencia').focus();
+
+            venda = {
+                subtotal: 0,
+                discount: 0,
+                total: 0,
+                client: '',
+                orderItems: []
+            };
+        })
+        .fail((err) => {
+            alert('Erro ao realizar a venda');
+        })
+        .always(function () {
+            $('#venda_btn_finaliza').attr('disabled', false);
+        });
+}
+
+function formatCurrency(value) {
+    return value.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+}

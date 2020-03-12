@@ -214,3 +214,15 @@ bill:
     actions:
         new: Nova Conta
         edit: Editar Conta
+
+order:
+    title: Vendas
+    title_single: Venda
+    fields:
+        subtotal: Subtotal
+        discount: Desconto
+        total: Total
+        client: Cliente
+        createdAt: Data de Criação
+    actions:
+        new: Nova Venda

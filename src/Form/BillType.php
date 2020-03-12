@@ -69,19 +69,6 @@ class BillType extends AbstractType
                 'label' => 'bill.fields.paymentMethod',
                 'choices' => array_flip(StockPaymentMethods::PAYMENT_METHODS),
             ])
-            ->add('referency', TextType::class, [
-                'label' => 'stock.fields.referency'
-            ])
-            ->add('quantity', NumberType::class, ['label' => 'stock.fields.quantity'])
-            ->add('customer', EntityType::class, [
-                'class' => Customer::class,
-                'query_builder' => function (CustomerRepository $er) {
-                    return $er->queryLatestForm();
-                },
-                'choice_label' => 'getNameWithCategory',
-                'label' => 'customer.title_single',
-                'required' => false
-            ])
         ;
 
         $formModifier = function (FormInterface $form, $billType = null) {

@@ -1,0 +1,328 @@
+{% extends 'admin/base.html.twig' %}
+{% block title %}{{ 'order.title'|trans }}{% endblock %}
+
+{% block page_content %}
+
+    {% embed 'admin/_partials/_default_table_list.html.twig' %}
+
+        {% block icon_list %}
+            <i class="flaticon-list"></i>
+        {% endblock %}
+
+        {% block caption_subject %}
+            {{ 'resource.caption'|trans({'%resourceName%': 'order.title'|trans, '%nbResults%' : orders.nbResults}) }}
+        {% endblock %}
+
+        {% block head_tools_actions %}
+            <li class="m-portlet__nav-item">
+                <a href="javascript:;" data-toggle="modal" data-target="#modalVenda"
+                   class="btn btn-accent m-btn m-btn--custom m-btn--icon">
+                    <span><i class="la la-plus"></i><span> Nova Venda</span></span>
+                </a>
+            </li>
+        {% endblock %}
+        {% block head_tools_dropdown %}{% endblock %}
+
+        {% block filters_actions %}
+            <div class="row m--margin-bottom-20">
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label>
+                        {{ 'resource.filters.date'|trans }}:
+                    </label>
+                    <div class="input-daterange input-group" id="m_datepicker">
+                        <input type="text" class="form-control m-input" name="date_start" readonly
+                               placeholder="{{ 'resource.filters.date_start'|trans }}" id="m_datepicker_1"
+                               value="{% if app.request.query.has('date_start') %}{{ app.request.query.get('date_start') }}{% endif %}"/>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="la la-ellipsis-h"></i>
+                            </span>
+                        </div>
+                        <input type="text" class="form-control m-input" name="date_end" readonly
+                               placeholder="{{ 'resource.filters.date_end'|trans }}" id="m_datepicker_1"
+                               value="{% if app.request.query.has('date_end') %}{{ app.request.query.get('date_end') }}{% endif %}"/>
+                    </div>
+                </div>
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label for="user">
+                        {{ 'user.title_single'|trans }}:
+                    </label>
+                    <select class="form-control m-input" name="user" id="user" onchange="submit();">
+                        <option value=""></option>
+                        {% for user in users %}
+                            <option value="{{ user.id }}"
+                                    {% if app.request.query.has('user') %}{% if app.request.query.get('user') == user.id %}selected{% endif %}{% endif %}>{{ user.fullName }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label for="user">
+                        Exportar
+                    </label>
+                    <select class="form-control m-input" name="exp" id="exp" onchange="submit();">
+                        <option value=""></option>
+                        <option value="excel"
+                                {% if app.request.query.has('exp') %}{% if app.request.query.get('exp') == 'excel' %}selected{% endif %}{% endif %}>
+                            Excel
+                        </option>
+                    </select>
+                </div>
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label for="num_items">
+                        {{ 'resource.filters.num_items'|trans }}:
+                    </label>
+                    <input type="number" class="form-control col-md-4"
+                           name="num_items" id="num_items"
+                           value="{{ app.request.query.get('num_items', pagination.routeParams('num_items')) }}"
+                           min="5">
+
+                </div>
+            </div>
+            <div class="m-separator m-separator--md m-separator--dashed"></div>
+            <div class="row m--margin-bottom-20">
+                <div class="col-lg-12">
+                    <button type="submit" class="btn btn-brand m-btn m-btn--icon">
+                        <span><i class="la la-search"></i><span>{{ 'resource.filters.search'|trans }}</span></span>
+                    </button>
+                    &nbsp;&nbsp;
+                    <a href="{{ path('admin_order_index') }}"
+                       class="btn btn-secondary m-btn m-btn--icon">
+                        <span><i class="la la-close"></i><span>{{ 'resource.actions.items.reset'|trans }}</span></span>
+                    </a>
+                </div>
+            </div>
+        {% endblock %}
+
+        {% block table_tr_th %}
+            <tr>
+                <th>ID</th>
+                <th>
+                    <a href="{{ path('admin_order_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('client') }}">
+                        {{ 'order.fields.client'|trans }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ path('admin_order_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('subtotal') }}">
+                        {{ 'order.fields.subtotal'|trans }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ path('admin_order_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('discount') }}">
+                        {{ 'order.fields.discount'|trans }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ path('admin_order_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('total') }}">
+                        {{ 'order.fields.total'|trans }}
+                    </a>
+                </th>
+                <th>Itens</th>
+                <th>
+                    <a href="{{ path('admin_order_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('createdAt') }}">
+                        {{ 'resource.timestampable.createdAt'|trans }}
+                    </a>
+                </th>
+                <th>{{ 'resource.actions.title'|trans }}</th>
+            </tr>
+        {% endblock %}
+
+        {% block table_tr_td %}
+            {% for order in orders %}
+                <tr>
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.client }}</td>
+                    <td>{{ order.subtotal | number_format }}</td>
+                    <td>
+                        {{ order.discount | number_format }}
+                    </td>
+                    <td>{{ order.total | number_format }}</td>
+                    <td>{{ order.orderItemsString | raw }}</td>
+                    <td>{{ order.createdAt|date('d/m/Y H:i') }} por {{ order.user.fullName }}</td>
+                    <td>
+                        <a href="javascript:;"
+                           class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"
+                           data-toggle="modal"
+                           data-target="#modalConfirmation"
+                           data-path="{{ path('admin_order_delete', {id: order.id})|escape }}"
+                           data-crf="{{ form_widget(delete_forms[order.id]._token)|escape }}"
+                           title="{{ 'resource.actions.items.delete'|trans }}"
+                        >
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endblock %}
+
+        {% block list_info %}
+            {{ 'resource.pagination.list_info'|trans({
+                '%currentPageOffsetStart%': orders.currentPageOffsetStart,
+                '%currentPageOffsetEnd%': orders.currentPageOffsetEnd,
+                '%nbResults%': orders.nbResults
+            }) }}
+        {% endblock %}
+
+        {% block list_pagination %}
+            {{ pagerfanta(orders, 'twitter_bootstrap4',{
+                routeName: 'admin_order_index',
+                routeParams: app.request.query.all
+            }) }}
+        {% endblock %}
+
+    {% endembed %}
+
+    <div class="m-portlet m-portlet--mobile">
+        <div class="m-portlet__body text-center">
+            <h4>
+                Total: {{ total | number_format }}
+            </h4>
+        </div>
+    </div>
+
+    <!-- ModalVenda -->
+    <div class="modal fade" id="modalVenda" tabindex="-1" role="basic" aria-labelledby="modaVendaLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Nova Venda</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form onsubmit="return;" id="#form_venda">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="venda_referencia"
+                                               class="form-control-label required">Referência</label>
+                                        <input type="text" id="venda_referencia" name="venda_referencia"
+                                               required="required"
+                                               class="form-control">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="venda_quantidade"
+                                               class="form-control-label required">Quantidade</label>
+                                        <input type="number" id="venda_quantidade" name="venda_quantidade"
+                                               required="required"
+                                               class="form-control" value="1">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="venda_valor" class="form-control-label required">Preço
+                                            Unitário</label>
+                                        <input type="text" id="venda_valor" name="venda_valor" required="required"
+                                               class="form-control">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="venda_marca_referencia"
+                                               class="form-control-label required">Marca</label>
+                                        <input type="text" id="venda_marca_referencia" name="venda_marca_referencia"
+                                               disabled
+                                               class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button type="button" class="btn btn-default btn-block" id="venda_btn_add"
+                                        onclick="vendaAddItem()">
+                                    <i class="fa fa-plus"></i> Adicionar
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="card mt-4">
+                            <h6 class="card-header">Itens Adicionados</h6>
+                            <div class="card-body">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>Referência</th>
+                                        <th>Preço Unitário</th>
+                                        <th>Quantidade</th>
+                                        <th>Total</th>
+                                        {#<th>Remover</th>#}
+                                    </tr>
+                                    </thead>
+                                    <tbody id="vendaTableBody">
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <th scope="row" colspan="3" class="text-right">Subtotal:</th>
+                                        <th scope="row">
+                                            <span id="venda_exibe_subtotal">R$ 0,00</span>
+                                        </th>
+                                        {#<th></th>#}
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" colspan="3" class="text-right">Desconto:</th>
+                                        <th scope="row">
+                                            <span id="venda_exibe_desconto">R$ 0,00</span>
+                                        </th>
+                                        {#<th></th>#}
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" colspan="3" class="text-right">Total:</th>
+                                        <th scope="row">
+                                            <span id="venda_exibe_total">R$ 0,00</span>
+                                        </th>
+                                        {#<th></th>#}
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="form-group col-md-4">
+                                <label for="venda_cliente" class="form-control-label required">Cliente</label>
+                                <input type="text" id="venda_cliente" name="venda_cliente" required="required"
+                                       class="form-control">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="venda_desconto" class="form-control-label required">Desconto</label>
+                                <input type="text" id="venda_desconto" name="venda_desconto" required="required"
+                                       class="form-control" value="0,00">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="venda_forma_pagamento" class="form-control-label required">Forma de
+                                    Pagamento</label>
+                                <select class="form-control" name="venda_forma_pagamento" id="venda_forma_pagamento">
+                                    {% for key, pm in paymentMethods %}
+                                        <option value="{{ key }}">{{ pm }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-md-12 pt-3">
+                                <button type="button" class="btn btn-primary btn-block" id="venda_btn_finaliza"
+                                        onclick="finalizaVenda()">
+                                    Finalizar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End ModalVenda -->
+
+{% endblock %}
+
+{% block javascripts %}
+    {% embed 'admin/_partials/_block_javascripts.html.twig' %}
+        {% block javascripts_page_snippets %}
+            <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+            <script src="{{ asset('assets/custom/RoutingManager.js') }}"></script>
+            <script src="{{ asset('assets/widgets/bootstrap-datepicker.js') }}"></script>
+            <script src="{{ asset('assets/widgets/bootstrap-datepicker.pt-BR.min.js') }}"></script>
+            <script src="{{ asset('assets/custom/venda.js') }}"></script>
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

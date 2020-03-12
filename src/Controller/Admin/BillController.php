@@ -192,25 +192,6 @@ class BillController extends BaseController
                 FlashBagEvents::MESSAGE_SUCCESS_INSERTED
             );
 
-            if ($bill->getReferency() !== '') {
-
-                $stockByReferency = $this->getDoctrine()->getRepository(Stock::class)->findOneBy(['referency' => $bill->getReferency()]);
-
-                $stock = new Stock();
-                $stock
-                    ->setType($bill->getType() === Bill::BILL_TYPE_RECEIVE ? StockTypes::TYPE_REMOVE : StockTypes::TYPE_ADD)
-                    ->setQuantity($bill->getQuantity())
-                    ->setAmount($stock->getQuantity() * $bill->getAmountPaid())
-                    ->setUnitPrice($bill->getAmountPaid())
-                    ->setCustomer($bill->getCustomer())
-                    ->setPaymentMethod($bill->getPaymentMethod())
-                    ->setReferency($bill->getReferency())
-                    ->setBrand($stockByReferency->getBrand());
-
-                $em->persist($stock);
-                $em->flush();
-            }
-
             $handleSubmitButtons = $this->handleSubmitButtons(
                 $form,
                 'admin_bill_new',
@@ -352,15 +333,12 @@ class BillController extends BaseController
         $sheet->setCellValue('B' . $linha, 'Descrição');
         $sheet->setCellValue('C' . $linha, 'Plano de Conta');
         $sheet->setCellValue('D' . $linha, 'Forma de Pagamento');
-        $sheet->setCellValue('E' . $linha, 'Referência');
-        $sheet->setCellValue('F' . $linha, 'Quantidade');
-        $sheet->setCellValue('G' . $linha, 'Cliente');
-        $sheet->setCellValue('H' . $linha, 'Data de Vencimento');
-        $sheet->setCellValue('I' . $linha, 'Valor');
-        $sheet->setCellValue('J' . $linha, 'Data Pagamento/Recebimento');
-        $sheet->setCellValue('K' . $linha, 'Valor Pago/Recebido');
-        $sheet->setCellValue('L' . $linha, 'Usuário');
-        $sheet->setCellValue('M' . $linha, 'Observações');
+        $sheet->setCellValue('E' . $linha, 'Data de Vencimento');
+        $sheet->setCellValue('F' . $linha, 'Valor');
+        $sheet->setCellValue('G' . $linha, 'Data Pagamento/Recebimento');
+        $sheet->setCellValue('H' . $linha, 'Valor Pago/Recebido');
+        $sheet->setCellValue('I' . $linha, 'Usuário');
+        $sheet->setCellValue('J' . $linha, 'Observações');
 
         foreach ($bills as $bill) {
             $linha++;
@@ -368,15 +346,12 @@ class BillController extends BaseController
             $sheet->setCellValue('B' . $linha, $bill->getDescription());
             $sheet->setCellValue('C' . $linha, $bill->getBillPlan()->getDescriptionWithType());
             $sheet->setCellValue('D' . $linha, $bill->getPaymentMethod());
-            $sheet->setCellValue('E' . $linha, $bill->getReferency());
-            $sheet->setCellValue('F' . $linha, $bill->getQuantity());
-            $sheet->setCellValue('G' . $linha, $bill->getCustomer()->getUser()->getFullName());
-            $sheet->setCellValue('H' . $linha, $bill->getDueDate()->format('d/m/Y'));
-            $sheet->setCellValue('I' . $linha, $bill->getAmount());
-            $sheet->setCellValue('J' . $linha, $bill->getPaymentDate()->format('d/m/Y'));
-            $sheet->setCellValue('K' . $linha, $bill->getAmountPaid());
-            $sheet->setCellValue('L' . $linha, $bill->getUser()->getFullName());
-            $sheet->setCellValue('M' . $linha, $bill->getNote());
+            $sheet->setCellValue('E' . $linha, $bill->getDueDate()->format('d/m/Y'));
+            $sheet->setCellValue('F' . $linha, $bill->getAmount());
+            $sheet->setCellValue('G' . $linha, $bill->getPaymentDate()->format('d/m/Y'));
+            $sheet->setCellValue('H' . $linha, $bill->getAmountPaid());
+            $sheet->setCellValue('I' . $linha, $bill->getUser()->getFullName());
+            $sheet->setCellValue('J' . $linha, $bill->getNote());
         }
 
         // Create your Office 2007 Excel (XLSX Format)
