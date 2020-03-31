@@ -68,11 +68,16 @@ function vendaAddItem() {
     const price = Number($('#venda_valor').val().toString().replace(',', '.'));
     // const discount = Number($('#venda_desconto').val().toString().replace(',', '.'));
 
+    if (!$('#venda_referencia').val() || !$('#venda_quantidade').val() || !$('#venda_valor').val()) {
+        return;
+    }
+
     vendaItem.quantity = quantity;
     vendaItem.referency = referency;
     vendaItem.price = price;
     vendaItem.subtotal = price * quantity;
     vendaItem.total = vendaItem.subtotal;
+    vendaItem.identity = vendaItemsCount;
 
     venda.subtotal += vendaItem.subtotal;
     venda.total += vendaItem.total;
@@ -80,7 +85,7 @@ function vendaAddItem() {
 
     $vendaTableBody = $('#vendaTableBody');
     // $vendaTableBody.append('<tr id=\'venda_item_'+vendaItemsCount+'\'><td>' + referency + '</td><td>' + formatCurrency(price) + '</td><td>' + quantity + '</td><td>' + formatCurrency(vendaItem.total) + '</td><td><i class=\'fa fa-trash\' onclick=\'vendaRemoveItem('+vendaItemsCount+')\'></td></tr>');
-    $vendaTableBody.append('<tr id=\'venda_item_'+vendaItemsCount+'\'><td>' + referency + '</td><td>' + formatCurrency(price) + '</td><td>' + quantity + '</td><td>' + formatCurrency(vendaItem.total) + '</td></tr>');
+    $vendaTableBody.prepend('<tr id=\'venda_item_' + vendaItemsCount + '\'><td><a href=\'javascript:;\' title="Remover Item" onclick="vendaRemoveItem(' + vendaItemsCount + ')"><i class=\'fa fa-trash\'></i></a></td><td>' + referency + '</td><td>' + formatCurrency(price) + '</td><td>' + quantity + '</td><td>' + formatCurrency(vendaItem.total) + '</td></tr>');
 
     $('#venda_exibe_subtotal').html(formatCurrency(venda.subtotal));
     $('#venda_exibe_total').html(formatCurrency(venda.total));
@@ -95,7 +100,17 @@ function vendaAddItem() {
 }
 
 function vendaRemoveItem(item) {
-    console.log(item);
+    $('#venda_item_' + item).remove();
+    vendaItemsCount++;
+
+    const findItem = venda.orderItems.find(el => el.identity === item);
+    venda.subtotal -= findItem.subtotal;
+    venda.total -= findItem.total;
+    venda.orderItems = venda.orderItems.filter(el => el.identity !== item);
+
+    $('#venda_exibe_subtotal').html(formatCurrency(venda.subtotal));
+    $('#venda_exibe_total').html(formatCurrency(venda.total));
+
 }
 
 function finalizaVenda() {
