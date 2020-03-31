@@ -424,9 +424,21 @@ class StockController extends BaseController
             return new JsonResponse(['message' => 'Invalid parameters'], 400);
         }
 
-        $stock = $this->getDoctrine()->getRepository(Stock::class)->findOneBy(['referency' => $referency]);
+        $repo = $this->getDoctrine()->getRepository(Stock::class);
+        $stock = $repo->findOneBy(['referency' => $referency]);
 
         if ($stock) {
+
+            $checkBalance = $request->query->get('balance') ?? false;
+
+            if ($checkBalance) {
+                $request->query->add(['search' => $referency]);
+                $pagination = new Pagination(null);
+                $pagination->handle($request);
+                $referencyBalance = $repo->balance($pagination)[0]['saldo'];
+                $stock->setBalance($referencyBalance);
+            }
+
             $encoders = [new JsonEncoder()];
             $normalizers = [new DateTimeNormalizer(), new ObjectNormalizer()];
             $serializer = new Serializer($normalizers, $encoders);

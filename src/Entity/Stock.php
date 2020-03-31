@@ -82,6 +82,8 @@ class Stock
      */
     private $obs;
 
+    private $balance = 0;
+
     public function getId()
     {
         return $this->id;
@@ -227,6 +229,24 @@ class Stock
     {
         $this->obs = $obs;
 
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBalance(): int
+    {
+        return $this->balance;
+    }
+
+    /**
+     * @param int $balance
+     * @return Stock
+     */
+    public function setBalance(int $balance): Stock
+    {
+        $this->balance = $balance;
         return $this;
     }
 }

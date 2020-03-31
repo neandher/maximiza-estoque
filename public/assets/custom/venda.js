@@ -1,14 +1,26 @@
+function delay(fn, ms) {
+    let timer = 0;
+    return function (...args) {
+        clearTimeout(timer);
+        timer = setTimeout(fn.bind(this, ...args), ms || 0);
+    }
+}
+
 $('#modalVenda').on('shown.bs.modal', function (event) {
 
     let $referency = $('#venda_referencia');
     $referency.focus();
-    $($referency).keyup((e) => {
+    $($referency).keyup(delay(function (e) {
         e.preventDefault();
         let referencyVal = $(e.currentTarget).val();
         if (referencyVal.length >= 6) {
             $('#venda_btn_add').attr('disabled', true);
-            $.get(RoutingManager.generate('admin_stock_verify_referency'), {referency: referencyVal})
+            $.get(RoutingManager.generate('admin_stock_verify_referency'), {referency: referencyVal, balance: 1})
                 .done((stock) => {
+                    if (stock.balance <= 0) {
+                        alert('Saldo indisponível: ' + stock.balance);
+                        return;
+                    }
                     $('#venda_marca_referencia').val(stock.brand.name);
                     $("#venda_valor").val(stock.unitPrice.toString().replace('.', ','));
                 })
@@ -21,7 +33,7 @@ $('#modalVenda').on('shown.bs.modal', function (event) {
                     $('#venda_btn_add').attr('disabled', false);
                 });
         }
-    });
+    }, 500));
 
     $('#venda_desconto').keyup((e) => {
         e.preventDefault();
@@ -89,6 +101,7 @@ function vendaAddItem() {
 
     $('#venda_exibe_subtotal').html(formatCurrency(venda.subtotal));
     $('#venda_exibe_total').html(formatCurrency(venda.total));
+    $('#venda_exibe_quantidade_itens').html(venda.orderItems.length);
 
     $('#venda_referencia').val('');
     $('#venda_quantidade').val(1);
@@ -110,6 +123,7 @@ function vendaRemoveItem(item) {
 
     $('#venda_exibe_subtotal').html(formatCurrency(venda.subtotal));
     $('#venda_exibe_total').html(formatCurrency(venda.total));
+    $('#venda_exibe_quantidade_itens').html(venda.orderItems.length);
 
 }
 
