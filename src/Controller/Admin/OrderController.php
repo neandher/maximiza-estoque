@@ -127,6 +127,10 @@ class OrderController extends BaseController
         foreach ($orderData->getOrderItems() as $orderItem) {
             $stockByReferency = $this->getDoctrine()->getRepository(Stock::class)->findOneBy(['referency' => $orderItem->getReferency()]);
 
+            if(!$stockByReferency){
+                return new JsonResponse(['message' => 'Referência ' . $orderItem->getReferency() . ' não encontrada.'], 400);
+            }
+
             $stock = new Stock();
             $stock
                 ->setType(StockTypes::TYPE_REMOVE)

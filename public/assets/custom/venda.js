@@ -25,6 +25,8 @@ $('#modalVenda').on('shown.bs.modal', function (event) {
                     $("#venda_valor").val(stock.unitPrice.toString().replace('.', ','));
                 })
                 .fail(() => {
+                    alert('Referência não encontrada no estoque');
+                    $('#venda_referencia').val('');
                     $('#venda_marca_referencia').val('');
                     $("#venda_valor").val('');
                 })
@@ -167,6 +169,10 @@ function finalizaVenda() {
             };
         })
         .fail((err) => {
+            if(err.responseJSON && err.responseJSON.message !== 'Error'){
+                alert(err.responseJSON.message);
+                return;
+            }
             alert('Erro ao realizar a venda');
         })
         .always(function () {
