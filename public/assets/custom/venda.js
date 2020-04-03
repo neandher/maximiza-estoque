@@ -10,32 +10,35 @@ $('#modalVenda').on('shown.bs.modal', function (event) {
 
     let $referency = $('#venda_referencia');
     $referency.focus();
-    $($referency).keyup(delay(function (e) {
+    $('#venda-btn-check-ref').click(function (e) {
         e.preventDefault();
-        let referencyVal = $(e.currentTarget).val();
-        if (referencyVal.length >= 6) {
-            $('#venda_btn_add').attr('disabled', true);
-            $.get(RoutingManager.generate('admin_stock_verify_referency'), {referency: referencyVal, balance: 1})
-                .done((stock) => {
-                    if (stock.balance <= 0) {
-                        alert('Saldo indisponível: ' + stock.balance);
-                        return;
-                    }
-                    $('#venda_marca_referencia').val(stock.brand.name);
-                    $("#venda_valor").val(stock.unitPrice.toString().replace('.', ','));
-                })
-                .fail(() => {
-                    alert('Referência não encontrada no estoque');
-                    $('#venda_referencia').val('');
-                    $('#venda_marca_referencia').val('');
-                    $("#venda_valor").val('');
-                })
-                .always(function () {
-                    $referency.attr('disabled', false);
-                    $('#venda_btn_add').attr('disabled', false);
-                });
-        }
-    }, 500));
+
+        $('#venda-btn-check-ref').attr('disabled', true);
+
+        let referencyVal = $referency.val();
+        $('#venda_btn_add').attr('disabled', true);
+        $.get(RoutingManager.generate('admin_stock_verify_referency'), {referency: referencyVal, balance: 1})
+            .done((stock) => {
+                if (stock.balance <= 0) {
+                    alert('Saldo indisponível: ' + stock.balance);
+                    return;
+                }
+                $('#venda_marca_referencia').val(stock.brand.name);
+                $("#venda_valor").val(stock.unitPrice.toString().replace('.', ','));
+            })
+            .fail(() => {
+                alert('Referência não encontrada no estoque');
+                $('#venda_referencia').val('');
+                $('#venda_marca_referencia').val('');
+                $("#venda_valor").val('');
+                $referency.focus();
+            })
+            .always(function () {
+                $referency.attr('disabled', false);
+                $('#venda_btn_add').attr('disabled', false);
+                $('#venda-btn-check-ref').attr('disabled', false);
+            });
+    });
 
     $('#venda_desconto').keyup((e) => {
         e.preventDefault();
@@ -169,7 +172,7 @@ function finalizaVenda() {
             };
         })
         .fail((err) => {
-            if(err.responseJSON && err.responseJSON.message !== 'Error'){
+            if (err.responseJSON && err.responseJSON.message !== 'Error') {
                 alert(err.responseJSON.message);
                 return;
             }
