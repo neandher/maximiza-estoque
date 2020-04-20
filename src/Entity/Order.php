@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Resource\Model\TimestampableTrait;
+use App\StockPaymentMethods;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -170,6 +171,19 @@ class Order
     public function getPaymentMethod(): ?string
     {
         return $this->paymentMethod;
+    }
+
+    public function getPaymentMethodFormatted(): ?string
+    {
+        $str = '';
+        if (strstr($this->paymentMethod, ',')) {
+            foreach (explode(',', $this->paymentMethod) as $value) {
+                $str .= StockPaymentMethods::PAYMENT_METHODS[$value] . ', ';
+            }
+            return $str;
+        }
+
+        return $this->paymentMethod ? StockPaymentMethods::PAYMENT_METHODS[$this->paymentMethod] : '';
     }
 
     public function setPaymentMethod(?string $paymentMethod): self

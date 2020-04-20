@@ -136,7 +136,7 @@ function finalizaVenda() {
     $('#venda_btn_finaliza').attr('disabled', true);
 
     venda.client = $('#venda_cliente').val() === '' ? '-' : $('#venda_cliente').val();
-    venda.paymentMethod = $('#venda_forma_pagamento').val();
+    venda.paymentMethod = $('#venda_forma_pagamento').val() ? $('#venda_forma_pagamento').val().join(',') : null;
     venda.subtotal = venda.subtotal.toString();
     venda.discount = venda.discount.toString();
     venda.total = venda.total.toString();

@@ -248,29 +248,31 @@ class OrderController extends BaseController
         $linha += 2;
 
         $sheet->setCellValue('A' . $linha, 'Cliente');
-        $sheet->setCellValue('B' . $linha, 'Subtotal');
-        $sheet->setCellValue('C' . $linha, 'Desconto');
-        $sheet->setCellValue('D' . $linha, 'Total');
-        $sheet->setCellValue('E' . $linha, 'Forma de Pagmento');
-        $sheet->setCellValue('F' . $linha, 'Usuário');
-        $sheet->setCellValue('G' . $linha, 'Data');
-        $sheet->setCellValue('H' . $linha, 'Itens');
+        $sheet->setCellValue('B' . $linha, 'Forma de Pagameto');
+        $sheet->setCellValue('C' . $linha, 'Subtotal');
+        $sheet->setCellValue('D' . $linha, 'Desconto');
+        $sheet->setCellValue('E' . $linha, 'Total');
+        $sheet->setCellValue('F' . $linha, 'Forma de Pagmento');
+        $sheet->setCellValue('G' . $linha, 'Usuário');
+        $sheet->setCellValue('H' . $linha, 'Data');
+        $sheet->setCellValue('I' . $linha, 'Itens');
 
         foreach ($orders as $order) {
             $linha++;
             $sheet->setCellValue('A' . $linha, $order->getClient());
-            $sheet->setCellValue('B' . $linha, $order->getSubtotal());
-            $sheet->setCellValue('C' . $linha, $order->getDiscount());
-            $sheet->setCellValue('D' . $linha, $order->getTotal());
-            $sheet->setCellValue('E' . $linha, $order->getPaymentMethod());
-            $sheet->setCellValue('F' . $linha, $order->getUser()->getFullName());
-            $sheet->setCellValue('G' . $linha, $order->getCreatedAt()->format('d/m/Y'));
+            $sheet->setCellValue('B' . $linha, $order->getPaymentMethodFormatted());
+            $sheet->setCellValue('C' . $linha, $order->getSubtotal());
+            $sheet->setCellValue('D' . $linha, $order->getDiscount());
+            $sheet->setCellValue('E' . $linha, $order->getTotal());
+            $sheet->setCellValue('F' . $linha, $order->getPaymentMethod());
+            $sheet->setCellValue('G' . $linha, $order->getUser()->getFullName());
+            $sheet->setCellValue('H' . $linha, $order->getCreatedAt()->format('d/m/Y'));
 
             $items = '';
             foreach ($order->getOrderItems() as $orderItem) {
                 $items .= ' * ' . $orderItem->getQuantity() . 'x ' . $orderItem->getReferency() . '(' . $orderItem->getPrice() . ') = ' . $orderItem->getTotal();
             }
-            $sheet->setCellValue('H' . $linha, $items);
+            $sheet->setCellValue('I' . $linha, $items);
         }
 
         // Create your Office 2007 Excel (XLSX Format)

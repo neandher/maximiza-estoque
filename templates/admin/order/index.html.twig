@@ -102,6 +102,7 @@
                         {{ 'order.fields.client'|trans }}
                     </a>
                 </th>
+                <th>Pagamento</th>
                 <th>
                     <a href="{{ path('admin_order_index') ~ pagination.buildQuery('sorting') ~ pagination.sortingFieldQuery('subtotal') }}">
                         {{ 'order.fields.subtotal'|trans }}
@@ -132,6 +133,7 @@
                 <tr>
                     <td>{{ order.id }}</td>
                     <td>{{ order.client }}</td>
+                    <td>{{ order.paymentMethodFormatted }}</td>
                     <td>{{ order.subtotal | number_format }}</td>
                     <td>
                         {{ order.discount | number_format }}
@@ -149,6 +151,14 @@
                            title="{{ 'resource.actions.items.delete'|trans }}"
                         >
                             <i class="fa fa-trash"></i>
+                        </a>
+                        <a href="javascript:;"
+                           class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"
+                           data-toggle="modal" data-target="#modalVenda"
+                           data-id="{{ order.id }}"
+                           title="{{ 'resource.actions.items.edit'|trans }}"
+                        >
+                            <i class="fa fa-edit"></i>
                         </a>
                     </td>
                 </tr>
@@ -304,7 +314,8 @@
                             <div class="form-group col-md-4">
                                 <label for="venda_forma_pagamento" class="form-control-label required">Forma de
                                     Pagamento</label>
-                                <select class="form-control" name="venda_forma_pagamento" id="venda_forma_pagamento">
+                                <select class="form-control" name="venda_forma_pagamento" id="venda_forma_pagamento"
+                                        multiple>
                                     {% for key, pm in paymentMethods %}
                                         <option value="{{ key }}">{{ pm }}</option>
                                     {% endfor %}
