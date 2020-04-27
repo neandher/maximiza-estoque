@@ -6,7 +6,44 @@ function delay(fn, ms) {
     }
 }
 
+let venda = {
+    id: null,
+    subtotal: 0,
+    discount: 0,
+    total: 0,
+    client: '',
+    paymentMethod: '',
+    orderItems: []
+};
+
+let vendaItemsCount = 1;
+
 $('#modalVenda').on('shown.bs.modal', function (event) {
+
+    let button = $(event.relatedTarget);
+    let id = button.data('id');
+
+    if (id) {
+        $.get(RoutingManager.generate('admin_order_details', {id}))
+            .done((order) => {
+                order.orderItems.forEach(el => {
+                    vendaAddItem(el);
+                });
+
+                venda.id = order.id;
+                venda.discount = Number(order.discount);
+                venda.total = Number(order.total);
+
+                $('#venda_cliente').val(order.client);
+                $('#venda_forma_pagamento').val(order.paymentMethod.split(','));
+                $('#venda_exibe_desconto').html(formatCurrency(venda.discount));
+                $('#venda_desconto').val(venda.discount.toString().replace('.', ','));
+                $('#venda_exibe_total').html(formatCurrency(venda.total));
+            })
+    }
+    else{
+        $('#venda_forma_pagamento').prop("selectedIndex", 0).val();
+    }
 
     let $referency = $('#venda_referencia');
     $referency.focus();
@@ -59,18 +96,8 @@ $('#modalVenda').on('shown.bs.modal', function (event) {
     });
 });
 
-let venda = {
-    subtotal: 0,
-    discount: 0,
-    total: 0,
-    client: '',
-    paymentMethod: '',
-    orderItems: []
-};
 
-let vendaItemsCount = 1;
-
-function vendaAddItem() {
+function vendaAddItem(orderItem = null) {
     let vendaItem = {
         referency: '',
         quantity: 1,
@@ -80,20 +107,21 @@ function vendaAddItem() {
         price: 0
     };
 
-    const referency = $('#venda_referencia').val();
-    const quantity = Number($('#venda_quantidade').val());
-    const price = Number($('#venda_valor').val().toString().replace(',', '.'));
+    const referency = orderItem ? orderItem.referency : $('#venda_referencia').val();
+    const quantity = orderItem ? Number(orderItem.quantity) : Number($('#venda_quantidade').val());
+    const price = orderItem ? Number(orderItem.price) :
+        Number($('#venda_valor').val().toString().replace(',', '.'));
     // const discount = Number($('#venda_desconto').val().toString().replace(',', '.'));
 
-    if (!$('#venda_referencia').val() || !$('#venda_quantidade').val() || !$('#venda_valor').val()) {
+    if (!referency || !quantity || !price) {
         return;
     }
 
     vendaItem.quantity = quantity;
     vendaItem.referency = referency;
     vendaItem.price = price;
-    vendaItem.subtotal = price * quantity;
-    vendaItem.total = vendaItem.subtotal;
+    vendaItem.subtotal = orderItem ? Number(orderItem.subtotal) : price * quantity;
+    vendaItem.total = orderItem ? Number(orderItem.total) : Number(vendaItem.subtotal);
     vendaItem.identity = vendaItemsCount;
 
     venda.subtotal += vendaItem.subtotal;
@@ -129,7 +157,6 @@ function vendaRemoveItem(item) {
     $('#venda_exibe_subtotal').html(formatCurrency(venda.subtotal));
     $('#venda_exibe_total').html(formatCurrency(venda.total));
     $('#venda_exibe_quantidade_itens').html(venda.orderItems.length);
-
 }
 
 function finalizaVenda() {
@@ -137,9 +164,14 @@ function finalizaVenda() {
 
     venda.client = $('#venda_cliente').val() === '' ? '-' : $('#venda_cliente').val();
     venda.paymentMethod = $('#venda_forma_pagamento').val() ? $('#venda_forma_pagamento').val().join(',') : null;
-    venda.subtotal = venda.subtotal.toString();
+    venda.subtotal = (venda.subtotal).toString();
     venda.discount = venda.discount.toString();
-    venda.total = venda.total.toString();
+    venda.total = typeof venda.total === 'string' ? venda.total : (venda.total).toString();
+
+    if (!venda.id) {
+        delete venda.id;
+    }
+
     venda.orderItems.forEach(el => {
         el.price = el.price.toString();
         el.subtotal = el.subtotal.toString();
@@ -148,22 +180,30 @@ function finalizaVenda() {
 
     $.post(RoutingManager.generate('admin_order_new'), JSON.stringify(venda))
         .done((res) => {
-            alert('Venda realizada com sucesso.');
+            let msg = 'Venda realizada com sucesso.';
+            if (venda.id) {
+                msg = 'Venda alterada com sucesso.';
+            }
+
+            alert(msg);
 
             $('#vendaTableBody').html('');
             $('#venda_referencia').val('');
             $('#venda_quantidade').val(1);
             $('#venda_valor').val('');
             $('#venda_marca_referencia').val('');
-            $('#venda_desconto').val('R$ 0,00');
+            $('#venda_desconto').val('0,00');
             $('#venda_forma_pagamento').prop("selectedIndex", 0).val();
             $('#venda_cliente').val('');
             $('#venda_exibe_subtotal').html('R$ 0,00');
             $('#venda_exibe_total').html('R$ 0,00');
-            $('#venda_exibe_desconto').html('R$ 0,00');
+            $('#venda_exibe_desconto').html('0,00');
             $('#venda_referencia').focus();
+            $('#venda_exibe_quantidade_itens').html('0');
+            vendaItemsCount = 0;
 
             venda = {
+                id: null,
                 subtotal: 0,
                 discount: 0,
                 total: 0,
@@ -176,7 +216,7 @@ function finalizaVenda() {
                 alert(err.responseJSON.message);
                 return;
             }
-            alert('Erro ao realizar a venda');
+            alert('Erro ao realizar operação.');
         })
         .always(function () {
             $('#venda_btn_finaliza').attr('disabled', false);
@@ -186,3 +226,29 @@ function finalizaVenda() {
 function formatCurrency(value) {
     return value.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
 }
+
+$('#modalVenda').on('hide.bs.modal', function (event) {
+    $('#vendaTableBody').html('');
+    $('#venda_referencia').val('');
+    $('#venda_quantidade').val(1);
+    $('#venda_valor').val('');
+    $('#venda_marca_referencia').val('');
+    $('#venda_desconto').val('0,00');
+    $('#venda_forma_pagamento').prop("selectedIndex", 0).val();
+    $('#venda_cliente').val('');
+    $('#venda_exibe_subtotal').html('R$ 0,00');
+    $('#venda_exibe_total').html('R$ 0,00');
+    $('#venda_exibe_desconto').html('0,00');
+    $('#venda_referencia').focus();
+    $('#venda_exibe_quantidade_itens').html('0');
+    vendaItemsCount = 0;
+
+    venda = {
+        id: null,
+        subtotal: 0,
+        discount: 0,
+        total: 0,
+        client: '',
+        orderItems: []
+    };
+});

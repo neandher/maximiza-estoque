@@ -23,6 +23,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -111,8 +115,16 @@ class OrderController extends BaseController
             return new JsonResponse(['message' => 'Invalid request'], 400);
         }
 
+        $obj = json_decode($request->getContent(), true);
+
+        $context = [];
+        if (key_exists('id', $obj)) {
+            $find = $this->getDoctrine()->getRepository(Order::class)->find($obj['id']);
+            $context['object_to_populate'] = $find;
+        }
+
         /** @var Order $orderData */
-        $orderData = $serializer->deserialize($request->getContent(), Order::class, 'json');
+        $orderData = $serializer->deserialize($request->getContent(), Order::class, 'json', $context);
         $errors = $validator->validate($orderData);
 
         if (count($errors) > 0) {
@@ -122,32 +134,65 @@ class OrderController extends BaseController
         $orderData->setUser($this->getUser());
 
         $em = $this->getDoctrine()->getManager();
-        $em->persist($orderData);
+        if ($orderData->getId()) {
+            $em->merge($orderData);
+        } else {
+            $em->persist($orderData);
+        }
 
         foreach ($orderData->getOrderItems() as $orderItem) {
             $stockByReferency = $this->getDoctrine()->getRepository(Stock::class)->findOneBy(['referency' => $orderItem->getReferency()]);
 
-            if(!$stockByReferency){
+            if (!$stockByReferency) {
                 return new JsonResponse(['message' => 'Referência ' . $orderItem->getReferency() . ' não encontrada.'], 400);
             }
 
-            $stock = new Stock();
-            $stock
-                ->setType(StockTypes::TYPE_REMOVE)
-                ->setQuantity($orderItem->getQuantity())
-                ->setAmount($stock->getQuantity() * $orderItem->getPrice())
-                ->setUnitPrice($orderItem->getPrice())
-                ->setCustomer(null)
-                ->setPaymentMethod($orderData->getPaymentMethod())
-                ->setReferency($orderItem->getReferency())
-                ->setBrand($stockByReferency->getBrand());
+            if (!$orderData->getId()) {
+                $stock = new Stock();
+                $stock
+                    ->setType(StockTypes::TYPE_REMOVE)
+                    ->setQuantity($orderItem->getQuantity())
+                    ->setAmount($stock->getQuantity() * $orderItem->getPrice())
+                    ->setUnitPrice($orderItem->getPrice())
+                    ->setCustomer(null)
+                    ->setPaymentMethod($orderData->getPaymentMethod())
+                    ->setReferency($orderItem->getReferency())
+                    ->setBrand($stockByReferency->getBrand());
 
-            $em->persist($stock);
+                $em->persist($stock);
+            }
         }
 
         $em->flush();
 
         return new JsonResponse(['message' => 'success'], 200);
+    }
+
+    /**
+     * @Route("/{id}/details", name="details", methods={"GET"}, options={"expose"="true"})
+     * @param Request $request
+     * @param Order $order
+     * @return JsonResponse|Response
+     */
+    public function details(Request $request, Order $order)
+    {
+        if (!$request->isXmlHttpRequest()) {
+            return new JsonResponse(['message' => 'Invalid request'], 400);
+        }
+
+        if ($order) {
+            $encoders = [new JsonEncoder()];
+            $normalizers = [new DateTimeNormalizer(), new ObjectNormalizer()];
+            $serializer = new Serializer($normalizers, $encoders);
+            $jsonContent = $serializer->serialize($order, 'json', [
+                'circular_reference_handler' => function ($object) {
+                    return $object->getId();
+                }
+            ]);
+            return JsonResponse::fromJsonString($jsonContent);
+        }
+
+        return new JsonResponse(['message' => 'Not Found'], 404);
     }
 
     /**
