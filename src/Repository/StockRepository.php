@@ -119,6 +119,7 @@ class StockRepository extends BaseRepository
             ->getConnection();
 
         $where = 'where id > 0';
+        $having = '';
 
         if (isset($routeParams['search']) && !empty($routeParams['search'])) {
             $where .= ' and referency like "%' . $routeParams['search'] . '%" ';
@@ -128,10 +129,17 @@ class StockRepository extends BaseRepository
             $where .= ' and brand_id = "' . $routeParams['brand'] . '" ';
         }
 
+        if (isset($routeParams['filter_balance']) && !empty($routeParams['filter_balance'])) {
+            if ($routeParams['filter_balance'] === 'balance_positive') {
+                $having .= ' having saldo > 0 ';
+            }
+        }
+
         $sql = '
                 select distinct referency, (select SUM(stock.quantity) from stock where referency = stk.referency ) as saldo 
                 from stock as stk ' . $where . '
-                group by referency                
+                group by referency   
+                ' . $having . '                             
                 order by referency asc
             ';
         $stmt = $conn->prepare($sql);

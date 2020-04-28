@@ -33,8 +33,20 @@
                     </select>
                 </div>
                 <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label for="search">
+                        {{ 'resource.filters.search'|trans }}:
+                    </label>
+                    <select class="form-control m-input" name="filter_balance" id="filter_balance" onchange="submit();">
+                        <option value="">Todos</option>
+                        <option value="balance_positive"
+                                {% if app.request.query.has('filter_balance') %}{% if app.request.query.get('filter_balance') == 'balance_positive' %}selected{% endif %}{% endif %}>
+                            Saldo maior que 0
+                        </option>
+                    </select>
+                </div>
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
                     <label for="num_items">
-                        {{ 'resource.filters.num_items'|trans }}:
+                        Filtro por Saldo
                     </label>
                     <input type="number" class="form-control col-md-4"
                            name="num_items" id="num_items"
