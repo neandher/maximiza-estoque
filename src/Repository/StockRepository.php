@@ -124,6 +124,10 @@ class StockRepository extends BaseRepository
             $where .= ' and referency like "%' . $routeParams['search'] . '%" ';
         }
 
+        if (isset($routeParams['brand']) && !empty($routeParams['brand'])) {
+            $where .= ' and brand_id = "' . $routeParams['brand'] . '" ';
+        }
+
         $sql = '
                 select distinct referency, (select SUM(stock.quantity) from stock where referency = stk.referency ) as saldo 
                 from stock as stk ' . $where . '

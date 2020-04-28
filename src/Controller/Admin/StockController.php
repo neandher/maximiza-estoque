@@ -458,10 +458,14 @@ class StockController extends BaseController
     {
         $pagination = $this->pagination->handle($request, Stock::class);
 
+        $brands = $this->getDoctrine()->getRepository(Brand::class)->queryLatestForm()
+            ->getQuery()->getResult();
+
         $stocks = $this->getDoctrine()->getRepository(Stock::class)->balancePaginator($pagination);
 
         return $this->render('admin/stock/balance.html.twig', [
             'stocks' => $stocks,
+            'brands' => $brands,
             'pagination' => $pagination,
         ]);
     }

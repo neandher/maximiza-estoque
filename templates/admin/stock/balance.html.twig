@@ -20,6 +20,19 @@
                            value="{% if app.request.query.has('search') %}{{ app.request.query.get('search') }}{% endif %}">
                 </div>
                 <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
+                    <label for="brand">
+                        {{ 'brand.title_single'|trans }}:
+                    </label>
+                    <select class="form-control m-input" name="brand" id="brand" onchange="submit();">
+                        <option value=""></option>
+                        {% for brand in brands %}
+                            <option value="{{ brand.id }}"
+                                    {% if app.request.query.has('brand') %}{% if app.request.query.get('brand') == brand.id %}selected{% endif %}{% endif %}>{{ brand.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
                     <label for="num_items">
                         {{ 'resource.filters.num_items'|trans }}:
                     </label>
