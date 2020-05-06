@@ -119,6 +119,7 @@ class StockRepository extends BaseRepository
             ->getConnection();
 
         $where = 'where id > 0';
+        $whereSum = 'where referency = stk.referency';
         $having = '';
 
         if (isset($routeParams['search']) && !empty($routeParams['search'])) {
@@ -135,8 +136,21 @@ class StockRepository extends BaseRepository
             }
         }
 
+        if ((isset($routeParams['date_start']) && !empty($routeParams['date_start'])) && (isset($routeParams['date_end']) && !empty($routeParams['date_end']))) {
+
+            $routeParams['date_start'] .= ' 00:00';
+            $routeParams['date_end'] .= ' 23:59';
+
+            $date_start = \DateTime::createFromFormat('d/m/Y H:i', $routeParams['date_start'])->format('Y-m-d H:i');
+            $date_end = \DateTime::createFromFormat('d/m/Y H:i', $routeParams['date_end'])->format('Y-m-d H:i');
+
+            if ($date_start && $date_end) {
+                $whereSum .= ' and created_at >= "' . $date_start . '" and created_at <= "' . $date_end . '" ';
+            }
+        }
+
         $sql = '
-                select distinct referency, (select SUM(stock.quantity) from stock where referency = stk.referency ) as saldo 
+                select distinct referency, (select SUM(stock.quantity) from stock ' . $whereSum . ' ) as saldo 
                 from stock as stk ' . $where . '
                 group by referency   
                 ' . $having . '                             
