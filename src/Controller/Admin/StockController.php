@@ -67,6 +67,7 @@ class StockController extends BaseController
 
     /**
      * @Route("/", name="index")
+     * @IsGranted("ROLE_LEVEL_2")
      * @param Request $request
      * @return Response
      */
@@ -170,6 +171,7 @@ class StockController extends BaseController
     /**
      * @Route("/new", name="new")
      * @Method({"GET", "POST"})
+     * @IsGranted("ROLE_LEVEL_2")
      * @param Request $request
      * @return Response
      */
@@ -212,6 +214,7 @@ class StockController extends BaseController
     /**
      * @Route("/{id}/edit", requirements={"id" : "\d+"}, name="edit")
      * @Method({"GET", "POST"})
+     * @IsGranted("ROLE_LEVEL_2")
      * @param Request $request
      * @param Stock $stock
      * @return Response
@@ -262,6 +265,7 @@ class StockController extends BaseController
      * @Route("/{id}/delete", requirements={"id" : "\d+"}, name="delete")
      * @IsGranted("ROLE_LEVEL_2")
      * @Method("DELETE")
+     * @IsGranted("ROLE_LEVEL_2")
      * @param Request $request
      * @param Stock $stock
      * @return Response
@@ -297,7 +301,7 @@ class StockController extends BaseController
     /**
      * @Route("/delete-items", name="delete_items")
      * @IsGranted("ROLE_LEVEL_2")
-     * @Method("DELETE")
+     * @IsGranted("ROLE_LEVEL_2")
      * @param Request $request
      * @return Response
      */
@@ -343,6 +347,7 @@ class StockController extends BaseController
     /**
      * @Route("/import-xml", name="import_xml")
      * @Method("POST")
+     * @IsGranted("ROLE_LEVEL_2")
      * @param Request $request
      * @return JsonResponse|RedirectResponse
      */

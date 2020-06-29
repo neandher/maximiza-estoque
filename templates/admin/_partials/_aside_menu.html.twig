@@ -31,17 +31,19 @@
             <h4 class="m-menu__section-text">Estoque</h4>
             <i class="m-menu__section-icon flaticon-more-v3"></i>
         </li>
-        <li class="m-menu__item " aria-haspopup="true">
-            <a href="{{ path('admin_stock_index') }}" class="m-menu__link ">
-                <span class="m-menu__item-here"></span>
-                <i class="m-menu__link-icon flaticon-map"></i>
-                <span class="m-menu__link-title">
+        {% if is_granted('ROLE_LEVEL_2') %}
+            <li class="m-menu__item " aria-haspopup="true">
+                <a href="{{ path('admin_stock_index') }}" class="m-menu__link ">
+                    <span class="m-menu__item-here"></span>
+                    <i class="m-menu__link-icon flaticon-map"></i>
+                    <span class="m-menu__link-title">
                     <span class="m-menu__link-wrap">
                         <span class="m-menu__link-text">{{ 'stock.title'|trans }}</span>
                     </span>
                 </span>
-            </a>
-        </li>
+                </a>
+            </li>
+        {% endif %}
         <li class="m-menu__item " aria-haspopup="true">
             <a href="{{ path('admin_stock_balance') }}" class="m-menu__link ">
                 <span class="m-menu__item-here"></span>
