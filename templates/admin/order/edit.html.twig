@@ -1,0 +1,113 @@
+{% extends 'admin/base.html.twig' %}
+{% block title %}{{ 'order.actions.edit'|trans }}{% endblock %}
+
+{% block page_content %}
+
+    {% embed 'admin/_partials/_default_resource.html.twig' with {'route_index' : 'admin_order_index'} %}
+
+        {% block form_start %}
+            {{ form_start(form, {'action': path('admin_order_edit',{id : order.id}) ~ pagination.buildQuery}) }}
+        {% endblock %}
+
+        {% block icon_list %}
+            <span class="m-portlet__head-icon">
+                <i class="flaticon-list"></i>
+            </span>
+        {% endblock %}
+
+        {% block caption_subject %}
+            <span class="caption-subject font-green-sharp bold uppercase">
+                {{ 'order.actions.edit'|trans }}
+            </span>
+        {% endblock %}
+
+        {% block nav_tabs %}
+            <li class="nav-item">
+                <a href="#geral" class="nav-link active" data-toggle="tab">{{ 'resource.tabs.details'|trans }}</a>
+            </li>
+        {% endblock %}
+
+        {% block tab_pane %}
+            {% include 'admin/order/_form.html.twig' with {'form': form} %}
+        {% endblock %}
+
+        {% block portlet_foot %}
+            <div class="m-portlet__foot">
+                <div class="row mt-4">
+                    <div class="col-md-3">
+                        <div class="kt-widget4">
+                            <div class="kt-widget4__item">
+                                <div class="kt-widget4__info">
+                                    <span class="kt-widget4__title">
+                                        Itens
+                                    </span>
+                                </div>
+                                <span class="kt-widget4__number">
+                                    <div class="form-control" id="order-quantity" disabled></div>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="kt-widget4">
+                            <div class="kt-widget4__item">
+                                <div class="kt-widget4__info">
+                                    <span class="kt-widget4__title">
+                                        SubTotal
+                                    </span>
+                                </div>
+                                <span class="kt-widget4__number">
+                                    {{ form_widget(form.subtotalView) }}
+                                    {{ form_widget(form.subtotal) }}
+				                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="kt-widget4">
+                            <div class="kt-widget4__item">
+                                <div class="kt-widget4__info">
+                                    <span class="kt-widget4__title">
+                                        Descontos
+                                    </span>
+                                </div>
+                                <span class="kt-widget4__number">
+                                    {{ form_widget(form.discount) }}
+				                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="kt-widget4">
+                            <div class="kt-widget4__item">
+                                <div class="kt-widget4__info">
+                                    <span class="kt-widget4__title">
+                                        Valor Total
+                                    </span>
+                                </div>
+                                <span class="kt-widget4__number">
+                                    {{ form_widget(form.totalView) }}
+                                    {{ form_widget(form.total) }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+
+    {% endembed %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {% embed 'admin/_partials/_block_javascripts.html.twig' %}
+        {% block javascripts_page_snippets %}
+            <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+            <script src="{{ asset('assets/custom/RoutingManager.js') }}"></script>
+            <script src="{{ asset('assets/custom/orderItems.js') }}"></script>
+            <script src="{{ asset('assets/widgets/select2.js') }}"></script>
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

@@ -1,0 +1,26 @@
+<div role="tabpanel" class="tab-pane active" id="geral">
+    <div class="row">
+        <div class="col-md-4">{{ form_row(form.client, {'attr': {'autofocus': true}}) }}</div>
+        <div class="col-md-4">{{ form_row(form.paymentMethod) }}</div>
+    </div>
+    <hr style="border-top: 1px dashed rgba(0,0,0,.1);">
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div id="orderItem" data-prototype="{% include 'admin/order/collection/_orderItems.html.twig'
+                with {'item': form.orderItems.vars.prototype, 'prototype': true} %}">
+
+                {% for orderItem in form.orderItems %}
+                    {% include 'admin/order/collection/_orderItems.html.twig'
+                        with {'item' : orderItem, 'collection': true } %}
+                {% endfor %}
+
+                <div id="panel_add_orderItem">
+                    <a href="#" class="btn btn-brand m-btn m-btn--icon m-btn--air" id="btn_add_orderItem">
+                        <span><i class="la la-plus"></i><span>{{ 'resource.actions.items.add'|trans }}</span></span>
+                    </a>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

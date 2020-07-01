@@ -1,0 +1,25 @@
+{% if prototype is defined %}
+    <div class='row'>
+        <div class='col-md-3'>{{ form_row(item.referency)|e('html_attr') }}</div>
+        <div class='col-md-3'>{{ form_row(item.price)|e('html_attr') }}</div>
+        <div class='col-md-3'>{{ form_row(item.quantity)|e('html_attr') }}</div>
+        <div class='col-md-3'>{{ form_row(item.totalView)|e('html_attr') }}</div>
+        {{ form_row(item.total)|e('html_attr') }}
+        {{ form_row(item.subtotal)|e('html_attr') }}
+    </div>
+{% endif %}
+
+{% if collection is defined %}
+    <div class='m-portlet m-portlet--rounded m-portlet--bordered'>
+        <div class='m-portlet__body'>
+            <div class='row'>
+                <div class='col-md-3'>{{ form_row(item.referency) }}</div>
+                <div class='col-md-3'>{{ form_row(item.price) }}</div>
+                <div class='col-md-3'>{{ form_row(item.quantity) }}</div>
+                <div class='col-md-3'>{{ form_row(item.totalView) }}</div>
+                {{ form_row(item.total) }}
+                {{ form_row(item.subtotal) }}
+            </div>
+        </div>
+    </div>
+{% endif %}
