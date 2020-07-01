@@ -210,7 +210,7 @@ class Stock
 
     public function getPaymentMethod(): ?string
     {
-        return $this->paymentMethod;
+        return strstr($this->paymentMethod, ',') ? explode(',', $this->paymentMethod)[0] : $this->paymentMethod;
     }
 
     public function setPaymentMethod(?string $paymentMethod): self

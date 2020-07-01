@@ -49,8 +49,9 @@ class Order
     private $client;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\OrderItems", mappedBy="orderEntity", orphanRemoval=true, cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\OrderItems", mappedBy="orderEntity", orphanRemoval=true, cascade={"persist", "remove"})
      * @Assert\Count(min="1")
+     * @Assert\Valid()
      *
      */
     private $orderItems;

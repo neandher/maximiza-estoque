@@ -7,6 +7,7 @@ use App\Entity\Order;
 use App\Entity\Stock;
 use App\Entity\User;
 use App\Event\FlashBagEvents;
+use App\Form\OrderType;
 use App\StockPaymentMethods;
 use App\StockTypes;
 use App\Util\FlashBag;
@@ -105,11 +106,11 @@ class OrderController extends BaseController
     }
 
     /**
-     * @Route("/new", name="new", methods={"POST"}, options={"expose"="true"})
+     * @Route("/new-old", name="new_od", methods={"POST"}, options={"expose"="true"})
      * @param Request $request
      * @return JsonResponse|Response
      */
-    public function newAction(Request $request, ValidatorInterface $validator, SerializerInterface $serializer)
+    public function newOldAction(Request $request, ValidatorInterface $validator, SerializerInterface $serializer)
     {
         if (!$request->isXmlHttpRequest()) {
             return new JsonResponse(['message' => 'Invalid request'], 400);
@@ -119,12 +120,24 @@ class OrderController extends BaseController
 
         $context = [];
         if (key_exists('id', $obj)) {
-            $find = $this->getDoctrine()->getRepository(Order::class)->find($obj['id']);
+            $qb = $this->getDoctrine()->getRepository(Order::class)->createQueryBuilder('ord');
+            $find = $qb
+                ->innerJoin('ord.orderItems', 'orderItems')
+                ->addSelect('orderItems')
+                ->where('ord.id = :id')
+                ->setParameter('id', $obj['id'])
+                ->getQuery()
+                ->getOneOrNullResult();
+            // $find = $this->getDoctrine()->getRepository(Order::class)->find($obj['id']);
+            dump($find);
             $context['object_to_populate'] = $find;
         }
 
+        dump($request->getContent());
+
         /** @var Order $orderData */
         $orderData = $serializer->deserialize($request->getContent(), Order::class, 'json', $context);
+        dump($orderData);
         $errors = $validator->validate($orderData);
 
         if (count($errors) > 0) {
@@ -134,11 +147,12 @@ class OrderController extends BaseController
         $orderData->setUser($this->getUser());
 
         $em = $this->getDoctrine()->getManager();
-        if ($orderData->getId()) {
-            $em->merge($orderData);
-        } else {
-            $em->persist($orderData);
-        }
+//        if ($orderData->getId()) {
+//            $em->merge($orderData);
+//        } else {
+//            $em->persist($orderData);
+//        }
+        $em->merge($orderData);
 
         foreach ($orderData->getOrderItems() as $orderItem) {
             $stockByReferency = $this->getDoctrine()->getRepository(Stock::class)->findOneBy(['referency' => $orderItem->getReferency()]);
@@ -333,4 +347,92 @@ class OrderController extends BaseController
         return $this->file($temp_file, $fileName, ResponseHeaderBag::DISPOSITION_INLINE);
     }
 
+    /**
+     * @Route("/new", name="new", methods={"GET", "POST"})
+     * @param Request $request
+     * @return Response
+     */
+    public function newAction(Request $request)
+    {
+        $pagination = $this->pagination->handle($request, Order::class);
+
+        $order = new Order();
+
+        $form = $this->createForm(OrderType::class, $order);
+        $this->addDefaultSubmitButtons($form);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $order->setUser($this->getUser());
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($order);
+            $em->flush();
+
+            $this->flashBag->newMessage(
+                FlashBagEvents::MESSAGE_TYPE_SUCCESS,
+                FlashBagEvents::MESSAGE_SUCCESS_INSERTED
+            );
+
+            $handleSubmitButtons = $this->handleSubmitButtons(
+                $form,
+                'admin_order_new',
+                'admin_order_edit',
+                ['id' => $order->getId()],
+                $pagination->getRouteParams()
+            );
+
+            return $handleSubmitButtons ? $handleSubmitButtons : $this->redirectToRoute('admin_order_index');
+        }
+
+        return $this->render('admin/order/new.html.twig', [
+            'order' => $order,
+            'form' => $form->createView(),
+            'pagination' => $pagination
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/edit", requirements={"id" : "\d+"}, name="edit")
+     * @param Order $order
+     * @param Request $request
+     * @return Response
+     */
+    public function editAction(Order $order, Request $request)
+    {
+        $pagination = $this->pagination->handle($request, Order::class);
+
+        $form = $this->createForm(OrderType::class, $order);
+        $this->addDefaultSubmitButtons($form);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($order);
+            $em->flush();
+
+            $this->flashBag->newMessage(
+                FlashBagEvents::MESSAGE_TYPE_SUCCESS,
+                FlashBagEvents::MESSAGE_SUCCESS_UPDATED
+            );
+
+            $handleSubmitButtons = $this->handleSubmitButtons(
+                $form,
+                'admin_order_new',
+                'admin_order_edit',
+                ['id' => $order->getId()],
+                $pagination->getRouteParams()
+            );
+
+            return $handleSubmitButtons ? $handleSubmitButtons : $this->redirectToRoute('admin_customer_index', $pagination->getRouteParams());
+        }
+
+        return $this->render('admin/order/edit.html.twig', [
+            'order' => $order,
+            'form' => $form->createView(),
+            'pagination' => $pagination
+        ]);
+    }
 }

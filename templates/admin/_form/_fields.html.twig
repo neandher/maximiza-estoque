@@ -24,3 +24,12 @@
         </span>
     </div>
 {% endblock %}
+
+{% block referency_widget -%}
+    <div class="input-group">
+        {{- block('form_widget_simple') -}}
+        <button class="btn btn-outline-brand" type="button"
+                id="venda-btn-check-ref"><i class="fa fa-check"></i>
+        </button>
+    </div>
+{%- endblock referency_widget %}

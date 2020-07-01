@@ -55,3 +55,7 @@ services:
     App\EventListener\BillSubscriber:
         tags:
             - { name: doctrine.event_subscriber }
+
+    App\EventListener\OrderItemSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }

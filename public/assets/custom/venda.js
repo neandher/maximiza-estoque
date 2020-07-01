@@ -98,6 +98,7 @@ $('#modalVenda').on('shown.bs.modal', function (event) {
 
 
 function vendaAddItem(orderItem = null) {
+    console.log(orderItem);
     let vendaItem = {
         referency: '',
         quantity: 1,
@@ -123,6 +124,11 @@ function vendaAddItem(orderItem = null) {
     vendaItem.subtotal = orderItem ? Number(orderItem.subtotal) : price * quantity;
     vendaItem.total = orderItem ? Number(orderItem.total) : Number(vendaItem.subtotal);
     vendaItem.identity = vendaItemsCount;
+
+    if(orderItem && orderItem.id){
+        vendaItem.id = orderItem && orderItem.id ? orderItem.id : null;
+        // vendaItem.orderEntity = orderItem && orderItem.orderEntity ? orderItem.orderEntity : null;
+    }
 
     venda.subtotal += vendaItem.subtotal;
     venda.total += vendaItem.total;

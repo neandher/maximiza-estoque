@@ -1,228 +1,239 @@
 resource:
-    flashbag:
-        success:
-            inserted: Registro inserido com sucesso
-            updated: Registro alterado com sucesso
-            deleted: Registro deletado com sucesso
-        error:
-            inserted: Houve um erro ao inserir o registro
-            updated: Houve um erro ao alterar o registro
-            deleted: Houve um erro ao deletar o registro
-    fields:
-        title: Título
-        name: Nome
-        description: Descrição
-    filters:
-        search: Busca
-        num_items: Items por página
-        date: Data
-        date_start: Data Inicial
-        date_end: Data Final
-    toglleable:
-        is_enabled_title: Ativo
-        is_enabled: Sim
-        is_not_enabled: Não
-    timestampable:
-        createdAt: Criado Em
-        updatedAt: Atualizado Em
-        updatedBy: Atualizado Por
-    delete_confirm:
-        title: Confirmação
-        text: Deseja confirmar a exclusão?
-        btns:
-            confirm: Confirmar Exclusão
-    tabs:
-        details: Geral
-    caption: '%resourceName% (%nbResults% registros)'
-    #caption: '%resourceName%'
-    pagination:
-        list_info: 'Exibindo %currentPageOffsetStart% a %currentPageOffsetEnd% de %nbResults% registros'
-    actions:
-        title: Ações
-        items:
-            save_and_new: Salvar e criar novo
-            save_and_keep: Salvar
-            save_and_close: Salvar e fechar
-            search: Buscar
-            reset: Limpar
-            send: Enviar
-            edit: Editar
-            delete: Deletar
-            cancel: Cancelar
-            go_back: Voltar
-            add: Adicionar Item
+  flashbag:
+    success:
+      inserted: Registro inserido com sucesso
+      updated: Registro alterado com sucesso
+      deleted: Registro deletado com sucesso
+    error:
+      inserted: Houve um erro ao inserir o registro
+      updated: Houve um erro ao alterar o registro
+      deleted: Houve um erro ao deletar o registro
+  fields:
+    title: Título
+    name: Nome
+    description: Descrição
+  filters:
+    search: Busca
+    num_items: Items por página
+    date: Data
+    date_start: Data Inicial
+    date_end: Data Final
+  toglleable:
+    is_enabled_title: Ativo
+    is_enabled: Sim
+    is_not_enabled: Não
+  timestampable:
+    createdAt: Criado Em
+    updatedAt: Atualizado Em
+    updatedBy: Atualizado Por
+  delete_confirm:
+    title: Confirmação
+    text: Deseja confirmar a exclusão?
+    btns:
+      confirm: Confirmar Exclusão
+  tabs:
+    details: Geral
+  caption: '%resourceName% (%nbResults% registros)'
+  #caption: '%resourceName%'
+  pagination:
+    list_info: 'Exibindo %currentPageOffsetStart% a %currentPageOffsetEnd% de %nbResults% registros'
+  actions:
+    title: Ações
+    items:
+      save_and_new: Salvar e criar novo
+      save_and_keep: Salvar
+      save_and_close: Salvar e fechar
+      search: Buscar
+      reset: Limpar
+      send: Enviar
+      edit: Editar
+      delete: Deletar
+      cancel: Cancelar
+      go_back: Voltar
+      add: Adicionar Item
 
 errors:
-    404:
-        title: Oops! Página não encontrada.
-        description: Não foi possível entrar a página procurada.
-    500:
-        title: Oops...
-        description: Algo deu errado.<br>Estamos trabalhando para corrigir.
+  404:
+    title: Oops! Página não encontrada.
+    description: Não foi possível entrar a página procurada.
+  500:
+    title: Oops...
+    description: Algo deu errado.<br>Estamos trabalhando para corrigir.
 
 Invalid credentials.: Login ou senha inválidos.
 
 user:
-    title: Usuários
-    title_single: Usuário
-    actions:
-        new: Novo Usuário
-        edit: Editar Usuário
-    fields:
-        firstName: Primeiro Nome
-        lastName: Segundo Nome
-        fullName: Name
-        email: E-mail
-        username: Usuário
-        lastLogin: Último Login
-        receiveEmails: Receber E-mails
-        emailNotifications: Email Notificações
-        roles: Nível de Permissão
-    menu:
-        profile: Meu Perfil
-        profile_update: Atualizar Perfil
-        details: Dados Pessoais
-        change_passaword: Alterar Senha
-        logout: Sair
-    resetting:
-        request:
-            title: Esqueceu a senha?
-            subtitle: Digite seu usuário para alterar sua senha
-            not_found: Usuário não encontrado
-        reset:
-            title: Alterar Senhar
-    login:
-        title: Login
-        title_small: Login
+  title: Usuários
+  title_single: Usuário
+  actions:
+    new: Novo Usuário
+    edit: Editar Usuário
+  fields:
+    firstName: Primeiro Nome
+    lastName: Segundo Nome
+    fullName: Name
+    email: E-mail
+    username: Usuário
+    lastLogin: Último Login
+    receiveEmails: Receber E-mails
+    emailNotifications: Email Notificações
+    roles: Nível de Permissão
+  menu:
+    profile: Meu Perfil
+    profile_update: Atualizar Perfil
+    details: Dados Pessoais
+    change_passaword: Alterar Senha
+    logout: Sair
+  resetting:
+    request:
+      title: Esqueceu a senha?
+      subtitle: Digite seu usuário para alterar sua senha
+      not_found: Usuário não encontrado
+    reset:
+      title: Alterar Senhar
+  login:
+    title: Login
+    title_small: Login
 
 stock:
-    title: Estoque Movimentação
-    titleBalance: Estoque Saldo
-    title_single: Estoque Movimentação
-    total: Total
-    balance: Saldo
-    fields:
-        referency: Referência
-        quantity: Quantidade
-        amount: Valor Total
-        unitPrice: Valor Unitário
-        type: Movimentação
-        xmlFile: Arquivo XML
-        barCode: Código de Barras
-        paymentMethod: Forma de Pagamento
-        obs: Observações
-    types:
-        add: Entrada
-        remove: Saída
-    paymentMethods:
-        cheque: Cheque
-        cartao: Cartão
-        dinheiro: Dinheiro
-    actions:
-        new: Novo
-        edit: Editar Movimentação
+  title: Estoque Movimentação
+  titleBalance: Estoque Saldo
+  title_single: Estoque Movimentação
+  total: Total
+  balance: Saldo
+  fields:
+    referency: Referência
+    quantity: Quantidade
+    amount: Valor Total
+    unitPrice: Valor Unitário
+    type: Movimentação
+    xmlFile: Arquivo XML
+    barCode: Código de Barras
+    paymentMethod: Forma de Pagamento
+    obs: Observações
+  types:
+    add: Entrada
+    remove: Saída
+  paymentMethods:
+    cheque: Cheque
+    cartao: Cartão
+    dinheiro: Dinheiro
+  actions:
+    new: Novo
+    edit: Editar Movimentação
 address:
-    title: Endereços
-    title_single: Endereço
-    fields:
-        street: Rua
-        district: Bairro
-        city: Cidade
-        zipCode: Cep
-        uf: UF
-        complement: Complemento
+  title: Endereços
+  title_single: Endereço
+  fields:
+    street: Rua
+    district: Bairro
+    city: Cidade
+    zipCode: Cep
+    uf: UF
+    complement: Complemento
 
 customer:
-    title: Clientes
-    title_single: Cliente
-    fields:
-        name: Razão Social
-        fantasyName: Nome Fantasia
-        email: E-mail
-        cnpj: CNPJ
-        phoneNumber: Telefone
-    actions:
-        new: Novo Cliente
-        edit: Editar Cliente
+  title: Clientes
+  title_single: Cliente
+  fields:
+    name: Razão Social
+    fantasyName: Nome Fantasia
+    email: E-mail
+    cnpj: CNPJ
+    phoneNumber: Telefone
+  actions:
+    new: Novo Cliente
+    edit: Editar Cliente
 
 customerObservations:
-    title: Observações
-    title_single: Observação
+  title: Observações
+  title_single: Observação
 
 brand:
-    title: Marcas
-    title_single: Marca
-    actions:
-        new: Nova Marca
-        edit: Editar Marca
+  title: Marcas
+  title_single: Marca
+  actions:
+    new: Nova Marca
+    edit: Editar Marca
 
 customerState:
-    title: Status Cliente
-    title_single: Status
-    actions:
-        new: Novo Status
-        edit: Editar Status
+  title: Status Cliente
+  title_single: Status
+  actions:
+    new: Novo Status
+    edit: Editar Status
 
 customerCategory:
-    title: Categoria Cliente
-    title_single: Categoria
-    actions:
-        new: Nova Categoria
-        edit: Editar Categoria
+  title: Categoria Cliente
+  title_single: Categoria
+  actions:
+    new: Nova Categoria
+    edit: Editar Categoria
 
 billPlanCategory:
-    title: Categorias Plano de Contas
-    title_single: Categoria Plano de Conta
-    actions:
-        new: Nova Categoria
-        edit: Editar Categoria
-    fields:
-        description: Descrição
-        type: Tipo
+  title: Categorias Plano de Contas
+  title_single: Categoria Plano de Conta
+  actions:
+    new: Nova Categoria
+    edit: Editar Categoria
+  fields:
+    description: Descrição
+    type: Tipo
 
 billPlan:
-    title: Plano de Contas
-    title_single: Plano de Conta
-    fields:
-        description: Descrição
-    actions:
-        new: Novo Plano de Conta
-        edit: Editar Plano de Conta
+  title: Plano de Contas
+  title_single: Plano de Conta
+  fields:
+    description: Descrição
+  actions:
+    new: Novo Plano de Conta
+    edit: Editar Plano de Conta
 
 bill:
-    title: Contas
-    title_single: Conta
-    fields:
-        description: Descrição
-        amount: Valor
-        note: Observações
-        dueDate: Data de Vencimento
-        paymentDate: Data de Pagamento ou Recebimento
-        amountPaid: Valor Pago ou Recebido
-        createdAt: Data de Criação
-        status: Status
-        type: Movimentação
-        paymentMethod: Forma de Pagamento
-    types:
-        pay: Despesa
-        receive: Receita
-    status:
-        open: Em aberto
-        paid: Pago
-        received: Recebido
-        overDue: Vencido
-    actions:
-        new: Nova Conta
-        edit: Editar Conta
+  title: Contas
+  title_single: Conta
+  fields:
+    description: Descrição
+    amount: Valor
+    note: Observações
+    dueDate: Data de Vencimento
+    paymentDate: Data de Pagamento ou Recebimento
+    amountPaid: Valor Pago ou Recebido
+    createdAt: Data de Criação
+    status: Status
+    type: Movimentação
+    paymentMethod: Forma de Pagamento
+  types:
+    pay: Despesa
+    receive: Receita
+  status:
+    open: Em aberto
+    paid: Pago
+    received: Recebido
+    overDue: Vencido
+  actions:
+    new: Nova Conta
+    edit: Editar Conta
 
 order:
-    title: Vendas
-    title_single: Venda
-    fields:
-        subtotal: Subtotal
-        discount: Desconto
-        total: Total
-        client: Cliente
-        createdAt: Data de Criação
-    actions:
-        new: Nova Venda
+  title: Vendas
+  title_single: Venda
+  fields:
+    subtotal: Subtotal
+    discount: Desconto
+    total: Total
+    client: Cliente
+    createdAt: Data de Criação
+    items: Itens
+  actions:
+    new: Nova Venda
+    edit: Editar Venda
+
+orderItems:
+  fields:
+    referency: Referência
+    quantity: Quantidade
+    subtotal: Subtotal
+    discount: Desconto
+    total: Total
+    price: Preço

@@ -15,11 +15,17 @@
 
         {% block head_tools_actions %}
             <li class="m-portlet__nav-item">
+                <a href="{{ path('admin_order_new') ~ pagination.buildQuery }}"
+                   class="btn btn-accent m-btn m-btn--icon m-btn--air">
+                    <span><i class="la la-plus-circle"></i><span> {{ 'order.actions.new'|trans }}</span></span>
+                </a>
+            </li>
+            {#<li class="m-portlet__nav-item">
                 <a href="javascript:;" data-toggle="modal" data-target="#modalVenda"
                    class="btn btn-accent m-btn m-btn--custom m-btn--icon">
                     <span><i class="la la-plus"></i><span> Nova Venda</span></span>
                 </a>
-            </li>
+            </li>#}
         {% endblock %}
         {% block head_tools_dropdown %}{% endblock %}
 
@@ -152,14 +158,18 @@
                         >
                             <i class="fa fa-trash"></i>
                         </a>
-                        <a href="javascript:;"
+                        <a href="{{ path('admin_order_edit', { id: order.id }) ~ pagination.buildQuery }}"
+                           class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"
+                           title="{{ 'resource.actions.items.edit'|trans }}"> <i class="la la-edit"></i>
+                        </a>
+                        {#<a href="javascript:;"
                            class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"
                            data-toggle="modal" data-target="#modalVenda"
                            data-id="{{ order.id }}"
                            title="{{ 'resource.actions.items.edit'|trans }}"
                         >
                             <i class="fa fa-edit"></i>
-                        </a>
+                        </a>#}
                     </td>
                 </tr>
             {% endfor %}

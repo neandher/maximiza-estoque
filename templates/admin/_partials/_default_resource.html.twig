@@ -3,7 +3,7 @@
 
         {% block form_start %}{% endblock %}
 
-        <div class="m-portlet m-portlet--rounded">
+        <div class="m-portlet m-portlet--last m-portlet--responsive-mobile">
             <div class="m-portlet__head">
                 <div class="m-portlet__head-caption">
                     <div class="m-portlet__head-title">
@@ -37,6 +37,7 @@
                     {% block tab_pane %}{% endblock %}
                 </div>
             </div>
+            {% block portlet_foot %}{% endblock %}
         </div>
 
         {% block form_end %}
