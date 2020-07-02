@@ -8,7 +8,7 @@ use App\StockTypes;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class OrderCreateSubscriber implements EventSubscriber
 {
@@ -30,7 +30,7 @@ class OrderCreateSubscriber implements EventSubscriber
                     $stockByReferency = $em->getRepository(Stock::class)->findOneBy(['referency' => $orderItem->getReferency()]);
 
                     if (!$stockByReferency) {
-                        return new JsonResponse(['message' => 'Referência ' . $orderItem->getReferency() . ' não encontrada.'], 400);
+                        throw new BadRequestHttpException('Referência ' . $orderItem->getReferency() . ' não encontrada.');
                     }
 
                     $stock = new Stock();
