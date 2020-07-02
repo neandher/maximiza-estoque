@@ -159,6 +159,8 @@ function handleOrder($collectionHolder, checkTotal = false) {
             $subtotalGeral.val(subtotalGeral);
             $subtotalGeralView.val(formatCurrency(subtotalGeral));
 
+            $('#order_orderItems_' + i + '_totalView').val(formatCurrency(Number($('#order_orderItems_' + i + '_total').val())));
+
             if ($subtotalGeral.val() && Number($subtotalGeral.val()) > 0 && $discount.val()) {
                 let discount = Number($discount.val().toString().replace(',', '.'));
                 $totalGeral.val(totalGeral - discount);

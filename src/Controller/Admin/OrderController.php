@@ -426,7 +426,7 @@ class OrderController extends BaseController
                 $pagination->getRouteParams()
             );
 
-            return $handleSubmitButtons ? $handleSubmitButtons : $this->redirectToRoute('admin_customer_index', $pagination->getRouteParams());
+            return $handleSubmitButtons ? $handleSubmitButtons : $this->redirectToRoute('admin_order_index', $pagination->getRouteParams());
         }
 
         return $this->render('admin/order/edit.html.twig', [
