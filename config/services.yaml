@@ -59,3 +59,7 @@ services:
     App\EventListener\OrderItemSubscriber:
         tags:
             - { name: doctrine.event_subscriber }
+
+    App\EventListener\OrderCreateSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }
