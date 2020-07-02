@@ -52,7 +52,7 @@ function addOrderItemForm($collectionHolder, $newLinkPanel) {
     // Inputmask.init();
     handleOrder($collectionHolder);
     addOrderItemFormDeleteLink($newFormPanelBody, $newFormPanel);
-    $('#order-quantity').html(new_index);
+    $('#order-items').html(new_index);
 
     return new_index;
 }
@@ -152,9 +152,11 @@ function handleOrder($collectionHolder, checkTotal = false) {
     let handleTotalGeral = () => {
         let subtotalGeral = 0;
         let totalGeral = 0;
+        let quantityTotal = 0;
         $collectionHolder.find('div.m-portlet__body').each(function (i) {
             subtotalGeral += Number($('#order_orderItems_' + i + '_subtotal').val());
             totalGeral += Number($('#order_orderItems_' + i + '_total').val());
+            quantityTotal += Number($quantity.val());
 
             $subtotalGeral.val(subtotalGeral);
             $subtotalGeralView.val(formatCurrency(subtotalGeral));
@@ -170,8 +172,10 @@ function handleOrder($collectionHolder, checkTotal = false) {
             $totalGeralView.val(formatCurrency(Number($totalGeral.val())));
         });
 
+        $('#order-quantity').html(quantityTotal);
+
         if (checkTotal) {
-            $('#order-quantity').html($collectionHolder.find('div.m-portlet__body').length);
+            $('#order-items').html($collectionHolder.find('div.m-portlet__body').length);
         }
     };
 
