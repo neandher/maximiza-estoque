@@ -145,7 +145,7 @@ function handleOrder($collectionHolder, checkTotal = false) {
                 $referency.focus();
             })
             .always(function () {
-                $referency.attr('disabled', false);
+                $btnCheckRef.attr('disabled', false);
             });
     });
 
