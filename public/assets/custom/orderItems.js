@@ -156,7 +156,7 @@ function handleOrder($collectionHolder, checkTotal = false) {
         $collectionHolder.find('div.m-portlet__body').each(function (i) {
             subtotalGeral += Number($('#order_orderItems_' + i + '_subtotal').val());
             totalGeral += Number($('#order_orderItems_' + i + '_total').val());
-            quantityTotal += Number($quantity.val());
+            quantityTotal += Number($('#order_orderItems_' + i + '_quantity').val());
 
             $subtotalGeral.val(subtotalGeral);
             $subtotalGeralView.val(formatCurrency(subtotalGeral));
